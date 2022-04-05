@@ -1,0 +1,29 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/gobidasu/.nvm/v0.10.32/bin/node',
+1 verbose cli   '/Users/gobidasu/.nvm/v0.10.32/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'watch' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 verbose run-script [ 'prewatch', 'watch', 'postwatch' ]
+5 info prewatch ralemodules@0.0.1
+6 info watch ralemodules@0.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info ralemodules@0.0.1 Failed to exec watch script
+9 error ralemodules@0.0.1 watch: `tsc -watch -p ./`
+9 error Exit status 8
+10 error Failed at the ralemodules@0.0.1 watch script.
+10 error This is most likely a problem with the ralemodules package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     tsc -watch -p ./
+10 error You can get their info via:
+10 error     npm owner ls ralemodules
+10 error There is likely additional logging output above.
+11 error System Darwin 19.6.0
+12 error command "/Users/gobidasu/.nvm/v0.10.32/bin/node" "/Users/gobidasu/.nvm/v0.10.32/bin/npm" "run" "watch"
+13 error cwd /Users/gobidasu/Desktop/rale-modules/ralemodules
+14 error node -v v0.10.32
+15 error npm -v 1.4.28
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]
