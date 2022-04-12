@@ -23,8 +23,15 @@ export function activate(context: vscode.ExtensionContext) {
 		//console.log("activeEditor.document.getText()", source_code)
 		let source_code_path = activeEditor.document.uri.fsPath
 		console.log("activeEditor.document.uri.fsPath()", source_code_path)
+		let wfs = vscode.workspace.workspaceFolders;
+		let wf = "";
+		if (wfs) {
+			wf = wfs[0].uri.path;
+			console.log("wf", wf);
+		}
+		// we need to pass in the repository path
 
-		exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path, (err: any, stdout: any, stderr: any) => {
+		exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err: any, stdout: any, stderr: any) => {
 			console.log("err:", err);
 			console.log("stdout:", stdout);
 			console.log("stderr:", stderr);
