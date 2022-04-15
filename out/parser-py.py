@@ -3,6 +3,8 @@ from email.mime import base
 import sys
 import os
 
+# python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
+
 print("\n") 
 file_to_parse = sys.argv[1]
 folder_to_parse = sys.argv[2]
@@ -93,10 +95,17 @@ for t in AST_TREES:
             if using_mixin:
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "Call":
-                        #print("subnode name:", ast.dump(subnode))
+                        print("subnode name:", ast.dump(subnode))
                         try:
-                            if subnode.__attr__ in MIXINS[using_mixin]["methods"]:
-                                print("adopted method:", subnode.__attr__)
+                            # Call(func=Attribute(value=Call(func=Name(id='super', ctx=Load()), args=[], keywords=[]), attr='get_queryset', ctx=Load()), args=[], keywords=[])
+                            #print("subnode func:", subnode.func)
+                            #print("subnode attr:", subnode.func.attr)
+                            #print('MIXINS[using_mixin]["methods"]', MIXINS[using_mixin]["methods"])
+                            # subnode name: Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='context', ctx=Load()), attr='update', ctx=Load()), args=[Dict(keys=[Constant(value='dashboard')], values=[Name(id='dashboard', ctx=Load())])], keywords=[])
+                            if subnode.func.attr in MIXINS[using_mixin]["methods"]:
+                                print("adopted method:", subnode.func.attr)
+                            
                         except:
                             #print("call doesn't have an attr prop")
                             pass
+                        func.value.id
