@@ -83,7 +83,20 @@ for t in AST_TREES:
 for t in AST_TREES:
     for node in ast.walk(t):
         if type(node).__name__ == "ClassDef":
+            using_mixin = None
             for b in node.bases:
                 base_name = get_base_name(b)
                 if base_name in MIXINS:
                     print("model name is using a mixin:", node.name, base_name)
+                    using_mixin = base_name
+            # find the adopted methods
+            if using_mixin:
+                for subnode in ast.walk(node):
+                    if type(subnode).__name__ == "Call":
+                        #print("subnode name:", ast.dump(subnode))
+                        try:
+                            if subnode.__attr__ in MIXINS[using_mixin]["methods"]:
+                                print("adopted method:", subnode.__attr__)
+                        except:
+                            #print("call doesn't have an attr prop")
+                            pass
