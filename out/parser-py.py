@@ -112,8 +112,10 @@ for t in AST_TREES:
                             pass
                         #func.value.id
                     if type(subnode).__name__ == "Attribute":
+                        #print("subnode name:", ast.dump(subnode))
+                        #print("subnode name:", subnode.attr)
                         try:
                             if subnode.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted property:", subnode.func.attr) 
+                                print("adopted property:", subnode.attr) 
                         except:
                             pass
