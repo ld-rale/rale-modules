@@ -81,6 +81,8 @@ for t in AST_TREES:
                 print(node.name, "is a model")
                 MODELS[node.name] = []
 
+print("MIXINS:", MIXINS)
+
 # second pass
 for t in AST_TREES:
     for node in ast.walk(t):
@@ -95,7 +97,8 @@ for t in AST_TREES:
             if using_mixin:
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "Call":
-                        print("subnode name:", ast.dump(subnode))
+                        #print("subnode name:", ast.dump(subnode))
+                        #print("subnode line number:", subnode.lineno)
                         try:
                             # Call(func=Attribute(value=Call(func=Name(id='super', ctx=Load()), args=[], keywords=[]), attr='get_queryset', ctx=Load()), args=[], keywords=[])
                             #print("subnode func:", subnode.func)
@@ -103,9 +106,14 @@ for t in AST_TREES:
                             #print('MIXINS[using_mixin]["methods"]', MIXINS[using_mixin]["methods"])
                             # subnode name: Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='context', ctx=Load()), attr='update', ctx=Load()), args=[Dict(keys=[Constant(value='dashboard')], values=[Name(id='dashboard', ctx=Load())])], keywords=[])
                             if subnode.func.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted method:", subnode.func.attr)
-                            
+                                print("adopted method:", subnode.func.attr)       
                         except:
                             #print("call doesn't have an attr prop")
                             pass
-                        func.value.id
+                        #func.value.id
+                    if type(subnode).__name__ == "Attribute":
+                        try:
+                            if subnode.attr in MIXINS[using_mixin]["methods"]:
+                                print("adopted property:", subnode.func.attr) 
+                        except:
+                            pass
