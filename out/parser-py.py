@@ -81,7 +81,7 @@ for t in AST_TREES:
                 print(node.name, "is a model")
                 MODELS[node.name] = []
 
-print("MIXINS:", MIXINS)
+print("MIXINS:", MIXINS['StructuredViewSetMixin'])
 
 # second pass
 for t in AST_TREES:
