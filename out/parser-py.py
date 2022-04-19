@@ -14,7 +14,9 @@ print("\n")
 
 MIXINS = {} # keys are the mixin names, values are the properties / methods and classes that adopt the mixin
 MODELS = {} # keys are the model names
-AST_TREES = []
+VIEWS = []
+AST_TREES = {}
+URLPATTERNS_FILES = []
 
 def get_base_name(b):
     base_name = None
@@ -43,27 +45,25 @@ for subdir, dirs, files in os.walk(folder_to_parse):
             try: # still need to cover py2 case
                 r = open(file_in_folder, 'r')
                 t = ast.parse(r.read())
-                AST_TREES.append(t)
+                AST_TREES[file_in_folder] = t
             except Exception as e:
                 print(e)
                 print("There was an exception (probably py2) when trying to AST parse: ", file_in_folder)
 
 # first pass
 for t in AST_TREES:
-    for node in ast.walk(t):
+    for node in ast.walk(AST_TREES[t]):
         if type(node).__name__ == "ClassDef":
-            #print(f'Nodetype: {type(node).__name__:{16}} {node}')
-            #print(ast.dump(node))
 
             # === MIXIN IDENTIFICATION ===
             # it seems that Mixin classes are almost always named [Name]Mixin in Python / Django
             # so we decide to make this fuzzy match
             if ("mixin" in node.name.lower()):
-                print("\nclass name:", node.name)
+                print("\nclass name:", node.name, node.lineno, node.col_offset, node.end_col_offset)
                 MIXINS[node.name] = []
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "FunctionDef":
-                        print("method / property name:", subnode.name)
+                        print("method / property name:", subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
                         try: 
                             MIXINS[node.name]["methods"].append(subnode.name)
                         except:
@@ -74,48 +74,88 @@ for t in AST_TREES:
             for b in node.bases:
                 base_name = get_base_name(b)
                 if base_name and type(base_name)==str:
-                    # print("base_name", base_name)
                     if "model" in base_name.lower():
                         is_model = True
             if is_model:
-                print(node.name, "is a model")
+                print(node.name, "is a model", node.lineno, node.col_offset, node.end_col_offset)
                 MODELS[node.name] = []
+            
+        # === VIEWS IDENTIFICATION ===
+        # classes or functions mentioned in urls (flask case to do based on @register GET / POST)
+        try:
+            if node.name == "urlpatterns":
+                URLPATTERNS_FILES.append(t)
+        except:
+            pass
+
+# === URLS ===
+for urlpattern_file in URLPATTERNS_FILES:
+    for node in ast.walk(AST_TREES[urlpattern_file]):
+        if type(node).__name__== "Call":
+            try:
+                #print("URLPATTERN node.func.id", node.func.id)
+                if "path" in node.func.id:
+                    try: 
+                        view_part = node.args[1]
+                        #print("node arg:", ast.dump(view_part))
+                        try:
+                            print("view name:", view_part.func.id)
+                        except:
+                            try:
+                                print("view name:", view_part.func.value.id)
+                            except:
+                                try:
+                                    print("view name:", view_part.id)
+                                except:
+                                    try:
+                                        print("view name:", view_part.attr)
+                                    except:
+                                        try:
+                                            print("view name:", view_part.func.value.attr)
+                                        except:
+                                            try:
+                                                print("view name:", view_part.func.attr)
+                                            except:
+                                                pass
+                    except:
+                        pass   
+            except:
+                pass
 
 print("MIXINS:", MIXINS['StructuredViewSetMixin'])
 
 # second pass
 for t in AST_TREES:
-    for node in ast.walk(t):
+    for node in ast.walk(AST_TREES[t]):
         if type(node).__name__ == "ClassDef":
             using_mixin = None
+            
+            # analyze bases
             for b in node.bases:
                 base_name = get_base_name(b)
                 if base_name in MIXINS:
-                    print("model name is using a mixin:", node.name, base_name)
+                    print("model name is using a mixin:", node.name, base_name, node.lineno, node.col_offset, node.end_col_offset)
                     using_mixin = base_name
-            # find the adopted methods
+            
+            # === find the adopted Mixin methods ===
             if using_mixin:
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "Call":
-                        #print("subnode name:", ast.dump(subnode))
-                        #print("subnode line number:", subnode.lineno)
                         try:
-                            # Call(func=Attribute(value=Call(func=Name(id='super', ctx=Load()), args=[], keywords=[]), attr='get_queryset', ctx=Load()), args=[], keywords=[])
-                            #print("subnode func:", subnode.func)
-                            #print("subnode attr:", subnode.func.attr)
-                            #print('MIXINS[using_mixin]["methods"]', MIXINS[using_mixin]["methods"])
-                            # subnode name: Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='context', ctx=Load()), attr='update', ctx=Load()), args=[Dict(keys=[Constant(value='dashboard')], values=[Name(id='dashboard', ctx=Load())])], keywords=[])
                             if subnode.func.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted method:", subnode.func.attr)       
+                                print("adopted method:", subnode.func.attr, subnode.lineno, node.col_offset, node.end_col_offset)       
                         except:
-                            #print("call doesn't have an attr prop")
                             pass
-                        #func.value.id
                     if type(subnode).__name__ == "Attribute":
-                        #print("subnode name:", ast.dump(subnode))
-                        #print("subnode name:", subnode.attr)
                         try:
                             if subnode.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted property:", subnode.attr) 
+                                print("adopted property:", subnode.attr, subnode.lineno, node.col_offset, node.end_col_offset) 
                         except:
                             pass
+
+            # === find the model use in views ===
+            
+
+
+
+
