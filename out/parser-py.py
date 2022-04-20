@@ -14,7 +14,7 @@ print("\n")
 
 MIXINS = {} # keys are the mixin names, values are the properties / methods and classes that adopt the mixin
 MODELS = {} # keys are the model names
-VIEWS = []
+VIEWS = set()
 AST_TREES = {}
 URLPATTERNS_FILES = []
 
@@ -87,40 +87,55 @@ for t in AST_TREES:
                 URLPATTERNS_FILES.append(t)
         except:
             pass
+        
+        if type(node).__name__ == "ClassDef":
+            try:
+                node_name = node.name.lower()
+                if "view" in node_name:
+                    node_name_parts = node_name.split("view")
+                    VIEWS.add(node_name_parts[0])
+            except:
+                pass
 
-# === URLS ===
+# === URLS & VIEWS ===
 for urlpattern_file in URLPATTERNS_FILES:
     for node in ast.walk(AST_TREES[urlpattern_file]):
         if type(node).__name__== "Call":
             try:
-                #print("URLPATTERN node.func.id", node.func.id)
                 if "path" in node.func.id:
                     try: 
                         view_part = node.args[1]
-                        #print("node arg:", ast.dump(view_part))
                         try:
-                            print("view name:", view_part.func.id)
+                            #print("view name:", view_part.func.id)
+                            VIEWS.add(view_part.func.id)
                         except:
                             try:
-                                print("view name:", view_part.func.value.id)
+                                #print("view name:", view_part.func.value.id)
+                                VIEWS.add(view_part.func.value.id)
                             except:
                                 try:
-                                    print("view name:", view_part.id)
+                                    #print("view name:", view_part.id)
+                                    VIEWS.add(view_part.id)
                                 except:
                                     try:
-                                        print("view name:", view_part.attr)
+                                        #print("view name:", view_part.attr)
+                                        VIEWS.add(view_part.attr)
                                     except:
                                         try:
-                                            print("view name:", view_part.func.value.attr)
+                                            #print("view name:", view_part.func.value.attr)
+                                            VIEWS.add(view_part.func.value.attr)
                                         except:
                                             try:
-                                                print("view name:", view_part.func.attr)
+                                                #print("view name:", view_part.func.attr)
+                                                VIEWS.add(view_part.func.attr)
                                             except:
                                                 pass
                     except:
                         pass   
             except:
                 pass
+
+print("VIEWS:", VIEWS)
 
 print("MIXINS:", MIXINS['StructuredViewSetMixin'])
 
