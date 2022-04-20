@@ -17,6 +17,7 @@ MODELS = {} # keys are the model names
 VIEWS = set()
 AST_TREES = {}
 URLPATTERNS_FILES = []
+TEMPLATES = set()
 
 def get_base_name(b):
     base_name = None
@@ -109,13 +110,20 @@ for t in AST_TREES:
             try:
                 node_name = node.func.id
                 if "template" in node_name:
-                    print("func call:", ast.dump(node))
                     for node_arg in node.args:
                         if type(node_arg).__name__ == "Constant":
                             print("constant:", node_arg.value)
+                            TEMPLATES.add(node_arg.value)
             except:
                 pass
-                
+            try:
+                for kw in node.keywords:
+                     if "template_name" in kw.arg:
+                         print("template name: ", kw.value.value)
+                         TEMPLATES.add(node_arg.value)
+            except:
+                pass
+        #print("func call:", ast.dump(node))    
 
 # === URLS & VIEWS ===
 for urlpattern_file in URLPATTERNS_FILES:
