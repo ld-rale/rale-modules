@@ -94,8 +94,28 @@ for t in AST_TREES:
                 if "view" in node_name:
                     node_name_parts = node_name.split("view")
                     VIEWS.add(node_name_parts[0])
+                else:
+                    for b in node.bases:
+                        base_name = get_base_name(b)
+                        if base_name and type(base_name)==str:
+                            if "view" in base_name.lower():
+                                VIEWS.add(node.name)
             except:
                 pass
+        
+        # === TEMPLATES IDENTIFICATION ===
+        # for django its template() and the property template_name=string, same in flask
+        if type(node).__name__ == "Call":
+            try:
+                node_name = node.func.id
+                if "template" in node_name:
+                    print("func call:", ast.dump(node))
+                    for node_arg in node.args:
+                        if type(node_arg).__name__ == "Constant":
+                            print("constant:", node_arg.value)
+            except:
+                pass
+                
 
 # === URLS & VIEWS ===
 for urlpattern_file in URLPATTERNS_FILES:
@@ -170,7 +190,3 @@ for t in AST_TREES:
 
             # === find the model use in views ===
             
-
-
-
-
