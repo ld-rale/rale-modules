@@ -202,23 +202,20 @@ for t in AST_TREES:
 # string search of other file types
 for subdir, dirs, files in os.walk(folder_to_parse):
     for file in files:
-        print("file:", file)
         if file.lower().endswith(('.html')) or file.lower().endswith(('.tsx')):
             # === SEARCH FOR TEMPLATES ===
             for temp in TEMPLATES:
                 if temp in file:
                     print("file is a template: ", file)    
-           # try:
-            file_in_folder = os.path.join(subdir, file)
-            r = open(file_in_folder, 'r')
-            file_content = r.read()
-            if file == "SavedInsights.tsx":
-                print("file_content:", file_content)
+            try:
+                file_in_folder = os.path.join(subdir, file)
+                r = open(file_in_folder, 'r')
+                file_content = r.read()
                 # === SEARCH FOR VIEWS === 
                 for temp in VIEWS:
                     needle = "/" + temp
-                    print("needle:", needle)
                     if needle in file_content:
                         print("found", needle, "in", file)
-            #except:
-            #    pass
+                        print("location, file_content.index", file_content.index(needle))
+            except:
+                pass
