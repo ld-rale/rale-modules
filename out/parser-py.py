@@ -1,7 +1,11 @@
 import ast
 from email.mime import base
+from multiprocessing.dummy import Array
 import sys
 import os
+from dataclasses import dataclass
+from tkinter.tix import INTEGER
+from tokenize import String
 
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
 
@@ -12,12 +16,39 @@ print("file_to_parse: ", file_to_parse)
 print("folder_to_parse: ", folder_to_parse)
 print("\n")
 
-MIXINS = {} # keys are the mixin names, values are the properties / methods and classes that adopt the mixin
-MODELS = {} # keys are the model names
-VIEWS = set()
-AST_TREES = {}
-URLPATTERNS_FILES = []
-TEMPLATES = set()
+class PatternArtifact:
+    def __init__(self):
+        self.lineno = 0
+        self.col_offset = 0
+        self.end_col_offset = 0
+        
+class Mixin(PatternArtifact):
+    def __init__(self):
+        super().__init__()        
+        self.prop_methods = []
+
+class Model(PatternArtifact):
+    def __init__(self):
+        super().__init__()  
+        self.name = ""
+
+class View(PatternArtifact):
+    def __init__(self):
+        super().__init__()
+        self.name = ""
+
+# === for mixin pattern ===
+MIXINS = {} # keys are the mixin names, values are Mixin objects
+
+# === for mvc pattern ===
+MODELS = {} # keys are the model names, values are Model objects
+VIEWS = {} # keys are model names, values are View objects
+TEMPLATES = set() # set of template file names 
+URLPATTERNS_FILES = [] # files defining urlpatterns 
+
+# === for all patterns === 
+AST_TREES = {} # keys are file names, values are AST trees
+
 
 def get_base_name(b):
     base_name = None
@@ -213,7 +244,7 @@ for subdir, dirs, files in os.walk(folder_to_parse):
                 file_content = r.read()
                 # === SEARCH FOR VIEWS === 
                 for temp in VIEWS:
-                    needle = "/" + temp
+                    needle = "/" + VIEWS[temp].name
                     if needle in file_content:
                         print("found", needle, "in", file)
                         print("location, file_content.index", file_content.index(needle))
