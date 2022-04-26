@@ -16,35 +16,38 @@ print("folder_to_parse: ", folder_to_parse)
 print("\n")
 
 class PatternArtifact:
-    def __init__(self, lineno, col_offset, end_col_offset): # add the file to all these
+    def __init__(self, lineno, col_offset, end_col_offset, file_path): # add the file to all these
         self.lineno = lineno
         self.col_offset = col_offset
         self.end_col_offset = end_col_offset
-        
+        self.file_path = file_path
+
 class Mixin(PatternArtifact):
-    def __init__(self, lineno, col_offset, end_col_offset):
-        super().__init__(lineno, col_offset, end_col_offset)        
+    def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
+        super().__init__(lineno, col_offset, end_col_offset, file_path) 
+        self.name = name       
         self.prop_methods = []
         self.adopters = []
 
 class PropMethod(PatternArtifact):
-    def __init__(self, name, lineno, col_offset, end_col_offset):
-        super().__init__(lineno, col_offset, end_col_offset)  
+    def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
+        super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
 
 class Model(PatternArtifact):
-    def __init__(self, name, lineno, col_offset, end_col_offset):
-        super().__init__(lineno, col_offset, end_col_offset)  
+    def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
+        super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
 
 class View(PatternArtifact):
-    def __init__(self, name, lineno, col_offset, end_col_offset):
-        super().__init__(lineno, col_offset, end_col_offset)
+    def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
+        super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
+        self.model = None
 
 class Template(PatternArtifact):
-    def __init__(self, name, lineno=-1, col_offset=-1, end_col_offset=-1):
-        super().__init__(lineno, col_offset, end_col_offset)
+    def __init__(self, name, lineno=-1, col_offset=-1, end_col_offset=-1, file_path=""):
+        super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
 
 # === for mixin pattern ===
@@ -101,12 +104,12 @@ for t in AST_TREES:
             # it seems that Mixin classes are almost always named [Name]Mixin in Python / Django
             # so we decide to make this fuzzy match
             if ("mixin" in node.name.lower()):
-                print("\nclass name:", node.name, node.lineno, node.col_offset, node.end_col_offset)
-                MIXINS[node.name] = Mixin(node.lineno, node.col_offset, node.end_col_offset)
+                #print("\nclass name:", node.name, node.lineno, node.col_offset, node.end_col_offset, t)
+                MIXINS[node.name] = Mixin(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "FunctionDef":
-                        print("method / property name:", subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
-                        pm = PropMethod(subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                        #print("method / property name:", subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                        pm = PropMethod(subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
                         MIXINS[node.name].prop_methods.append(pm)
           
             # === MODEL IDENTIFICATION ===
@@ -117,8 +120,8 @@ for t in AST_TREES:
                     if "model" in base_name.lower():
                         is_model = True
             if is_model:
-                print(node.name, "is a model", node.lineno, node.col_offset, node.end_col_offset)
-                MODELS[node.name] = Model(node.name, node.lineno, node.col_offset, node.end_col_offset)
+                #print(node.name, "is a model", node.lineno, node.col_offset, node.end_col_offset)
+                MODELS[node.name] = Model(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
      
         # === VIEWS IDENTIFICATION ===
         # classes or functions mentioned in urls (flask case to do based on @register GET / POST)
@@ -134,13 +137,13 @@ for t in AST_TREES:
                 if "view" in node_name:
                     node_name_parts = node_name.split("view")
                     relevant_view_name = node_name_parts[0]
-                    VIEWS[relevant_view_name] = View(relevant_view_name, node.lineno, node.col_offset, node.end_col_offset)
+                    VIEWS[relevant_view_name] = View(relevant_view_name, node.lineno, node.col_offset, node.end_col_offset, t)
                 else:
                     for b in node.bases:
                         base_name = get_base_name(b)
                         if base_name and type(base_name)==str:
                             if "view" in base_name.lower():
-                                VIEWS[node.name] = View(node.name, node.lineno, node.col_offset, node.end_col_offset)
+                                VIEWS[node.name] = View(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
             except:
                 pass
 
@@ -152,14 +155,14 @@ for t in AST_TREES:
                 if "template" in node_name:
                     for node_arg in node.args:
                         if type(node_arg).__name__ == "Constant":
-                            print("constant:", node_arg.value)
+                            #print("constant:", node_arg.value)
                             TEMPLATES[node_arg.value] = Template(node_arg.value)
             except:
                 pass
             try:
                 for kw in node.keywords:
                      if "template_name" in kw.arg:
-                         print("template name: ", kw.value.value)
+                         #print("template name: ", kw.value.value)
                          TEMPLATES[kw.value.value] = Template(kw.value.value)
                          
             except:
@@ -175,28 +178,28 @@ for urlpattern_file in URLPATTERNS_FILES:
                     try: 
                         view_part = node.args[1]
                         try:
-                            print("view name:", view_part.func.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
-                            VIEWS[view_part.func.id] = View(view_part.func.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                            #print("view name:", view_part.func.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                            VIEWS[view_part.func.id] = View(view_part.func.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                         except:
                             try:
-                                print("view name:", view_part.func.value.id)
-                                VIEWS[view_part.func.value.id] = View(view_part.func.value.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                                #print("view name:", view_part.func.value.id)
+                                VIEWS[view_part.func.value.id] = View(view_part.func.value.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                             except:
                                 try:
-                                    print("view name:", view_part.id)
-                                    VIEWS[view_part.id] = View(view_part.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                                    #print("view name:", view_part.id)
+                                    VIEWS[view_part.id] = View(view_part.id, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                                 except:
                                     try:
-                                        print("view name:", view_part.attr)
-                                        VIEWS[view_part.attr] = View(view_part.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                                        #print("view name:", view_part.attr)
+                                        VIEWS[view_part.attr] = View(view_part.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                                     except:
                                         try:
-                                            print("view name:", view_part.func.value.attr)
-                                            VIEWS[view_part.func.value.attr] = View(view_part.func.value.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                                            #print("view name:", view_part.func.value.attr)
+                                            VIEWS[view_part.func.value.attr] = View(view_part.func.value.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                                         except:
                                             try:
-                                                print("view name:", view_part.func.attr)
-                                                VIEWS[view_part.func.attr] = View(view_part.func.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset)
+                                                #print("view name:", view_part.func.attr)
+                                                VIEWS[view_part.func.attr] = View(view_part.func.attr, view_part.lineno, view_part.col_offset, view_part.end_col_offset, t)
                                             except:
                                                 pass
                     except:
@@ -215,9 +218,9 @@ for t in AST_TREES:
             for b in node.bases:
                 base_name = get_base_name(b)
                 if base_name in MIXINS:
-                    print("view name is using a mixin:", node.name, base_name, node.lineno, node.col_offset, node.end_col_offset)
+                    #print("view name is using a mixin:", node.name, base_name, node.lineno, node.col_offset, node.end_col_offset)
                     using_mixin = base_name
-                    adopting_view = View(node.name, node.lineno, node.col_offset, node.end_col_offset)
+                    adopting_view = View(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
                     MIXINS[using_mixin].adopters.append(adopting_view)
             
             # === find the adopted Mixin methods ===
@@ -226,21 +229,26 @@ for t in AST_TREES:
                     if type(subnode).__name__ == "Call":
                         try:
                             if subnode.func.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted method:", subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
-                                adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                                #print("adopted method:", subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                                adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
                                 MIXINS[using_mixin].adopters.append(adopting_method)
                         except:
                             pass
                     if type(subnode).__name__ == "Attribute":
                         try:
                             if subnode.attr in MIXINS[using_mixin]["methods"]:
-                                print("adopted property:", subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
-                                adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                                #print("adopted property:", subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                                adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
                                 MIXINS[using_mixin].adopters.append(adopting_property)
                         except:
                             pass
 
             # === find the model use in views ===
+            for model_name in MODELS:
+                for view_name in VIEWS:
+                    if model_name in view_name:
+                        VIEWS[view_name].model = model_name
+                    
 
 # string search of other file types
 for subdir, dirs, files in os.walk(folder_to_parse):
@@ -248,8 +256,8 @@ for subdir, dirs, files in os.walk(folder_to_parse):
         if file.lower().endswith(('.html')) or file.lower().endswith(('.tsx')):
             # === SEARCH FOR TEMPLATES ===
             for temp in TEMPLATES:
-                if temp in file:
-                    print("file is a template: ", file)
+                if temp.lower().strip() == file.lower().strip(): 
+                    #print("this file is a template: ", file)
                     TEMPLATES[file] = Template(file)
             try:
                 file_in_folder = os.path.join(subdir, file)
@@ -259,12 +267,13 @@ for subdir, dirs, files in os.walk(folder_to_parse):
                 for temp in VIEWS:
                     needle = "/" + VIEWS[temp].name
                     if needle in file_content:
-                        print("found", needle, "in", file)
-                        print("location, file_content.index", file_content.index(needle))
-                        TEMPLATES[needle] = Template(needle, file_content.index)
+                        #print("found", needle, "in", file)
+                        #print("location, file_content.index", file_content.index(needle))
+                        TEMPLATES[needle] = Template(needle, file_content.index, file_path=file_in_folder)
             except:
                 pass
 
+'''
 print("Mixins: ", MIXINS)
 print("Mixins: ", MIXINS["StructuredViewSetMixin"])
 print("StructuredViewSetMixin: ", MIXINS["StructuredViewSetMixin"].lineno)
@@ -289,3 +298,21 @@ print("VIEWS: ", VIEWS["insight"].lineno)
 print("VIEWS: ", VIEWS["insight"].col_offset)
 print("VIEWS: ", VIEWS["insight"].end_col_offset)
 print("TEMPLATES: ", TEMPLATES)
+'''
+
+# print all the places we should highlight
+for m in MIXINS:
+    mixin = MIXINS[m]
+    print("Need to highlight mixin", mixin.name, mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
+    for pm in mixin.prop_methods:
+        print("Need to highlight prop_method", pm.name, pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+    for a in mixin.adopters:
+        print("Need to highlight adopters", a.name, a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+
+for m in MODELS:
+    model = MODELS[m]
+    print("Need to highlight model", model.name, model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+
+for v in VIEWS:
+    view = VIEWS[v]
+    print("Need to highlight view", view.name, view.lineno, view.col_offset, view.end_col_offset, view.file_path)
