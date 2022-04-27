@@ -303,16 +303,16 @@ print("TEMPLATES: ", TEMPLATES)
 # print all the places we should highlight
 for m in MIXINS:
     mixin = MIXINS[m]
-    print("Need to highlight mixin", mixin.name, mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
+    print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
     for pm in mixin.prop_methods:
-        print("Need to highlight prop_method", pm.name, pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+        print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
     for a in mixin.adopters:
-        print("Need to highlight adopters", a.name, a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+        print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
 
 for m in MODELS:
     model = MODELS[m]
-    print("Need to highlight model", model.name, model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+    print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
 
 for v in VIEWS:
     view = VIEWS[v]
-    print("Need to highlight view", view.name, view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+    print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
