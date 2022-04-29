@@ -66,6 +66,7 @@ function highlightDesignPatterns(activeEditor) {
 // your extension is activated the very first time the command is executed
 function activate(context) {
     let activeEditor = vscode.window.activeTextEditor;
+    let to_highlight = {};
     if (activeEditor) {
         //console.log("activeEditor.document.getText()", source_code)
         let source_code_path = activeEditor.document.uri.fsPath;
@@ -83,7 +84,6 @@ function activate(context) {
             //console.log("stderr:", stderr);
             let stdout_lines = stdout.split("\n");
             let opened = [];
-            let to_highlight = {};
             for (let i = 0; i < stdout_lines.length; i++) {
                 try {
                     let components = stdout_lines[i].split("Need2highlight ");
@@ -92,7 +92,6 @@ function activate(context) {
                     let col_offset = Number(main_components[1]);
                     let col_offset_end = Number(main_components[2]);
                     let file_name = main_components[3];
-                    let to_highlight = {};
                     if (to_highlight[file_name])
                         to_highlight[file_name].push(new HighlightLocation(lineno, col_offset, col_offset_end));
                     else
@@ -119,6 +118,25 @@ function activate(context) {
         //highlightDesignPatterns(activeEditor);
         vscode.workspace.onDidOpenTextDocument((d) => {
             console.log("[Document Opened]:" + d.fileName);
+            console.log("to_highlight:", to_highlight);
+            let fileName_trim = d.fileName;
+            if (d.fileName.includes(".git")) {
+                fileName_trim = d.fileName.substring(0, d.fileName.length - 4);
+            }
+            console.log("to_highlight[fileName_trim]:", to_highlight[fileName_trim]);
+            if (to_highlight[fileName_trim]) {
+                console.log("document is in dictionary");
+                let activeEditor = vscode.window.activeTextEditor;
+                if (activeEditor) {
+                    let to_hl_list = to_highlight[fileName_trim];
+                    console.log("to_hl_list", to_hl_list);
+                    for (let i = 0; i < to_hl_list.length; i++) {
+                        let hl_loc = to_hl_list[i];
+                        console.log("about to highlight:", hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName);
+                        highlightDesignPatterns2(activeEditor, hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName);
+                    }
+                }
+            }
         });
     }
     // Use the console to output diagnostic information (console.log) and errors (console.error)

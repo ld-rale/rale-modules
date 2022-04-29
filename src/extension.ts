@@ -8,10 +8,10 @@ const { exec } = require('child_process');
 let PATH_TO_AST_PARSERS = __dirname // put AST parsers in out folder
 
 class HighlightLocation {
-	lineno: Number;
-	col_offset: Number;
-	col_offset_end: Number;
-	constructor(lineno: Number, col_offset: Number, col_offset_end: Number) {
+	lineno: number;
+	col_offset: number;
+	col_offset_end: number;
+	constructor(lineno: number, col_offset: number, col_offset_end: number) {
 		this.lineno = lineno;
 		this.col_offset = col_offset;
 		this.col_offset_end = col_offset_end;
@@ -75,8 +75,9 @@ function highlightDesignPatterns(activeEditor: vscode.TextEditor){
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	
 	let activeEditor = vscode.window.activeTextEditor;
+	let to_highlight: { [key: string]: [HighlightLocation] } = {};
+
 	if (activeEditor) {
 		
 		//console.log("activeEditor.document.getText()", source_code)
@@ -96,7 +97,6 @@ export function activate(context: vscode.ExtensionContext) {
 			//console.log("stderr:", stderr);
 			let stdout_lines = stdout.split("\n")
 			let opened: string[] = [];
-			let to_highlight = {}
 			for (let i=0; i<stdout_lines.length; i++){
 				try {
 					let components = stdout_lines[i].split("Need2highlight ");
@@ -105,7 +105,7 @@ export function activate(context: vscode.ExtensionContext) {
 					let col_offset = Number(main_components[1]);
 					let col_offset_end = Number(main_components[2]);
 					let file_name = main_components[3];
-					let to_highlight: { [key: string]: [HighlightLocation] } = {};
+					
 					if (to_highlight[file_name])
 						to_highlight[file_name].push(new HighlightLocation(lineno, col_offset, col_offset_end));
 					else
@@ -135,7 +135,25 @@ export function activate(context: vscode.ExtensionContext) {
 		//highlightDesignPatterns(activeEditor);
 		vscode.workspace.onDidOpenTextDocument((d)=>{
 			console.log("[Document Opened]:" + d.fileName);
-
+			console.log("to_highlight:", to_highlight);
+			let fileName_trim = d.fileName;
+			if (d.fileName.includes(".git")) {
+				fileName_trim = d.fileName.substring(0, d.fileName.length-4);
+			}
+			console.log("to_highlight[fileName_trim]:", to_highlight[fileName_trim]);
+			if (to_highlight[fileName_trim]){
+				console.log("document is in dictionary");
+				let activeEditor = vscode.window.activeTextEditor;
+				if (activeEditor){
+					let to_hl_list = to_highlight[fileName_trim];
+					console.log("to_hl_list", to_hl_list);
+					for (let i = 0; i<to_hl_list.length; i++){
+						let hl_loc = to_hl_list[i];
+						console.log("about to highlight:", hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName)
+						highlightDesignPatterns2(activeEditor, hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName);
+					}
+				}
+			}
 		});
 	
 	}
