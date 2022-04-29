@@ -9,7 +9,13 @@ let PATH_TO_AST_PARSERS = __dirname // put AST parsers in out folder
 
 class HighlightLocation {
 	lineno: Number;
-	constructor()
+	col_offset: Number;
+	col_offset_end: Number;
+	constructor(lineno: Number, col_offset: Number, col_offset_end: Number) {
+		this.lineno = lineno;
+		this.col_offset = col_offset;
+		this.col_offset_end = col_offset_end;
+	}
 
 }
 
@@ -99,7 +105,11 @@ export function activate(context: vscode.ExtensionContext) {
 					let col_offset = Number(main_components[1]);
 					let col_offset_end = Number(main_components[2]);
 					let file_name = main_components[3];
-					to_highlight[file_name] = {"lineno": lineno, }
+					let to_highlight: { [key: string]: [HighlightLocation] } = {};
+					if (to_highlight[file_name])
+						to_highlight[file_name].push(new HighlightLocation(lineno, col_offset, col_offset_end));
+					else
+						to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end)];
 					//console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name)
 					if (i > 40) break;
 					if (!opened.includes(file_name)) {

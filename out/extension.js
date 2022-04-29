@@ -10,6 +10,11 @@ const { exec } = require('child_process');
 // console.log(`Directory name is ${__dirname}`);
 let PATH_TO_AST_PARSERS = __dirname; // put AST parsers in out folder
 class HighlightLocation {
+    constructor(lineno, col_offset, col_offset_end) {
+        this.lineno = lineno;
+        this.col_offset = col_offset;
+        this.col_offset_end = col_offset_end;
+    }
 }
 function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_end, file_name) {
     console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
@@ -87,7 +92,11 @@ function activate(context) {
                     let col_offset = Number(main_components[1]);
                     let col_offset_end = Number(main_components[2]);
                     let file_name = main_components[3];
-                    to_highlight[file_name] = { "lineno": lineno, };
+                    let to_highlight = {};
+                    if (to_highlight[file_name])
+                        to_highlight[file_name].push(new HighlightLocation(lineno, col_offset, col_offset_end));
+                    else
+                        to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end)];
                     //console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name)
                     if (i > 40)
                         break;
