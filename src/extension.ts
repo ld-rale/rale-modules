@@ -7,6 +7,23 @@ const { exec } = require('child_process');
 // console.log(`Directory name is ${__dirname}`);
 let PATH_TO_AST_PARSERS = __dirname // put AST parsers in out folder
 
+class HighlightLocation {
+	lineno: Number;
+	constructor()
+
+}
+
+function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: number, col_offset: number, col_offset_end: number, file_name: string){
+	console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
+	let sp = new Position(lineno, col_offset);
+	let ep = new Position(lineno, col_offset_end);
+	let decorationType = vscode.window.createTextEditorDecorationType({
+		backgroundColor:"yellow"
+	});
+	let rangeOption = new Range(sp, ep);
+	activeEditor.setDecorations(decorationType, [rangeOption]);
+}
+
 function highlightDesignPatterns(activeEditor: vscode.TextEditor){
 	let patterns = [/Mixin/g, /Model/g]
 	let patterns_string = ["Mixin", "Model"]
@@ -19,9 +36,9 @@ function highlightDesignPatterns(activeEditor: vscode.TextEditor){
 	for (let i=0; i<patterns.length; i++){
 		let match;
 		let pattern = patterns[i];
-		console.log("pattern:", pattern);
+		//console.log("pattern:", pattern);
 		while (match = pattern.exec(source_code)){
-			console.log("in while loop")
+			//console.log("in while loop")
 			var startPos = activeEditor.document.positionAt(match.index);
 			var endPos = activeEditor.document.positionAt(match.index + match[0].length);
 
@@ -36,10 +53,10 @@ function highlightDesignPatterns(activeEditor: vscode.TextEditor){
 
 	vscode.languages.registerHoverProvider('python', {
 		provideHover(document, position, token) {
-			console.log("in provideHover, dpt:", document, position, token);
+			//console.log("in provideHover, dpt:", document, position, token);
 			let range = document.getWordRangeAtPosition(position);
 			let word = document.getText(range);
-			console.log("word", word);
+			//console.log("word", word);
 			for (let i=0; i<patterns_string.length; i++){
 				if (word.includes(patterns_string[i]))
 					return new vscode.Hover(patterns_definitions[i]);
@@ -63,41 +80,53 @@ export function activate(context: vscode.ExtensionContext) {
 		let wf = "";
 		if (wfs) {
 			wf = wfs[0].uri.path;
-			console.log("wf", wf);
+			//console.log("wf", wf);
 		}
 		// we need to pass in the repository path
 
 		exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err: any, stdout: any, stderr: any) => {
-			console.log("err:", err);
-			console.log("stdout:", stdout);
+			//console.log("err:", err);
+			//console.log("stdout:", stdout);
 			//console.log("stderr:", stderr);
 			let stdout_lines = stdout.split("\n")
 			let opened: string[] = [];
+			let to_highlight = {}
 			for (let i=0; i<stdout_lines.length; i++){
 				try {
-					let components = stdout_lines[i].split("Need2highlight ")
-					let main_components = components[1].split(" ")
-					let lineno = main_components[0]
-					let col_offset = main_components[1]
-					let col_offset_end = main_components[2]
-					let file_name = main_components[3]
-					console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name)
-					if (i > 50) break;
+					let components = stdout_lines[i].split("Need2highlight ");
+					let main_components = components[1].split(" ");
+					let lineno = Number(main_components[0]);
+					let col_offset = Number(main_components[1]);
+					let col_offset_end = Number(main_components[2]);
+					let file_name = main_components[3];
+					to_highlight[file_name] = {"lineno": lineno, }
+					//console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name)
+					if (i > 40) break;
 					if (!opened.includes(file_name)) {
 						opened.push(file_name)
 					
 						vscode.workspace.openTextDocument(vscode.Uri.file(file_name)).then(
-							document => vscode.window.showTextDocument(document)
+							document => vscode.window.showTextDocument(document).then(document => {
+								console.log("showing document", document);
+								let activeEditor = vscode.window.activeTextEditor;
+								if (activeEditor) {
+									highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_end, file_name);
+								}
+							})
 						); // maybe need to make list of files, and then have them opened auto
 					}
 				}
 				catch {
-					console.log("problem parsing out to highlight locations")
+					console.log("problem parsing out to highlight locations");
 				}
 			}
 		});
 		
-		highlightDesignPatterns(activeEditor);
+		//highlightDesignPatterns(activeEditor);
+		vscode.workspace.onDidOpenTextDocument((d)=>{
+			console.log("[Document Opened]:" + d.fileName);
+
+		});
 	
 	}
 
