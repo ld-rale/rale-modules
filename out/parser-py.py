@@ -6,6 +6,7 @@ import os
 from dataclasses import dataclass
 from tokenize import String
 
+# https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
 
 print("\n") 
@@ -104,13 +105,14 @@ for t in AST_TREES:
             # it seems that Mixin classes are almost always named [Name]Mixin in Python / Django
             # so we decide to make this fuzzy match
             if ("mixin" in node.name.lower()):
-                #print("\nclass name:", node.name, node.lineno, node.col_offset, node.end_col_offset, t)
-                MIXINS[node.name] = Mixin(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
+                # print("\nclass name:", node.name, node.lineno, node.col_offset, node.end_col_offset, t)
+                MIXINS[node.name] = Mixin(node.name, node.lineno, -1, -1, t) # node lasts whole class so only care about the start line
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "FunctionDef":
                         #print("method / property name:", subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
-                        pm = PropMethod(subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
-                        MIXINS[node.name].prop_methods.append(pm)
+                        pm = PropMethod(subnode.name, subnode.lineno, -1, -1, t) 
+                        # node lasts whole method so only care about the start line
+                        MIXINS[node.name].prop_methods.append(pm) 
           
             # === MODEL IDENTIFICATION ===
             is_model = False
@@ -121,7 +123,8 @@ for t in AST_TREES:
                         is_model = True
             if is_model:
                 #print(node.name, "is a model", node.lineno, node.col_offset, node.end_col_offset)
-                MODELS[node.name] = Model(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
+                MODELS[node.name] = Model(node.name, node.lineno, -1, -1, t)  
+                # node lasts whole class so only care about the start line
      
         # === VIEWS IDENTIFICATION ===
         # classes or functions mentioned in urls (flask case to do based on @register GET / POST)
@@ -137,13 +140,13 @@ for t in AST_TREES:
                 if "view" in node_name:
                     node_name_parts = node_name.split("view")
                     relevant_view_name = node_name_parts[0]
-                    VIEWS[relevant_view_name] = View(relevant_view_name, node.lineno, node.col_offset, node.end_col_offset, t)
+                    VIEWS[relevant_view_name] = View(relevant_view_name, node.lineno, -1, -1, t)
                 else:
                     for b in node.bases:
                         base_name = get_base_name(b)
                         if base_name and type(base_name)==str:
                             if "view" in base_name.lower():
-                                VIEWS[node.name] = View(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
+                                VIEWS[node.name] = View(node.name, node.lineno, -1, -1, t)
             except:
                 pass
 

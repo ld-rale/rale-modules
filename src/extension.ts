@@ -20,14 +20,22 @@ class HighlightLocation {
 }
 
 function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: number, col_offset: number, col_offset_end: number, file_name: string){
-	console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
-	let sp = new Position(lineno-1, col_offset); // highlights for some reason need to be one line offset for vs code
-	let ep = new Position(lineno-1, col_offset_end); // highlights for some reason need to be one line offset for vs code
+	//console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
+	let sp: Position;
+	let ep: Position
+	if (col_offset < 0 || col_offset_end < 0) { // columns not specified, highlight whole line
+		sp = new Position(lineno-1, 0);
+		ep = new Position(lineno, 0);
+	} else {
+		sp = new Position(lineno-1, col_offset); 
+		ep = new Position(lineno-1, col_offset_end); 
+	} // highlights for some reason need to be one line offset for vs code
+
 	let decorationType = vscode.window.createTextEditorDecorationType({
-		backgroundColor:"yellow"
+		backgroundColor:"gray"
 	});
 	let rangeOption = new Range(sp, ep);
-	console.log("rangeOption", rangeOption);
+	//console.log("rangeOption", rangeOption);
 	activeEditor.setDecorations(decorationType, [rangeOption]);
 }
 
