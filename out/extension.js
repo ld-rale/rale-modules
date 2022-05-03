@@ -17,13 +17,14 @@ class HighlightLocation {
     }
 }
 function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_end, file_name) {
-    // console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
-    let sp = new vscode_1.Position(lineno, col_offset);
-    let ep = new vscode_1.Position(lineno, col_offset_end);
+    console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
+    let sp = new vscode_1.Position(lineno - 1, col_offset); // highlights for some reason need to be one line offset for vs code
+    let ep = new vscode_1.Position(lineno - 1, col_offset_end); // highlights for some reason need to be one line offset for vs code
     let decorationType = vscode.window.createTextEditorDecorationType({
         backgroundColor: "yellow"
     });
     let rangeOption = new vscode_1.Range(sp, ep);
+    console.log("rangeOption", rangeOption);
     activeEditor.setDecorations(decorationType, [rangeOption]);
 }
 function highlightDesignPatterns(activeEditor) {
