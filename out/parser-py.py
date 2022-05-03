@@ -223,8 +223,9 @@ for t in AST_TREES:
                 if base_name in MIXINS:
                     #print("view name is using a mixin:", node.name, base_name, node.lineno, node.col_offset, node.end_col_offset)
                     using_mixin = base_name
-                    adopting_view = View(node.name, node.lineno, node.col_offset, node.end_col_offset, t)
-                    MIXINS[using_mixin].adopters.append(adopting_view)
+                    adopting_view = View(node.name, node.lineno, -1, -1, t) 
+                    # node lasts whole view class so only care about the start line
+                    MIXINS[using_mixin].adopters.append(adopting_view) 
             
             # === find the adopted Mixin methods ===
             if using_mixin:
