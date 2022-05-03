@@ -17,7 +17,7 @@ class HighlightLocation {
     }
 }
 function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_end, file_name) {
-    console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
+    // console.log("lineno, col_offset, col_offset_end, file_name:", lineno, col_offset, col_offset_end, file_name);
     let sp = new vscode_1.Position(lineno, col_offset);
     let ep = new vscode_1.Position(lineno, col_offset_end);
     let decorationType = vscode.window.createTextEditorDecorationType({
@@ -68,9 +68,9 @@ function activate(context) {
     let activeEditor = vscode.window.activeTextEditor;
     let to_highlight = {};
     if (activeEditor) {
-        //console.log("activeEditor.document.getText()", source_code)
+        // console.log("activeEditor.document.getText()", source_code)
         let source_code_path = activeEditor.document.uri.fsPath;
-        console.log("activeEditor.document.uri.fsPath()", source_code_path);
+        // console.log("activeEditor.document.uri.fsPath()", source_code_path)
         let wfs = vscode.workspace.workspaceFolders;
         let wf = "";
         if (wfs) {
@@ -92,17 +92,21 @@ function activate(context) {
                     let col_offset = Number(main_components[1]);
                     let col_offset_end = Number(main_components[2]);
                     let file_name = main_components[3];
-                    if (to_highlight[file_name])
+                    if (file_name.includes("test_")) {
+                        continue; // skip test files
+                        //console.log("file_name includes test_", file_name)
+                    }
+                    if (to_highlight[file_name]) {
                         to_highlight[file_name].push(new HighlightLocation(lineno, col_offset, col_offset_end));
-                    else
+                    }
+                    else {
                         to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end)];
-                    //console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name)
-                    if (i > 40)
-                        break;
+                    }
+                    console.log("lineno, col_offset, col_offset_end, file_name", lineno, col_offset, col_offset_end, file_name);
                     if (!opened.includes(file_name)) {
                         opened.push(file_name);
                         vscode.workspace.openTextDocument(vscode.Uri.file(file_name)).then(document => vscode.window.showTextDocument(document).then(document => {
-                            console.log("showing document", document);
+                            //console.log("showing document", document);
                             let activeEditor = vscode.window.activeTextEditor;
                             if (activeEditor) {
                                 highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_end, file_name);
@@ -118,21 +122,21 @@ function activate(context) {
         //highlightDesignPatterns(activeEditor);
         vscode.workspace.onDidOpenTextDocument((d) => {
             console.log("[Document Opened]:" + d.fileName);
-            console.log("to_highlight:", to_highlight);
+            //console.log("to_highlight:", to_highlight);
             let fileName_trim = d.fileName;
             if (d.fileName.includes(".git")) {
                 fileName_trim = d.fileName.substring(0, d.fileName.length - 4);
             }
-            console.log("to_highlight[fileName_trim]:", to_highlight[fileName_trim]);
+            //console.log("to_highlight[fileName_trim]:", to_highlight[fileName_trim]);
             if (to_highlight[fileName_trim]) {
-                console.log("document is in dictionary");
+                //console.log("document is in dictionary");
                 let activeEditor = vscode.window.activeTextEditor;
                 if (activeEditor) {
                     let to_hl_list = to_highlight[fileName_trim];
-                    console.log("to_hl_list", to_hl_list);
+                    //console.log("to_hl_list", to_hl_list);
                     for (let i = 0; i < to_hl_list.length; i++) {
                         let hl_loc = to_hl_list[i];
-                        console.log("about to highlight:", hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName);
+                        //console.log("about to highlight:", hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName)
                         highlightDesignPatterns2(activeEditor, hl_loc.lineno, hl_loc.col_offset, hl_loc.col_offset_end, d.fileName);
                     }
                 }
@@ -141,7 +145,7 @@ function activate(context) {
     }
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "ralemodules" is now active2!');
+    //console.log('Congratulations, your extension "ralemodules" is now active2!');
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
