@@ -37,6 +37,16 @@ function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: numbe
 	let rangeOption = new Range(sp, ep);
 	//console.log("rangeOption", rangeOption);
 	activeEditor.setDecorations(decorationType, [rangeOption]);
+
+	vscode.languages.registerHoverProvider('python', {
+		provideHover(document, position, token) {
+			//console.log("in provideHover, dpt:", document, position, token);
+			let range = rangeOption;
+			let word = document.getText(range);
+			//console.log("word", word);
+			return new vscode.Hover("pattern definition");
+		}
+	});
 }
 
 function highlightDesignPatterns(activeEditor: vscode.TextEditor){

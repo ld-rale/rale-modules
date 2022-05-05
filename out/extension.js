@@ -34,6 +34,15 @@ function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_e
     let rangeOption = new vscode_1.Range(sp, ep);
     //console.log("rangeOption", rangeOption);
     activeEditor.setDecorations(decorationType, [rangeOption]);
+    vscode.languages.registerHoverProvider('python', {
+        provideHover(document, position, token) {
+            //console.log("in provideHover, dpt:", document, position, token);
+            let range = rangeOption;
+            let word = document.getText(range);
+            //console.log("word", word);
+            return new vscode.Hover("pattern definition");
+        }
+    });
 }
 function highlightDesignPatterns(activeEditor) {
     let patterns = [/Mixin/g, /Model/g];
