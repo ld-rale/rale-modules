@@ -44,7 +44,7 @@ function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: numbe
 			let range = rangeOption;
 			let word = document.getText(range);
 			//console.log("word", word);
-			return new vscode.Hover("pattern definition");
+			return new vscode.Hover("pattern definition ");
 		}
 	});
 }

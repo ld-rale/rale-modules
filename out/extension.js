@@ -40,7 +40,7 @@ function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_e
             let range = rangeOption;
             let word = document.getText(range);
             //console.log("word", word);
-            return new vscode.Hover("pattern definition");
+            return new vscode.Hover("pattern definition ");
         }
     });
 }
