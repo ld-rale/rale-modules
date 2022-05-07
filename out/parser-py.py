@@ -308,15 +308,15 @@ print("TEMPLATES: ", TEMPLATES)
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
-    for pm in mixin.prop_methods:
-        print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
-    for a in mixin.adopters:
-        print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+    #for pm in mixin.prop_methods:
+        #print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+    #for a in mixin.adopters:
+        #print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
 
 for m in MODELS:
     model = MODELS[m]
-    print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+    #print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
 
 for v in VIEWS:
     view = VIEWS[v]
-    print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+    #print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)

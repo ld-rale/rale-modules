@@ -36,9 +36,9 @@ function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: numbe
 	activeEditor.setDecorations(decorationType, [rangeOption]);
 }
 
-function highlightDesignPatterns(pattern: String){
+function highlightDesignPatterns(pattern: String, pattern_instance: String){
 	if (pattern == "mixin")
-		return "Mixins let a class adopt methods and attributes of another class.";
+		return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/.";
 	if (pattern == "prop_method")
 		return "Instances of some classes may have used this Mixin method / property.";
 	if (pattern == "adopters")
@@ -53,11 +53,13 @@ function highlightDesignPatterns(pattern: String){
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	console.log("in activate");
 
 	let activeEditor = vscode.window.activeTextEditor;
 	let to_highlight: { [key: string]: [HighlightLocation] } = {};
 
 	if (activeEditor) {
+		console.log("in if");
 		let source_code_path = activeEditor.document.uri.fsPath
 		let wfs = vscode.workspace.workspaceFolders;
 		let wf = "";
@@ -67,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// we need to pass in the repository path
 
 		exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err: any, stdout: any, stderr: any) => {
+			console.log("in exec output")
 			let stdout_lines = stdout.split("\n")
 			let opened: string[] = [];
 			for (let i=0; i<stdout_lines.length; i++){
@@ -130,19 +133,19 @@ export function activate(context: vscode.ExtensionContext) {
 		// on hovering within documents
 		vscode.languages.registerHoverProvider('python', {
 			provideHover(document, position, token) {
-				console.log("in provideHover, dpt:", document, position, token, document.uri.path);
+				// console.log("in provideHover, dpt:", document, position, token, document.uri.path);
 				
 				let range = document.getWordRangeAtPosition(position);
 				let word = document.getText(range);
 				
 				let th = to_highlight[document.uri.path];
-				console.log("th", th);
+				// console.log("th", th);
 				for (let i = 0; i<th.length; i++){
 					let highlight_able = th[0];
 					if (position.line == highlight_able.lineno - 1){
 						let pattern_instance_name = highlight_able.pattern.split(" ")[0]
 						let pattern_name = highlight_able.pattern.split(" ")[1]
-						return new vscode.Hover("pattern definition of " + highlightDesignPatterns(pattern_name));
+						return new vscode.Hover(highlightDesignPatterns(pattern_name, pattern_instance_name));
 					}
 				}
 			}
