@@ -1,4 +1,5 @@
 "use strict";
+// USAGE: 1. Open an untitled window. 2. > Developer Reload Window 3. > Hello World 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 // The module 'vscode' contains the VS Code extensibility API
@@ -34,7 +35,7 @@ function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_e
 }
 function highlightDesignPatterns(pattern, pattern_instance) {
     if (pattern == "mixin")
-        return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/.";
+        return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/. \n\n Activity 1: Scan the mixin code below and summarize what you think the Mixin does: [link] \n\n Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature): [link]";
     if (pattern == "prop_method")
         return "Instances of some classes may have used this Mixin method / property.";
     if (pattern == "adopters")
@@ -48,11 +49,9 @@ function highlightDesignPatterns(pattern, pattern_instance) {
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
-    console.log("in activate");
     let activeEditor = vscode.window.activeTextEditor;
     let to_highlight = {};
     if (activeEditor) {
-        console.log("in if");
         let source_code_path = activeEditor.document.uri.fsPath;
         let wfs = vscode.workspace.workspaceFolders;
         let wf = "";
@@ -61,7 +60,6 @@ function activate(context) {
         }
         // we need to pass in the repository path
         exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err, stdout, stderr) => {
-            console.log("in exec output");
             let stdout_lines = stdout.split("\n");
             let opened = [];
             for (let i = 0; i < stdout_lines.length; i++) {
@@ -82,7 +80,7 @@ function activate(context) {
                     else {
                         to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end, pattern)];
                     }
-                    console.log("lineno, col_offset, col_offset_end, file_name, pattern", lineno, col_offset, col_offset_end, file_name, pattern);
+                    //console.log("lineno, col_offset, col_offset_end, file_name, pattern", lineno, col_offset, col_offset_end, file_name, pattern);
                     if (!opened.includes(file_name)) {
                         opened.push(file_name);
                         vscode.workspace.openTextDocument(vscode.Uri.file(file_name)).then(document => vscode.window.showTextDocument(document).then(document => {
@@ -123,9 +121,8 @@ function activate(context) {
                 let range = document.getWordRangeAtPosition(position);
                 let word = document.getText(range);
                 let th = to_highlight[document.uri.path];
-                // console.log("th", th);
                 for (let i = 0; i < th.length; i++) {
-                    let highlight_able = th[0];
+                    let highlight_able = th[i];
                     if (position.line == highlight_able.lineno - 1) {
                         let pattern_instance_name = highlight_able.pattern.split(" ")[0];
                         let pattern_name = highlight_able.pattern.split(" ")[1];
