@@ -232,16 +232,14 @@ for t in AST_TREES:
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "Call":
                         try:
-                            if subnode.func.attr in MIXINS[using_mixin]["methods"]:
-                                #print("adopted method:", subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                            if subnode.func.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
                                 adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
                                 MIXINS[using_mixin].adopters.append(adopting_method)
                         except:
                             pass
                     if type(subnode).__name__ == "Attribute":
                         try:
-                            if subnode.attr in MIXINS[using_mixin]["methods"]:
-                                #print("adopted property:", subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
+                            if subnode.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
                                 adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
                                 MIXINS[using_mixin].adopters.append(adopting_property)
                         except:
@@ -311,12 +309,15 @@ for m in MIXINS:
     for pm in mixin.prop_methods:
         print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
     for a in mixin.adopters:
-        print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+        if type(a).__name__ == "View":
+            print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+        else:
+            print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
 
 for m in MODELS:
     model = MODELS[m]
-    #print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+    print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
 
 for v in VIEWS:
     view = VIEWS[v]
-    #print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+    print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
