@@ -308,10 +308,10 @@ print("TEMPLATES: ", TEMPLATES)
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
-    #for pm in mixin.prop_methods:
-        #print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
-    #for a in mixin.adopters:
-        #print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+    for pm in mixin.prop_methods:
+        print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+    for a in mixin.adopters:
+        print(a.name, "adopters Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
 
 for m in MODELS:
     model = MODELS[m]
