@@ -321,3 +321,7 @@ for m in MODELS:
 for v in VIEWS:
     view = VIEWS[v]
     print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+
+for t in TEMPLATES:
+    template = TEMPLATES[t]
+    print(template.name, "template Need2highlight", template.lineno, template.col_offst, template.end_col_offset, template.file_path)
