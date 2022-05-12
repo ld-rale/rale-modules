@@ -51,6 +51,8 @@ function highlightDesignPatterns(pattern: String, pattern_instance: String){
 		return "MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the template) for visual representations, and the controller for logic for manipulating the model or view. Nuances and examples: \n\n - https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller \n\n - https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4 \n\n - https://www.geeksforgeeks.org/difference-between-mvc-and-mvt-design-patterns/ \n\n Below you will find the " + pattern_instance + " Model. \n\n Activity 1 - Describe the " + pattern_instance + " model. [link] \n\n Activity 2 - Name the file / class that forms the " + pattern_instance + " model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). [link] \n\n Activity 3 - Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view) [link] \n\n Go to the controller and view/template to do activities 4-5. \n\n Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?";
 	if (pattern == "view")
 		return "Below you will find the " + pattern_instance + " MV* controller (i.e. 'View' in Django). \n\n Activity 4 - How does this controller access the data model (i.e. which line of code)? What data does the model provide the controller? [link] \n\n Activity 5 - How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? [link] \n\n Hint 1) look at the URL configuration files (i.e. urls.py) \n\n Hint 2) go to the Network tab in CDT on the URL corresponding to this view, as specified in urls.py.";
+	if (pattern == "template")
+		return "Below you will find a part of the " + pattern_instance + " MV* view (i.e. 'Template' in Django). There may be other parts -- look around at the other highlighted files. \n\n Activity 7 - This is a subjective question, but would you consider this MVC, MVVM, MVP, MVT, and why do you think the code architectures chose that?";
 	return "some pattern definition";
 }
 
@@ -134,18 +136,23 @@ export function activate(context: vscode.ExtensionContext) {
 		// on hovering within documents
 		vscode.languages.registerHoverProvider('python', {
 			provideHover(document, position, token) {
-				// console.log("in provideHover, dpt:", document, position, token, document.uri.path);
+				console.log("in provideHover, dpt:", document, position, token, document.uri.path);
 				
 				let range = document.getWordRangeAtPosition(position);
 				let word = document.getText(range);
-				
-				let th = to_highlight[document.uri.path];
+				let path_name = document.uri.path;
+				if (path_name.includes(".git")) {
+					path_name = path_name.substring(0, path_name.length-4);
+				}
+				console.log("path_name", path_name);
+				let th = to_highlight[path_name];
 				let pattern_message = "";
 				for (let i = 0; i<th.length; i++){
 					let highlight_able = th[i];
 					if (position.line == highlight_able.lineno - 1){
 						let pattern_instance_name = highlight_able.pattern.split(" ")[0]
 						let pattern_name = highlight_able.pattern.split(" ")[1]
+						console.log("pattern:", pattern_name);
 						if (pattern_message == ""){
 							pattern_message = highlightDesignPatterns(pattern_name, pattern_instance_name);
 						}

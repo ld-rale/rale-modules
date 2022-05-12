@@ -8,6 +8,7 @@ from tokenize import String
 
 # https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
+# needle /insight file /Users/gobidasu/Desktop/rale-modules/posthog/frontend/src/scenes/saved-insights/SavedInsights.tsx
 
 print("\n") 
 file_to_parse = sys.argv[1]
@@ -83,6 +84,15 @@ def get_base_name(b):
     except Exception: 
         pass
     return base_name
+
+def line_of_needle(needle, file):
+    r = open(file, 'r')
+    line_counter = 1
+    for line in r:
+        if needle in line and "import" not in line: # exclude import statements
+            return line_counter
+        line_counter += 1
+    return None
 
 for subdir, dirs, files in os.walk(folder_to_parse):
     for file in files:
@@ -263,15 +273,17 @@ for subdir, dirs, files in os.walk(folder_to_parse):
                     TEMPLATES[file] = Template(file)
             try:
                 file_in_folder = os.path.join(subdir, file)
-                r = open(file_in_folder, 'r')
-                file_content = r.read()
+                
                 # === SEARCH FOR VIEWS === 
                 for temp in VIEWS:
                     needle = "/" + VIEWS[temp].name
-                    if needle in file_content:
-                        #print("found", needle, "in", file)
-                        #print("location, file_content.index", file_content.index(needle))
-                        TEMPLATES[needle] = Template(needle, file_content.index, file_path=file_in_folder)
+                    lineno = line_of_needle(needle, file_in_folder)
+                    if lineno:
+                        template_to_add = Template(needle, lineno, file_path=file_in_folder)
+                        if needle in TEMPLATES:
+                            TEMPLATES[needle].append(template_to_add)
+                        else:
+                            TEMPLATES[needle] = [template_to_add]
             except:
                 pass
 
@@ -303,6 +315,7 @@ print("TEMPLATES: ", TEMPLATES)
 '''
 
 # print all the places we should highlight
+'''
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
@@ -321,7 +334,12 @@ for m in MODELS:
 for v in VIEWS:
     view = VIEWS[v]
     print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
-
+'''
 for t in TEMPLATES:
-    template = TEMPLATES[t]
-    print(template.name, "template Need2highlight", template.lineno, template.col_offst, template.end_col_offset, template.file_path)
+    templates_l = TEMPLATES[t]
+    try: # in the case it's a list
+        for template in templates_l:
+            print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
+    except: # in the case it's just a single template
+        template = templates_l
+        print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
