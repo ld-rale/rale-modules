@@ -168,15 +168,15 @@ for t in AST_TREES:
                 if "template" in node_name:
                     for node_arg in node.args:
                         if type(node_arg).__name__ == "Constant":
-                            #print("constant:", node_arg.value)
-                            TEMPLATES[node_arg.value] = Template(node_arg.value)
+                            print("template constant:", node_arg.value, t)
+                            TEMPLATES[node_arg.value] = [Template(node_arg.value, lineno=node_arg.lineno, file_path=t)]
             except:
                 pass
             try:
                 for kw in node.keywords:
                      if "template_name" in kw.arg:
-                         #print("template name: ", kw.value.value)
-                         TEMPLATES[kw.value.value] = Template(kw.value.value)
+                         print("template_name: ", kw.value.value, t)
+                         TEMPLATES[kw.value.value] = [Template(kw.value.value, lineno=kw.lineno, file_path=t)]
                          
             except:
                 pass
@@ -269,8 +269,12 @@ for subdir, dirs, files in os.walk(folder_to_parse):
             # === SEARCH FOR TEMPLATES ===
             for temp in TEMPLATES:
                 if temp.lower().strip() == file.lower().strip(): 
-                    #print("this file is a template: ", file)
-                    TEMPLATES[file] = Template(file)
+                    print("this file is a template: ", file)
+                    template_to_add = Template(file, file_path=os.path.join(subdir, file))
+                    if file in TEMPLATES:
+                        TEMPLATES[file].append(template_to_add)                        
+                    else:    
+                        TEMPLATES[file] = [template_to_add]
             try:
                 file_in_folder = os.path.join(subdir, file)
                 
@@ -315,7 +319,7 @@ print("TEMPLATES: ", TEMPLATES)
 '''
 
 # print all the places we should highlight
-'''
+
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
@@ -334,7 +338,7 @@ for m in MODELS:
 for v in VIEWS:
     view = VIEWS[v]
     print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
-'''
+
 for t in TEMPLATES:
     templates_l = TEMPLATES[t]
     try: # in the case it's a list

@@ -23,13 +23,19 @@ class HighlightLocation {
 function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: number, col_offset: number, col_offset_end: number, file_name: string){
 	let sp: Position;
 	let ep: Position
-	if (col_offset < 0 || col_offset_end < 0) { // columns not specified, highlight whole line
-		sp = new Position(lineno-1, 0);
-		ep = new Position(lineno, 0);
+	if (lineno < 0) {
+		sp = new Position(1, 0); // just highlight the first line then 
+		ep = new Position(2, 0); 
 	} else {
-		sp = new Position(lineno-1, col_offset); 
-		ep = new Position(lineno-1, col_offset_end); 
-	} // highlights for some reason need to be one line offset for vs code
+		if (col_offset < 0 || col_offset_end < 0) { // columns not specified, highlight whole line
+			sp = new Position(lineno-1, 0);
+			ep = new Position(lineno, 0);
+		} 
+		else {
+			sp = new Position(lineno-1, col_offset); 
+			ep = new Position(lineno-1, col_offset_end);
+		} // highlights for some reason need to be one line offset for vs code
+	}
 
 	let decorationType = vscode.window.createTextEditorDecorationType({
 		backgroundColor:"gray"
@@ -40,19 +46,19 @@ function highlightDesignPatterns2(activeEditor: vscode.TextEditor, lineno: numbe
 
 function highlightDesignPatterns(pattern: String, pattern_instance: String){
 	if (pattern == "mixin")
-		return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/. \n\n Activity 1: Scan the mixin code below and summarize what you think the Mixin does: [link] \n\n Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature): [link]";
+		return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 1: Scan the mixin code below and summarize what you think the Mixin does: [link] \n\n Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature): [link]";
 	if (pattern == "prop_method")
-		return "Some classes may use this Mixin method / property. \n\n Activity 3A: List the files + line numbers + classes, where this Mixin's method " + pattern_instance + " is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system. [link] \n\n Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger. [link] \n\n Activity 3C: Describe how this Mixin's " + pattern_instance + " method is being used there. i.e. what does this Mixin's " + pattern_instance + " do? i.e. what does the class that adopts this Mixin's " + pattern_instance + " do? [link]";
+		return "Some classes may use this Mixin method / property. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 3A: List the files + line numbers + classes, where this Mixin's method " + pattern_instance + " is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system. [link] \n\n Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger. [link] \n\n Activity 3C: Describe how this Mixin's " + pattern_instance + " method is being used there. i.e. what does this Mixin's " + pattern_instance + " do? i.e. what does the class that adopts this Mixin's " + pattern_instance + " do? [link]";
 	if (pattern == "adopters_view")
-		return "Mixins let a class adopt methods and attributes of another class. In this case, the " + pattern_instance + " is adopting methods / attributes from some mixins. Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/";
+		return "Mixins let a class adopt methods and attributes of another class. In this case, the " + pattern_instance + " is adopting methods / attributes from some mixins. Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/ \n\n View a diagram of the mixins in this example that we generated: [link]";
 	if (pattern == "adopters_pm")
-		return "In this case, this class is adopting the " + pattern_instance + " method from a mixin. \n\n Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens. [link] \n\n Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying. [link] \n\n (A) Mixins can be used by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration. For instance, in https://www.patterns.dev/posts/mixin-pattern/, all animals (dogs, cats, etc) can use the animalFunctionality mixin. \n\n (B) Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. For instance in the https://stackoverflow.com/a/547714/1194050 example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed. Each included mixin's version of any given method (i.e. " + pattern_instance + ") will run. \n\n (C) Compartmentalization: code at different levels (data touching, logic, view touching, etc) should be separated so different developers can collaborate easily. For instance, in https://www.patterns.dev/posts/mixin-pattern/, functionality for animals in general in animalFunctionality can be separated from dog-specific functionality.";
+		return "In this case, this class is adopting the " + pattern_instance + " method from a mixin. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens. [link] \n\n Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying. [link] \n\n (A) Mixins can be used by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration. For instance, in https://www.patterns.dev/posts/mixin-pattern/, all animals (dogs, cats, etc) can use the animalFunctionality mixin. \n\n (B) Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. For instance in the https://stackoverflow.com/a/547714/1194050 example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed. Each included mixin's version of any given method (i.e. " + pattern_instance + ") will run. \n\n (C) Compartmentalization: code at different levels (data touching, logic, view touching, etc) should be separated so different developers can collaborate easily. For instance, in https://www.patterns.dev/posts/mixin-pattern/, functionality for animals in general in animalFunctionality can be separated from dog-specific functionality. \n\n Activity 5: Finally complete the design patterns tradeoffs exercise. [link]";
 	if (pattern == "model")
-		return "MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the template) for visual representations, and the controller for logic for manipulating the model or view. Nuances and examples: \n\n - https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller \n\n - https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4 \n\n - https://www.geeksforgeeks.org/difference-between-mvc-and-mvt-design-patterns/ \n\n Below you will find the " + pattern_instance + " Model. \n\n Activity 1 - Describe the " + pattern_instance + " model. [link] \n\n Activity 2 - Name the file / class that forms the " + pattern_instance + " model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). [link] \n\n Activity 3 - Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view) [link] \n\n Go to the controller and view/template to do activities 4-5. \n\n Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?";
+		return "MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the template) for visual representations, and the controller for logic for manipulating the model or view. Nuances and examples: \n\n - https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller \n\n - https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4 \n\n - https://www.geeksforgeeks.org/difference-between-mvc-and-mvt-design-patterns/ \n\n Below you will find the " + pattern_instance + " Model. \n\n View a diagram of the MV* in this example that we generated: [link] \n\n Activity 1: Describe the " + pattern_instance + " model. [link] \n\n Activity 2: Name the file / class that forms the " + pattern_instance + " model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). [link] \n\n Activity 3: Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view) [link] \n\n Go to the controller and view/template to do activities 4-5. \n\n Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?";
 	if (pattern == "view")
-		return "Below you will find the " + pattern_instance + " MV* controller (i.e. 'View' in Django). \n\n Activity 4 - How does this controller access the data model (i.e. which line of code)? What data does the model provide the controller? [link] \n\n Activity 5 - How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? [link] \n\n Hint 1) look at the URL configuration files (i.e. urls.py) \n\n Hint 2) go to the Network tab in CDT on the URL corresponding to this view, as specified in urls.py.";
+		return "Below you will find the " + pattern_instance + " MV* controller (i.e. 'View' in Django). \n\n View a diagram of the MV* in this example that we generated: [link] \n\n Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only? [link] \n\n Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? [link] \n\n Hint 1) look at the URL configuration files (i.e. urls.py) \n\n Hint 2) go to the Network tab in CDT on the URL corresponding to this view, as specified in urls.py.";
 	if (pattern == "template")
-		return "Below you will find a part of the " + pattern_instance + " MV* view (i.e. 'Template' in Django). There may be other parts -- look around at the other highlighted files. \n\n Activity 7 - This is a subjective question, but would you consider this MVC, MVVM, MVP, MVT, and why do you think the code architectures chose that?";
+		return "Below you will find a part of the " + pattern_instance + " MV* view (i.e. 'Template' in Django). There may be other parts -- look around at the other highlighted files. \n\n View a diagram of the MV* in this example that we generated: [link] \n\n Activity 7: This is a subjective question, but would you consider this MVC, MVVM, MVP, MVT, and why do you think the code architects chose that? [link] \n\n Activity 8: Finally, complete the design patterns tradeoffs exercise. [link]";
 	return "some pattern definition";
 }
 
@@ -134,9 +140,9 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 
 		// on hovering within documents
-		vscode.languages.registerHoverProvider('python', {
+		vscode.languages.registerHoverProvider({ pattern: '**/*.{ts,js,css,tsx,py,html}' }, {
 			provideHover(document, position, token) {
-				console.log("in provideHover, dpt:", document, position, token, document.uri.path);
+				//console.log("in provideHover, dpt:", document, position, token, document.uri.path);
 				
 				let range = document.getWordRangeAtPosition(position);
 				let word = document.getText(range);
@@ -144,15 +150,13 @@ export function activate(context: vscode.ExtensionContext) {
 				if (path_name.includes(".git")) {
 					path_name = path_name.substring(0, path_name.length-4);
 				}
-				console.log("path_name", path_name);
 				let th = to_highlight[path_name];
 				let pattern_message = "";
 				for (let i = 0; i<th.length; i++){
 					let highlight_able = th[i];
-					if (position.line == highlight_able.lineno - 1){
+					if (position.line == highlight_able.lineno - 1 || position.line == 1 && highlight_able.lineno == -1){
 						let pattern_instance_name = highlight_able.pattern.split(" ")[0]
 						let pattern_name = highlight_able.pattern.split(" ")[1]
-						console.log("pattern:", pattern_name);
 						if (pattern_message == ""){
 							pattern_message = highlightDesignPatterns(pattern_name, pattern_instance_name);
 						}
