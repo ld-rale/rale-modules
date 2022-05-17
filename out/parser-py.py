@@ -111,6 +111,7 @@ for t in AST_TREES:
     for node in ast.walk(AST_TREES[t]):
         if type(node).__name__ == "ClassDef":
 
+            # IS THE HEURISTIC TRUE 99% of the TIME
             # === MIXIN IDENTIFICATION ===
             # it seems that Mixin classes are almost always named [Name]Mixin in Python / Django
             # so we decide to make this fuzzy match
