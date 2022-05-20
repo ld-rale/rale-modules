@@ -14,99 +14,149 @@
                     <br>
                     <div id="mixins">
                         <h2>Mixins of this example</h2>
-                        <center>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <b>Mixin 1</b>
-                                            <p>function1()</p>
-                                            <p>function2()</p>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <p>→</p>
-                                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>Mixin 1</b>
+                                        <p>function1()</p>
+                                        <p>function2()</p>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <b>Mixin 2</b>
-                                            <p>functionABC()</p>
-                                            <p>property1</p>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <p>→</p>
-                                        </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                <b>New Class</b> 
-                                <p>function1()</p>
-                                <p>function2()</p>
-                                <p>functionABC()</p>
-                                <p>property1</p>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>Mixin 2</b>
+                                        <p>functionABC()</p>
+                                        <p>property1</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
                                 </div>
                             </div>
-                        </center>
+                            <div class="col-sm-6">
+                            <b>New Class</b> 
+                            <p>function1()</p>
+                            <p>function2()</p>
+                            <p>functionABC()</p>
+                            <p>property1</p>
+                            </div>
+                        </div>
+                        <h4>Mixin 1</h4>
+                        <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <h6>function1()</h6>
+                        <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method " + pattern_instance + " is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 3C: Describe how this Mixin's " + pattern_instance + " method is being used there. i.e. what does this Mixin's " + pattern_instance + " do? i.e. what does the class that adopts this Mixin's " + pattern_instance + " do?</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <table class="table">
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Definition and Reasons</th>
+                                <th>Example</th>
+                                <th>Tradeoff</th>
+                            </tr>
+                            <tr>
+                                <td>Mixin</td>
+                                <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
+                                <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
+                                <td>
+                                    Why were mixins useful for + "name of example" + ? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Inheritence</td>
+                                <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
+                                <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
+                                <td>
+                                    Why would inheritence not work in this example?<br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <br>
                     <div id="mv*">
                         <h2>MV* of this example</h2>
-                        <center>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <b>Templates / Views</b>
-                                            <p>template1</p>
-                                            <p>template2</p>
-                                            <br>
-                                            <b>Roles</b>
-                                            <p>Frontend Developers</p>
-                                            <p>Fullstack Developers</p>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p>→</p>
-                                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <b>Templates / Views</b>
+                                        <p>template1</p>
+                                        <p>template2</p>
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Frontend Developers</p>
+                                        <p>Fullstack Developers</p>
                                     </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <b>Controllers</b> 
-                                    <p>controller1</p>
-                                    <p>controller2</p>
-                                    <p>controller3</p>
-                                    <p>controller4</p>
-                                    <br>
-                                    <b>Roles</b>
-                                    <p>Backend Developers</p>
-                                    <p>Fullstack Developers</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <p>←</p>
-                                            <br>
-                                            <p>Describe how the controller accesses / manipulates the model</p>
-                                            <textarea></textarea>
-                                            <br><br>
-                                            <p>Describe how the controller fills in the model (i.e. with what information)</p>
-                                            <textarea></textarea>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <b>Models</b>
-                                            <p>model1</p>
-                                            <p>model2</p>
-                                            <br>
-                                            <b>Roles</b>
-                                            <p>Backend Developers</p>
-                                            <p>Database Admin</p>
-                                        </div>
+                                    <div class="col-sm-8">
+                                        <p style="text-align: center;">→</p>
+                                        <br>
+                                        <p>Describe how the controller fills in / manipulates the template (i.e. with what information)</p>
+                                        <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
                                     </div>
                                 </div>
                             </div>
-                        </center>
+                            <div class="col-sm-2" style="text-align: center;">
+                                <b>Controllers</b> 
+                                <p>controller1</p>
+                                <p>controller2</p>
+                                <p>controller3</p>
+                                <p>controller4</p>
+                                <br>
+                                <b>Roles</b>
+                                <p>Backend Developers</p>
+                                <p>Fullstack Developers</p>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <p style="text-align: center;">←</p>
+                                        <br>
+                                        <p>Describe how the controller accesses / manipulates the model</p>
+                                        <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p>Describe how the controller fills in the model (i.e. with what information)</p>
+                                        <textarea rows="5
+                                        " style="width: 100%; max-width: 100%;"></textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>Models</b>
+                                        <p>model1</p>
+                                        <p>model2</p>
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Backend Developers</p>
+                                        <p>Database Admin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <br><br>
     </body>
 </html>
