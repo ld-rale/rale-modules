@@ -9,7 +9,7 @@
                 <div class="col-xs-12">
                     <div id="uml">
                         <br>
-                        <h1>UML Diagrams and Activities for Design Patterns</h1>
+                        <h1>Diagrams and Activities for Design Patterns</h1>
                     </div>
                     <br>
                     <div id="mixins">
@@ -153,6 +153,59 @@
                                 </div>
                             </div>
                         </div>
+                        <h4>Model 1</h4>
+                        <p>Activity 1: Describe the " + pattern_instance + " model.</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 2: Name the file / class that forms the " + pattern_instance + " model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 3: Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 3: Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <h4>Controller 1</h4>
+                        <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template?</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <h4>Template / View 1</h4>
+                        <p>Activity 7: This is a subjective question, but would you consider this MVC, MVVM, MVP, MVT, and why do you think the code architects chose that?</p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <table class="table">
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Definition and Reasons</th>
+                                <th>Example</th>
+                                <th>Tradeoff</th>
+                            </tr>
+                            <tr>
+                                <td>MV*</td>
+                                <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
+                                <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
+                                <td>
+                                    Why were mixins useful for + "name of example" + ? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>No Framework</td>
+                                <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
+                                <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
+                                <td>
+                                    Why would inheritence not work in this example?<br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
