@@ -6,10 +6,13 @@ import os
 from dataclasses import dataclass
 from tokenize import String
 import json
+import requests
 
 # https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
 # needle /insight file /Users/gobidasu/Desktop/rale-modules/posthog/frontend/src/scenes/saved-insights/SavedInsights.tsx
+
+SERVER = "localhost:8000"
 
 print("\n") 
 file_to_parse = sys.argv[1]
@@ -322,30 +325,32 @@ print("TEMPLATES: ", TEMPLATES)
 
 # print all the places we should highlight
 
-jMIXINS = {}
+jDP = {"mixins": {}, "models": [], "views": [], "templates": []}
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
-    jMIXINS[mixin.name] = {"prop_methods": [], "adopters": []}
+    jDP["mixins"][mixin.name] = {"prop_methods": [], "adopters": []}
     for pm in mixin.prop_methods:
         print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
-        jMIXINS[mixin.name]["prop_methods"].append(pm.name)
+        jDP["mixins"][mixin.name]["prop_methods"].append(pm.name)
     for a in mixin.adopters:
         if type(a).__name__ == "View":
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-        jMIXINS[mixin.name]["adopters"].append(a.name)
-jMIXINS = json.dumps(jMIXINS)
-print("jMIXINS", jMIXINS)
+        jDP["mixins"][mixin.name]["adopters"].append(a.name)
+jDP["mixins"] = json.dumps(jDP["mixins"])
 
+jDP["models"] = []
 for m in MODELS:
     model = MODELS[m]
     print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+    jDP["models"].append(model.name)
 
 for v in VIEWS:
     view = VIEWS[v]
     print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+    jDP["views"].append(view.name)
 
 for t in TEMPLATES:
     templates_l = TEMPLATES[t]
@@ -355,3 +360,7 @@ for t in TEMPLATES:
     except: # in the case it's just a single template
         template = templates_l
         print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
+    jDP["templates"].append(template.name)
+
+response = {"name": folder_to_parse, "details": jDP}
+print("response", response)
