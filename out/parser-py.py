@@ -5,6 +5,7 @@ import sys
 import os
 from dataclasses import dataclass
 from tokenize import String
+import json
 
 # https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
@@ -331,6 +332,8 @@ for m in MIXINS:
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+jMIXINS = json.dumps(MIXINS)
+print("jMIXINS", jMIXINS)
 
 for m in MODELS:
     model = MODELS[m]
