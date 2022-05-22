@@ -322,17 +322,21 @@ print("TEMPLATES: ", TEMPLATES)
 
 # print all the places we should highlight
 
+jMIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
+    jMIXINS[mixin.name] = {"prop_methods": [], "adopters": []}
     for pm in mixin.prop_methods:
         print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+        jMIXINS[mixin.name]["prop_methods"].append(pm.name)
     for a in mixin.adopters:
         if type(a).__name__ == "View":
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-jMIXINS = json.dumps(MIXINS)
+        jMIXINS[mixin.name]["adopters"].append(a.name)
+jMIXINS = json.dumps(jMIXINS)
 print("jMIXINS", jMIXINS)
 
 for m in MODELS:
