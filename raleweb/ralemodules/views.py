@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import TemplateView
-from models import *
+from .models import *
 import json
 
 # Create your views here.
@@ -22,10 +22,11 @@ class ExercisesView(TemplateView):
 def design_patterns(request):
     dpdetails = request.POST['dpdetails']
     dpj = json.loads(dpdetails)
+    print(dpj)
     # load the design patterns data
-    dp = DesignPattern(name=dpj.name, details=dpj.details)
+    #dp = DesignPattern(name=dpj.name, details=dpj.details)
     # check if it already exists in the database
     
     # if not add the pattern to the database
-    dp.save()
+    #dp.save()
     return JsonResponse({"response":"added pattern" + dpdetails})
