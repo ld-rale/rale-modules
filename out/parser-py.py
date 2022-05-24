@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from tokenize import String
 import json
 import requests
+import csv
 
 # https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
@@ -364,3 +365,8 @@ for t in TEMPLATES:
 
 response = {"name": folder_to_parse, "details": jDP}
 print("response", response)
+
+with open('out/dp.csv','a') as fd:
+    writer_object = csv.writer(fd)
+    writer_object.writerow([folder_to_parse,json.dumps(jDP)])
+    fd.close()
