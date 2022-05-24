@@ -340,7 +340,6 @@ for m in MIXINS:
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         jDP["mixins"][mixin.name]["adopters"].append(a.name)
-jDP["mixins"] = json.dumps(jDP["mixins"])
 
 jDP["models"] = []
 for m in MODELS:

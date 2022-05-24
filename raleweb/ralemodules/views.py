@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import TemplateView
 from .models import *
 import json
+import csv
 
 # Create your views here.
 
@@ -13,20 +14,26 @@ class ExercisesView(TemplateView):
     template_name = 'ralemodules/exercises.html'
 
     def get(self, request, *args, **kwargs):
-        print('in ExercisesView')
+        # print('in ExercisesView')
+
+        # get codebase folder
+        codebase_dp_details = None
+        with open('../out/dp.csv', newline='\n') as csvfile:
+            dpreader = csv.reader(csvfile, delimiter=',', quotechar='"', doublequote=True)
+            for row in dpreader:
+                # print(', '.join(row))
+                # print("request.GET['file']", request.GET['file'])
+                # print("row[0]", row[0])
+                if len(row) > 1 and row[0] == request.GET['file']:
+                    # print("found file")
+                    codebase_dp_details = row[1]
+        
+        # extract design patterns from csv
+        # print("codebase_dp_details", codebase_dp_details)
+        codebase_dp = json.loads(codebase_dp_details)
+        print("codebase_dp", codebase_dp)
+
         context = {
-            'design_pattern': "dp",
+            'dp': codebase_dp,
         }
         return render(request, self.template_name, context)
-
-def design_patterns(request):
-    dpdetails = request.POST['dpdetails']
-    dpj = json.loads(dpdetails)
-    print(dpj)
-    # load the design patterns data
-    #dp = DesignPattern(name=dpj.name, details=dpj.details)
-    # check if it already exists in the database
-    
-    # if not add the pattern to the database
-    #dp.save()
-    return JsonResponse({"response":"added pattern" + dpdetails})

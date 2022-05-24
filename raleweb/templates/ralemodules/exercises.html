@@ -14,6 +14,10 @@
                     <br>
                     <div id="mixins">
                         <h2>Mixins of this example</h2>
+                        {{dp}}
+                        {% for mixin in dp.mixins %}
+                            {{mixin}}
+                        {% endfor %}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="row">
