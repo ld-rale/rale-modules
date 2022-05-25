@@ -15,9 +15,7 @@
                     <div id="mixins">
                         <h2>Mixins of this example</h2>
                         {{dp}}
-                        {% for mixin in dp.mixins %}
-                            {{mixin}}
-                        {% endfor %}
+                        
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="row">
@@ -49,29 +47,33 @@
                             <p>property1</p>
                             </div>
                         </div>
-                        <h4>Mixin 1</h4>
-                        <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <h6>function1()</h6>
-                        <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method " + pattern_instance + " is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 3C: Describe how this Mixin's " + pattern_instance + " method is being used there. i.e. what does this Mixin's " + pattern_instance + " do? i.e. what does the class that adopts this Mixin's " + pattern_instance + " do?</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
+                        {% for mixin, details in dp.mixins.items %}
+                            <h4>{{mixin}}</h4>
+                            <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            {% for prop_method in details.prop_methods%}
+                                <h6>{{prop_method}}</h6>
+                                <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method <b>{{prop_method}}</b> is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.</p>
+                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                <br><br>
+                                <p>Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.</p>
+                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                <br><br>
+                                <p>Activity 3C: Describe how this Mixin's <b>{{prop_method}}</b> method is being used there. i.e. what does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do?</p>
+                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                <br><br>
+                                <p>Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.</p>
+                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                <br><br>
+                                <p>Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.</p>
+                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                <br><br>
+                            {% endfor %}
+                        {% endfor %}
                         <table class="table">
                             <tr>
                                 <th>Pattern</th>
@@ -157,33 +159,39 @@
                                 </div>
                             </div>
                         </div>
-                        <h4>Model 1</h4>
-                        <p>Activity 1: Describe the " + pattern_instance + " model.</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 2: Name the file / class that forms the " + pattern_instance + " model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 3: Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 3: Name the file that corresponds to the " + pattern_instance + " model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <h4>Controller 1</h4>
-                        <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template?</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
-                        <h4>Template / View 1</h4>
-                        <p>Activity 7: This is a subjective question, but would you consider this MVC, MVVM, MVP, MVT, and why do you think the code architects chose that?</p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                        <br><br>
+                        {% for model in dp.models %}
+                            <h4>{{model}}</h4>
+                            <p>Activity 1: Describe the {{model}} model.</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                        {% endfor %}
+                        {% for controller in dp.views %}
+                            <h4>{{controller}}</h4>
+                            <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template?</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                        {% endfor %}
+                        {% for template in dp.templates %}
+                            <h4>{{template}} Template</h4>
+                            <p>Activity 7: This is a subjective question, but would you consider this template part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?</p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                        {% endfor %}
                         <table class="table">
                             <tr>
                                 <th>Pattern</th>
