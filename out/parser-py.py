@@ -327,6 +327,7 @@ print("TEMPLATES: ", TEMPLATES)
 # print all the places we should highlight
 
 jDP = {"mixins": {}, "models": [], "views": [], "templates": []}
+CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
@@ -337,9 +338,18 @@ for m in MIXINS:
     for a in mixin.adopters:
         if type(a).__name__ == "View":
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+            if not CLASSES_BY_MIXINS[a.name]:
+                CLASSES_BY_MIXINS[a.name] = set()
+            CLASSES_BY_MIXINS[a.name].add(mixin.name)
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         jDP["mixins"][mixin.name]["adopters"].append(a.name)
+
+
+for m in MIXINS:
+    m = MIXINS[m]
+    for a in mixin.adopters:
+
 
 jDP["models"] = []
 for m in MODELS:

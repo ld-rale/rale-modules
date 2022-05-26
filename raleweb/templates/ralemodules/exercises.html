@@ -107,16 +107,17 @@
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <b>Templates / Views</b>
-                                        <p>template1</p>
-                                        <p>template2</p>
+                                        {% for template in dp.templates %}
+                                            <p>{{template}}</p>
+                                        {% endfor %}
                                         <br>
                                         <b>Roles</b>
                                         <p>Frontend Developers</p>
                                         <p>Fullstack Developers</p>
                                     </div>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
                                         <p>Describe how the controller fills in / manipulates the template (i.e. with what information)</p>
@@ -126,10 +127,9 @@
                             </div>
                             <div class="col-sm-2" style="text-align: center;">
                                 <b>Controllers</b> 
-                                <p>controller1</p>
-                                <p>controller2</p>
-                                <p>controller3</p>
-                                <p>controller4</p>
+                                {% for controller in dp.views %}
+                                    <p>{{controller}}</p>
+                                {% endfor %}
                                 <br>
                                 <b>Roles</b>
                                 <p>Backend Developers</p>
@@ -149,8 +149,9 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <b>Models</b>
-                                        <p>model1</p>
-                                        <p>model2</p>
+                                        {% for model in dp.models %}
+                                            <p>{{model}}</p>
+                                        {% endfor %}
                                         <br>
                                         <b>Roles</b>
                                         <p>Backend Developers</p>
@@ -201,8 +202,19 @@
                             </tr>
                             <tr>
                                 <td>MV*</td>
-                                <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
-                                <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
+                                <td>
+                                    <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="_blank">Model-view-controller architectures</a> and 
+                                    <a href="https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4" target="_blank">MVC vs MVP vs MVVM</a></td>
+                                <td>
+                                    <a href="https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4" target="_blank">MVC vs MVP vs MVVM</a>
+                                    <ul>
+                                        <li>(A) separation of visualization, processing, data management</li>
+                                        <li>(B) modularity</li>
+                                        <li>(C) flexibility</li>
+                                        <li>(D) testability</li>
+                                        <li>(E) maintainability</li>
+                                    </ul>    
+                                </td>
                                 <td>
                                     Why were mixins useful for + "name of example" + ? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
@@ -210,10 +222,10 @@
                             </tr>
                             <tr>
                                 <td>No Framework</td>
-                                <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
-                                <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
+                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a>.</td>
+                                <td><a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a</td>
                                 <td>
-                                    Why would inheritence not work in this example?<br><br>
+                                    Why would no framework not work in this example?<br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
