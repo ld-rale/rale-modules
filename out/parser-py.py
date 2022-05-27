@@ -40,6 +40,7 @@ class PropMethod(PatternArtifact):
     def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
         super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
+        self.associated_view = None
 
 class Model(PatternArtifact):
     def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
@@ -343,13 +344,8 @@ for m in MIXINS:
             CLASSES_BY_MIXINS[a.name].add(mixin.name)
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+            # need to figure out which class it is part of, store it above
         jDP["mixins"][mixin.name]["adopters"].append(a.name)
-
-
-for m in MIXINS:
-    m = MIXINS[m]
-    for a in mixin.adopters:
-
 
 jDP["models"] = []
 for m in MODELS:
