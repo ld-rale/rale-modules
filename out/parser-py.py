@@ -37,10 +37,10 @@ class Mixin(PatternArtifact):
         self.adopters = []
 
 class PropMethod(PatternArtifact):
-    def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
-        super().__init__(lineno, col_offset, end_col_offset, file_path)
+    def __init__(self, name, lineno, col_offset, end_col_offset, file_path, associated_class):
+        super().__init__(lineno, col_offset, end_col_offset, file_path, associated_class)
         self.name = name
-        self.associated_view = None
+        self.associated_class = associated_class
 
 class Model(PatternArtifact):
     def __init__(self, name, lineno, col_offset, end_col_offset, file_path):
@@ -127,7 +127,7 @@ for t in AST_TREES:
                 for subnode in ast.walk(node):
                     if type(subnode).__name__ == "FunctionDef":
                         #print("method / property name:", subnode.name, subnode.lineno, subnode.col_offset, subnode.end_col_offset)
-                        pm = PropMethod(subnode.name, subnode.lineno, -1, -1, t) 
+                        pm = PropMethod(subnode.name, subnode.lineno, -1, -1, t, node.name) 
                         # node lasts whole method so only care about the start line
                         MIXINS[node.name].prop_methods.append(pm) 
           
@@ -250,14 +250,14 @@ for t in AST_TREES:
                     if type(subnode).__name__ == "Call":
                         try:
                             if subnode.func.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
-                                adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
+                                adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
                                 MIXINS[using_mixin].adopters.append(adopting_method)
                         except:
                             pass
                     if type(subnode).__name__ == "Attribute":
                         try:
                             if subnode.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
-                                adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t)
+                                adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
                                 MIXINS[using_mixin].adopters.append(adopting_property)
                         except:
                             pass
