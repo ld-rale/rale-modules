@@ -340,10 +340,14 @@ for m in MIXINS:
         if type(a).__name__ == "View":
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
             if not CLASSES_BY_MIXINS[a.name]:
-                CLASSES_BY_MIXINS[a.name] = set()
-            CLASSES_BY_MIXINS[a.name].add(mixin.name)
+                CLASSES_BY_MIXINS[a.name] = {}
+            if not (mixin.name in CLASSES_BY_MIXINS[a.name]):
+                CLASSES_BY_MIXINS[a.name][mixin.name] = [] 
+                # [adopting class][mixin adopted] = [list of prop_methods adopted]
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+            if not 
+                CLASSES_BY_MIXINS[]
             # need to figure out which class it is part of, store it above
         jDP["mixins"][mixin.name]["adopters"].append(a.name)
 
