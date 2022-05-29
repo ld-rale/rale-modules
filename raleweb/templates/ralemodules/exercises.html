@@ -15,38 +15,34 @@
                     <div id="mixins">
                         <h2>Mixins of this example</h2>
                         {{dp}}
-                        
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>Mixin 1</b>
-                                        <p>function1()</p>
-                                        <p>function2()</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
+                        {% for class, details in dp.classes_by_mixins.items %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {% for mixin_adopted, mixin_details in details.items %}
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>{{ mixin_adopted }}</b>
+                                                {% for pm_adopted in mixin_details %}
+                                                    <p>{{pm_adopted}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>Mixin 2</b>
-                                        <p>functionABC()</p>
-                                        <p>property1</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
+                                <div class="col-sm-6">
+                                <b>{{class}}</b> 
+                                {% for mixin_adopted, mixin_details in details.items %}
+                                    {% for pm_adopted in mixin_details %}
+                                        <p>{{pm_adopted}}</p>
+                                    {% endfor %}
+                                {% endfor %}
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                            <b>New Class</b> 
-                            <p>function1()</p>
-                            <p>function2()</p>
-                            <p>functionABC()</p>
-                            <p>property1</p>
-                            </div>
-                        </div>
+                            <hr>
+                        {% endfor %}
                         {% for mixin, details in dp.mixins.items %}
                             <h4>{{mixin}}</h4>
                             <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:</p>

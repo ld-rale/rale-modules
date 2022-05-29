@@ -38,7 +38,7 @@ class Mixin(PatternArtifact):
 
 class PropMethod(PatternArtifact):
     def __init__(self, name, lineno, col_offset, end_col_offset, file_path, associated_class):
-        super().__init__(lineno, col_offset, end_col_offset, file_path, associated_class)
+        super().__init__(lineno, col_offset, end_col_offset, file_path)
         self.name = name
         self.associated_class = associated_class
 
@@ -244,29 +244,29 @@ for t in AST_TREES:
                     # node lasts whole view class so only care about the start line
                     MIXINS[using_mixin].adopters.append(adopting_view) 
             
-            # === find the adopted Mixin methods ===
-            if using_mixin:
-                for subnode in ast.walk(node):
-                    if type(subnode).__name__ == "Call":
-                        try:
-                            if subnode.func.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
-                                adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
-                                MIXINS[using_mixin].adopters.append(adopting_method)
-                        except:
-                            pass
-                    if type(subnode).__name__ == "Attribute":
-                        try:
-                            if subnode.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
-                                adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
-                                MIXINS[using_mixin].adopters.append(adopting_property)
-                        except:
-                            pass
+                # === find the adopted Mixin methods ===
+                if using_mixin:
+                    for subnode in ast.walk(node):
+                        if type(subnode).__name__ == "Call":
+                            try:
+                                if subnode.func.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
+                                    adopting_method = PropMethod(subnode.func.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
+                                    MIXINS[using_mixin].adopters.append(adopting_method)
+                            except:
+                                pass
+                        if type(subnode).__name__ == "Attribute":
+                            try:
+                                if subnode.attr in [prop_method.name for prop_method in MIXINS[using_mixin].prop_methods]:
+                                    adopting_property = PropMethod(subnode.attr, subnode.lineno, subnode.col_offset, subnode.end_col_offset, t, node.name)
+                                    MIXINS[using_mixin].adopters.append(adopting_property)
+                            except:
+                                pass
 
-            # === find the model use in views ===
-            for model_name in MODELS:
-                for view_name in VIEWS:
-                    if model_name in view_name:
-                        VIEWS[view_name].model = model_name
+# === find the model use in views ===
+for model_name in MODELS:
+    for view_name in VIEWS:
+        if model_name in view_name:
+            VIEWS[view_name].model = model_name
                     
 
 # string search of other file types
@@ -327,7 +327,7 @@ print("TEMPLATES: ", TEMPLATES)
 
 # print all the places we should highlight
 
-jDP = {"mixins": {}, "models": [], "views": [], "templates": []}
+jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}}
 CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
@@ -339,16 +339,24 @@ for m in MIXINS:
     for a in mixin.adopters:
         if type(a).__name__ == "View":
             print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-            if not CLASSES_BY_MIXINS[a.name]:
-                CLASSES_BY_MIXINS[a.name] = {}
-            if not (mixin.name in CLASSES_BY_MIXINS[a.name]):
-                CLASSES_BY_MIXINS[a.name][mixin.name] = [] 
-                # [adopting class][mixin adopted] = [list of prop_methods adopted]
+            if a.name not in jDP["classes_by_mixins"]:
+                jDP["classes_by_mixins"][a.name] = {}
+            if mixin.name not in jDP["classes_by_mixins"][a.name]:
+                jDP["classes_by_mixins"][a.name][mixin.name] = []
+            # [adopting class][mixin adopted] = [list of prop_methods adopted]
+            # [InsightViewSet][TaggedItemViewSetMixin]
         else:
             print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-            if not 
-                CLASSES_BY_MIXINS[]
-            # need to figure out which class it is part of, store it above
+            # print("a.associated_class:", a.associated_class)
+            if a.associated_class not in jDP["classes_by_mixins"]:
+                jDP["classes_by_mixins"][a.associated_class] = {}
+            # print("mixin.name", mixin.name)
+            if mixin.name not in jDP["classes_by_mixins"][a.associated_class]:
+                jDP["classes_by_mixins"][a.associated_class][mixin.name] = []
+            # print("a.name", a.name)
+            if a.name not in jDP["classes_by_mixins"][a.associated_class][mixin.name]:
+                jDP["classes_by_mixins"][a.associated_class][mixin.name].append(a.name)
+
         jDP["mixins"][mixin.name]["adopters"].append(a.name)
 
 jDP["models"] = []
@@ -371,6 +379,9 @@ for t in TEMPLATES:
         template = templates_l
         print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
     jDP["templates"].append(template.name)
+
+print("CLASSES_BY_MIXINS", CLASSES_BY_MIXINS)
+#jDP["classes_by_mixins"] = CLASSES_BY_MIXINS
 
 response = {"name": folder_to_parse, "details": jDP}
 print("response", response)
