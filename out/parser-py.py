@@ -327,7 +327,7 @@ print("TEMPLATES: ", TEMPLATES)
 
 # print all the places we should highlight
 
-jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}}
+jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}, "classes_by_propmethods": {}}
 CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
@@ -380,8 +380,15 @@ for t in TEMPLATES:
         print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
     jDP["templates"].append(template.name)
 
-print("CLASSES_BY_MIXINS", CLASSES_BY_MIXINS)
-#jDP["classes_by_mixins"] = CLASSES_BY_MIXINS
+# print("CLASSES_BY_MIXINS", CLASSES_BY_MIXINS)
+jDP["classes_by_propmethods"] = {}
+for code_class in jDP["classes_by_mixins"]:
+    jDP["classes_by_propmethods"][code_class] = []
+    for mixin_adopted in jDP["classes_by_mixins"][code_class]:
+        for pm_adopted in jDP["classes_by_mixins"][code_class][mixin_adopted]:
+            if pm_adopted not in jDP["classes_by_propmethods"][code_class]:
+                jDP["classes_by_propmethods"][code_class].append(pm_adopted)
+print('jDP["classes_by_propmethods"]', jDP["classes_by_propmethods"])
 
 response = {"name": folder_to_parse, "details": jDP}
 print("response", response)

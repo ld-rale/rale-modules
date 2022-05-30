@@ -33,11 +33,9 @@
                                     {% endfor %}
                                 </div>
                                 <div class="col-sm-6">
-                                <b>{{class}}</b> 
-                                {% for mixin_adopted, mixin_details in details.items %}
-                                    {% for pm_adopted in mixin_details %}
-                                        <p>{{pm_adopted}}</p>
-                                    {% endfor %}
+                                <b>{{class}}</b>
+                                {% for pm_adopted in dp.classes_by_propmethods|get_value:class %}
+                                    <p>{{pm_adopted}}</p>
                                 {% endfor %}
                                 </div>
                             </div>

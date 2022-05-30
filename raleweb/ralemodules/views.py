@@ -4,8 +4,14 @@ from django.views.generic.base import TemplateView
 from .models import *
 import json
 import csv
+from django.template.defaulttags import register
 
 # Create your views here.
+
+# https://fedingo.com/how-to-lookup-dictionary-value-with-key-in-django-template/
+@register.filter
+def get_value(dictionary, key):
+    return dictionary.get(key)
 
 def index(request):
     return HttpResponse("Hello, world. You're at the ralemodules index.")
