@@ -13,8 +13,8 @@
                     </div>
                     <br>
                     <div id="mixins">
-                        <h2>Mixins of this example</h2>
                         {{dp}}
+                        <h2>Mixins of this example</h2>
                         {% for class, details in dp.classes_by_mixins.items %}
                             <div class="row">
                                 <div class="col-sm-6">
@@ -80,7 +80,7 @@
                                 <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
                                 <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
                                 <td>
-                                    Why were mixins useful for + "name of example" + ? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
@@ -173,7 +173,7 @@
                             <br><br>
                         {% endfor %}
                         {% for controller in dp.views %}
-                            <h4>{{controller}}</h4>
+                            <h4>{{controller.name}} (controller.model)</h4>
                             <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
