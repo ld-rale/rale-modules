@@ -55,6 +55,7 @@ class View(PatternArtifact):
         self.name = name
         self.ast_node = ast_node
         self.model = None
+        self.short_name = name
 
 class Template(PatternArtifact):
     def __init__(self, name, lineno=-1, col_offset=-1, end_col_offset=-1, file_path=""):
@@ -161,9 +162,10 @@ for t in AST_TREES:
             try:
                 node_name = node.name.lower()
                 if "view" in node_name:
-                    # node_name_parts = node_name.split("view")
-                    # relevant_view_name = node_name_parts[0]
+                    node_name_parts = node_name.split("view")
+                    relevant_view_name = node_name_parts[0]
                     VIEWS[node_name] = View(node_name, node.lineno, -1, -1, t, node)
+                    VIEWS[node_name].short_name = relevant_view_name
                 else:
                     for b in node.bases:
                         base_name = get_base_name(b)
@@ -293,7 +295,7 @@ for subdir, dirs, files in os.walk(folder_to_parse):
             # === SEARCH FOR TEMPLATES ===
             for temp in TEMPLATES:
                 if temp.lower().strip() == file.lower().strip(): 
-                    # print("this file is a template: ", file)
+                    print("this file is a template: ", file)
                     template_to_add = Template(file, file_path=os.path.join(subdir, file))
                     if file in TEMPLATES:
                         TEMPLATES[file].append(template_to_add)                        
@@ -304,9 +306,10 @@ for subdir, dirs, files in os.walk(folder_to_parse):
                 
                 # === SEARCH FOR VIEWS === 
                 for temp in VIEWS:
-                    needle = "/" + VIEWS[temp].name
+                    needle = "/" + VIEWS[temp].short_name
                     lineno = line_of_needle(needle, file_in_folder)
                     if lineno:
+                        print("this route is a template", needle)
                         template_to_add = Template(needle, lineno, file_path=file_in_folder)
                         if needle in TEMPLATES:
                             TEMPLATES[needle].append(template_to_add)
@@ -317,9 +320,16 @@ for subdir, dirs, files in os.walk(folder_to_parse):
 
 # === find the model use in templates ===
 for model_name in MODELS:
-    for template_name in TEMPLATES:
-        if model_name in template_name:
-            TEMPLATES[template_name].model = model_name
+    for template_key in TEMPLATES:
+        if type(TEMPLATES[template_key]).__name__ == "list":
+            for i in range(0, len(TEMPLATES[template_key])):
+                print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key][i].name", TEMPLATES[template_key][i].name)
+                if model_name.lower() in TEMPLATES[template_key][i].name.lower():
+                    TEMPLATES[template_key][i].model = model_name
+        else:
+            print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key].name", TEMPLATES[template_key].name)
+            if model_name in TEMPLATES[template_key].name:
+                TEMPLATES[template_key].model = model_name
 
 '''
 print("Mixins: ", MIXINS)
@@ -506,6 +516,24 @@ for mixin in jDP["mixins"]:
 # print("to_remove", to_remove)
 for unused_prop_method in to_remove:
     jDP["mixins"][unused_prop_method[0]]["prop_methods"].remove(unused_prop_method[1])
+
+# Remove repeated templates
+seen_list = []
+new_jDP_templates = []
+for i in range(0, len(jDP["templates"])):
+    if jDP["templates"][i]["name"] not in seen_list:
+        new_jDP_templates.append(jDP["templates"][i])
+        seen_list.append(jDP["templates"][i]["name"])
+jDP["templates"] = new_jDP_templates
+
+# Remove templates with no associated model
+
+
+# Remove controllers with no associated models
+
+# Remove models that aren't associated with a template and controller
+
+# Constraining should happen to highlights too
 
 with open('out/dp.csv','w') as fd:
     writer_object = csv.writer(fd)
