@@ -364,14 +364,14 @@ jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mix
 CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
-    print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
+    # print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
     jDP["mixins"][mixin.name] = {"prop_methods": [], "adopters": []}
     for pm in mixin.prop_methods:
-        print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+        # print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
         jDP["mixins"][mixin.name]["prop_methods"].append(pm.name)
     for a in mixin.adopters:
         if type(a).__name__ == "View":
-            print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+            # print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
             if a.name not in jDP["classes_by_mixins"]:
                 jDP["classes_by_mixins"][a.name] = {}
             if mixin.name not in jDP["classes_by_mixins"][a.name]:
@@ -379,7 +379,7 @@ for m in MIXINS:
             # [adopting class][mixin adopted] = [list of prop_methods adopted]
             # [InsightViewSet][TaggedItemViewSetMixin]
         else:
-            print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+            # print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
             # print("a.associated_class:", a.associated_class)
             if a.associated_class not in jDP["classes_by_mixins"]:
                 jDP["classes_by_mixins"][a.associated_class] = {}
@@ -540,3 +540,20 @@ with open('out/dp.csv','w') as fd:
     writer_object.writerow(["File", "Details"])
     writer_object.writerow([folder_to_parse,json.dumps(jDP)])
     fd.close()
+
+print("===new section===")
+for m in jDP["mixins"]:
+    mixin = MIXINS[m]
+    print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
+    for prop_method in jDP["mixins"][m]["prop_methods"]:
+        for pm in mixin.prop_methods:
+            if pm.name == prop_method:
+                print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+    for adopter in jDP["mixins"][m]["adopters"]:
+        for a in mixin.adopters:
+            if a.name == adopter:
+                if type(a).__name__ == "View":    
+                    print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+                else:
+                    print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+
