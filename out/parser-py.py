@@ -282,6 +282,7 @@ for model_name in MODELS:
                 for node in ast.walk(VIEWS[view_name].ast_node):
                     try:
                         if node.name and model_name in node.name:
+                            print("match - node.name", node.name, "model_name", model_name)
                             VIEWS[view_name].model = model_name
                             break
                     except: # format not quite right

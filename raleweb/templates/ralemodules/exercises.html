@@ -43,27 +43,41 @@
                         {% endfor %}
                         {% for mixin, details in dp.mixins.items %}
                             <h4>{{mixin}}</h4>
-                            <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:</p>
+                            <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):</p>
+                            <p>Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                             {% for prop_method in details.prop_methods%}
                                 <h6>{{prop_method}}</h6>
-                                <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method <b>{{prop_method}}</b> is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.</p>
+                                <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method <b>{{prop_method}}</b> is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                                </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p>Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.</p>
+                                <p>Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p>Activity 3C: Describe how this Mixin's <b>{{prop_method}}</b> method is being used there. i.e. what does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do?</p>
+                                <p>Activity 3C: Describe how this Mixin's <b>{{prop_method}}</b> method is being used there. i.e. what does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do?
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p>Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.</p>
+                                <p>Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p>Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.</p>
+                                <p>Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
                             {% endfor %}
@@ -80,7 +94,9 @@
                                 <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
                                 <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
                                 <td>
-                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                                    <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
@@ -89,7 +105,9 @@
                                 <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
                                 <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
                                 <td>
-                                    Why would inheritence not work in this example?<br><br>
+                                    Why would inheritence not work in this example?
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                                    <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
@@ -117,7 +135,9 @@
                                     <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)</p>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
                                         <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
                                     </div>
                                 </div>
@@ -140,10 +160,14 @@
                                     <div class="col-sm-8">
                                         <p style="text-align: center;">←</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model</p>
+                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
                                         <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)</p>
+                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
                                         <textarea rows="5
                                         " style="width: 100%; max-width: 100%;"></textarea>
                                     </div>
@@ -162,37 +186,51 @@
                         </div>
                         {% for model in dp.models %}
                             <h4>{{model}}</h4>
-                            <p>Activity 1: Describe the {{model}} model.</p>
+                            <p>Activity 1: Describe the {{model}} model.
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).</p>
+                            <p>Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
+                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)</p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?</p>
+                            <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                         {% endfor %}
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
-                            <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
+                            <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template?</p>
+                            <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? Consider which part, Model code vs. Controller code, is responsible for data touching logic versus template preparation logic.
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                         {% endfor %}
-                        {% for template in dp.templates %}
-                            <h4>{{template.name}} Template</h4>
-                            <p>Activity 7: This is a subjective question, but would you consider this template part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?</p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                        {% endfor %}
+                        <h4>
+                            {% for template in dp.templates %}
+                                {{template.name}}, 
+                            {% endfor %}
+                            Templates
+                        </h4>
+                        <p>Activity 7: This is a subjective question, but would you consider these templates part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
+                        </p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
                         <table class="table">
                             <tr>
                                 <th>Pattern</th>
@@ -216,7 +254,9 @@
                                     </ul>    
                                 </td>
                                 <td>
-                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    Why was MV* useful for {{dp.project}}? (hint - think about tradeoffs over not using any framework)
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                    <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
@@ -225,7 +265,9 @@
                                 <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a>.</td>
                                 <td><a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a</td>
                                 <td>
-                                    Why would no framework not work in this example?<br><br>
+                                    Why would no framework not work in this example?
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                    <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
