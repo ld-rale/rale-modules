@@ -13,7 +13,7 @@
                     </div>
                     <br>
                     <div id="mixins">
-                        {{dp}}
+                        <!--{{dp}}-->
                         <h2>Mixins of this example</h2>
                         {% for class, details in dp.classes_by_mixins.items %}
                             <div class="row">
@@ -179,7 +179,7 @@
                             <br><br>
                         {% endfor %}
                         {% for controller in dp.views %}
-                            <h4>{{controller.name}} (controller.model)</h4>
+                            <h4>{{controller.name}}</h4>
                             <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?</p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
@@ -188,7 +188,7 @@
                             <br><br>
                         {% endfor %}
                         {% for template in dp.templates %}
-                            <h4>{{template}} Template</h4>
+                            <h4>{{template.name}} Template</h4>
                             <p>Activity 7: This is a subjective question, but would you consider this template part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?</p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
@@ -216,7 +216,7 @@
                                     </ul>    
                                 </td>
                                 <td>
-                                    Why were mixins useful for + "name of example" + ? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
+                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)<br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
