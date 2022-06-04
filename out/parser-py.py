@@ -183,14 +183,14 @@ for t in AST_TREES:
                 if "template" in node_name:
                     for node_arg in node.args:
                         if type(node_arg).__name__ == "Constant":
-                            print("template constant:", node_arg.value, t)
+                            # print("template constant:", node_arg.value, t)
                             TEMPLATES[node_arg.value] = [Template(node_arg.value, lineno=node_arg.lineno, file_path=t)]
             except:
                 pass
             try:
                 for kw in node.keywords:
                      if "template_name" in kw.arg:
-                         print("template_name: ", kw.value.value, t)
+                         # print("template_name: ", kw.value.value, t)
                          TEMPLATES[kw.value.value] = [Template(kw.value.value, lineno=kw.lineno, file_path=t)]
                          
             except:
@@ -295,7 +295,7 @@ for subdir, dirs, files in os.walk(folder_to_parse):
             # === SEARCH FOR TEMPLATES ===
             for temp in TEMPLATES:
                 if temp.lower().strip() == file.lower().strip(): 
-                    print("this file is a template: ", file)
+                    # print("this file is a template: ", file)
                     template_to_add = Template(file, file_path=os.path.join(subdir, file))
                     if file in TEMPLATES:
                         TEMPLATES[file].append(template_to_add)                        
@@ -309,7 +309,7 @@ for subdir, dirs, files in os.walk(folder_to_parse):
                     needle = "/" + VIEWS[temp].short_name
                     lineno = line_of_needle(needle, file_in_folder)
                     if lineno:
-                        print("this route is a template", needle)
+                        # print("this route is a template", needle)
                         template_to_add = Template(needle, lineno, file_path=file_in_folder)
                         if needle in TEMPLATES:
                             TEMPLATES[needle].append(template_to_add)
@@ -390,28 +390,29 @@ for m in MIXINS:
             if a.name not in jDP["classes_by_mixins"][a.associated_class][mixin.name]:
                 jDP["classes_by_mixins"][a.associated_class][mixin.name].append(a.name)
 
-        jDP["mixins"][mixin.name]["adopters"].append(a.name)
+        if a.name not in jDP["mixins"][mixin.name]["adopters"]:
+            jDP["mixins"][mixin.name]["adopters"].append(a.name)
 
 jDP["models"] = []
 for m in MODELS:
     model = MODELS[m]
-    print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+    # print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
     jDP["models"].append(model.name)
 
 for v in VIEWS:
     view = VIEWS[v]
-    print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+    # print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
     jDP["views"].append({"name": view.name, "model": view.model})
 
 for t in TEMPLATES:
     templates_l = TEMPLATES[t]
     try: # in the case it's a list
         for template in templates_l:
-            print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
+            # print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
             jDP["templates"].append({"name": template.name, "model": template.model})
     except: # in the case it's just a single template
         template = templates_l
-        print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
+        # print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
         jDP["templates"].append({"name": template.name, "model": template.model})
 
 # print("CLASSES_BY_MIXINS", CLASSES_BY_MIXINS)
@@ -428,9 +429,9 @@ for code_class in jDP["classes_by_mixins"]:
 response = {"name": folder_to_parse, "details": jDP}
 # print("response", response)
 
-# Constraining Time
+# CONSTRAINING TIME:
 
-# remember jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}, "classes_by_propmethods": {}}
+# Remember jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}, "classes_by_propmethods": {}}
 
 # Remove classes that use one or fewer mixins (unless it's the only case of that mixin used alone), or that don't use all the mixins fed into them.
 to_remove = set()
@@ -517,21 +518,46 @@ for mixin in jDP["mixins"]:
 for unused_prop_method in to_remove:
     jDP["mixins"][unused_prop_method[0]]["prop_methods"].remove(unused_prop_method[1])
 
-# Remove repeated templates
+# Remove repeated templates and remove templates with no associated model
 seen_list = []
+affiliated_models_templates = set()
 new_jDP_templates = []
 for i in range(0, len(jDP["templates"])):
-    if jDP["templates"][i]["name"] not in seen_list:
+    if jDP["templates"][i]["name"] not in seen_list and jDP["templates"][i]["model"]:
         new_jDP_templates.append(jDP["templates"][i])
         seen_list.append(jDP["templates"][i]["name"])
+        affiliated_models_templates.add(jDP["templates"][i]["model"])
 jDP["templates"] = new_jDP_templates
 
-# Remove templates with no associated model
+# Remove repeated controllers and those with no associated models
+seen_list = []
+new_jDP_controllers = []
+affiliated_models_controllers = set()
+for i in range(0, len(jDP["views"])):
+    if jDP["views"][i]["name"] not in seen_list and jDP["views"][i]["model"]:
+        new_jDP_controllers.append(jDP["views"][i])
+        seen_list.append(jDP["views"][i]["name"])
+        affiliated_models_controllers.add(jDP["views"][i]["model"])
+jDP["views"] = new_jDP_controllers
 
+# In future maybe we should consider the content of the view also and whether there are Model.object... calls within them. 
 
-# Remove controllers with no associated models
+# Remove models that aren't affiliated with a template and controller
+to_keep = affiliated_models_templates.intersection(affiliated_models_controllers)  
+jDP["models"] = list(to_keep)
 
-# Remove models that aren't associated with a template and controller
+# Now constrain the templates and controllers to those models too
+new_jDP_templates = []
+for i in range(0, len(jDP["templates"])):
+    if jDP["templates"][i]["model"] in jDP["models"]:
+        new_jDP_templates.append(jDP["templates"][i])
+jDP["templates"] = new_jDP_templates
+
+new_jDP_controllers = []
+for i in range(0, len(jDP["views"])):
+    if jDP["views"][i]["model"] in jDP["models"]:
+        new_jDP_controllers.append(jDP["views"][i])
+jDP["views"] = new_jDP_controllers
 
 # Constraining should happen to highlights too
 
@@ -541,7 +567,7 @@ with open('out/dp.csv','w') as fd:
     writer_object.writerow([folder_to_parse,json.dumps(jDP)])
     fd.close()
 
-print("===new section===")
+print("===new section - what to highlight===")
 for m in jDP["mixins"]:
     mixin = MIXINS[m]
     print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
@@ -549,11 +575,14 @@ for m in jDP["mixins"]:
         for pm in mixin.prop_methods:
             if pm.name == prop_method:
                 print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
-    for adopter in jDP["mixins"][m]["adopters"]:
-        for a in mixin.adopters:
-            if a.name == adopter:
-                if type(a).__name__ == "View":    
+    for a in mixin.adopters:
+        if type(a).__name__ == "View":
+            for adopter in jDP["classes_by_mixins"]:
+                if a.name == adopter:  
                     print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-                else:
-                    print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
-
+        else:
+            if a.associated_class in jDP["classes_by_mixins"]:
+                if mixin.name in jDP["classes_by_mixins"][a.associated_class]:
+                    for adopter in jDP["classes_by_mixins"][a.associated_class][mixin.name]:
+                        if a.name == adopter: 
+                            print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)

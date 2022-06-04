@@ -104,7 +104,10 @@
                                     <div class="col-sm-6">
                                         <b>Templates / Views</b>
                                         {% for template in dp.templates %}
-                                            <p>{{template}}</p>
+                                            <p>
+                                                {{template.name}}<br>
+                                                <span style="font-size:10px;">May use {{template.model}} model but check.</span>
+                                            </p>
                                         {% endfor %}
                                         <br>
                                         <b>Roles</b>
@@ -114,30 +117,33 @@
                                     <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
-                                        <p>Describe how the controller fills in / manipulates the template (i.e. with what information)</p>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)</p>
                                         <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2" style="text-align: center;">
+                            <div class="col-sm-3">
                                 <b>Controllers</b> 
                                 {% for controller in dp.views %}
-                                    <p>{{controller}}</p>
+                                    <p>
+                                        {{controller.name}}<br>
+                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                    </p>
                                 {% endfor %}
                                 <br>
                                 <b>Roles</b>
                                 <p>Backend Developers</p>
                                 <p>Fullstack Developers</p>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <div class="row">
                                     <div class="col-sm-8">
                                         <p style="text-align: center;">←</p>
                                         <br>
-                                        <p>Describe how the controller accesses / manipulates the model</p>
+                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model</p>
                                         <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p>Describe how the controller fills in the model (i.e. with what information)</p>
+                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)</p>
                                         <textarea rows="5
                                         " style="width: 100%; max-width: 100%;"></textarea>
                                     </div>
