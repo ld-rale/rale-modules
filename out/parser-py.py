@@ -281,8 +281,9 @@ for model_name in MODELS:
             if VIEWS[view_name].ast_node:
                 for node in ast.walk(VIEWS[view_name].ast_node):
                     try:
+                        # print("ast.dump(node)", ast.dump(node))
                         if node.name and model_name in node.name:
-                            print("match - node.name", node.name, "model_name", model_name)
+                            # print("match - node.name", node.name, "model_name", model_name)
                             VIEWS[view_name].model = model_name
                             break
                     except: # format not quite right
@@ -324,11 +325,11 @@ for model_name in MODELS:
     for template_key in TEMPLATES:
         if type(TEMPLATES[template_key]).__name__ == "list":
             for i in range(0, len(TEMPLATES[template_key])):
-                print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key][i].name", TEMPLATES[template_key][i].name)
+                # print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key][i].name", TEMPLATES[template_key][i].name)
                 if model_name.lower() in TEMPLATES[template_key][i].name.lower():
                     TEMPLATES[template_key][i].model = model_name
         else:
-            print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key].name", TEMPLATES[template_key].name)
+            # print("model_name", model_name, "template_key", template_key, "TEMPLATES[template_key].name", TEMPLATES[template_key].name)
             if model_name in TEMPLATES[template_key].name:
                 TEMPLATES[template_key].model = model_name
 
@@ -535,7 +536,10 @@ seen_list = []
 new_jDP_controllers = []
 affiliated_models_controllers = set()
 for i in range(0, len(jDP["views"])):
-    if jDP["views"][i]["name"] not in seen_list and jDP["views"][i]["model"]:
+    print('jDP["views"][i]["name"]', jDP["views"][i]["name"])
+    print('jDP["classes_by_mixins"]', jDP["classes_by_mixins"])
+    if jDP["views"][i]["name"] not in seen_list and jDP["views"][i]["model"] and jDP["views"][i]["name"] in jDP["classes_by_mixins"].keys().lower()?: 
+        # and make sure they overlap with view classses relevant to other patterns we detect like: mixins
         new_jDP_controllers.append(jDP["views"][i])
         seen_list.append(jDP["views"][i]["name"])
         affiliated_models_controllers.add(jDP["views"][i]["model"])
