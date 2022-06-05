@@ -535,10 +535,9 @@ jDP["templates"] = new_jDP_templates
 seen_list = []
 new_jDP_controllers = []
 affiliated_models_controllers = set()
+lowered_classes_by_mixins_list = [x.lower() for x in list(jDP["classes_by_mixins"].keys())]
 for i in range(0, len(jDP["views"])):
-    print('jDP["views"][i]["name"]', jDP["views"][i]["name"])
-    print('jDP["classes_by_mixins"]', jDP["classes_by_mixins"])
-    if jDP["views"][i]["name"] not in seen_list and jDP["views"][i]["model"] and jDP["views"][i]["name"] in jDP["classes_by_mixins"].keys().lower()?: 
+    if jDP["views"][i]["name"] not in seen_list and jDP["views"][i]["model"] and jDP["views"][i]["name"] in lowered_classes_by_mixins_list: 
         # and make sure they overlap with view classses relevant to other patterns we detect like: mixins
         new_jDP_controllers.append(jDP["views"][i])
         seen_list.append(jDP["views"][i]["name"])
