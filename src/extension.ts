@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { Range, Position } from 'vscode';
 const { exec } = require('child_process');
 let PATH_TO_AST_PARSERS = __dirname // put AST parsers in out folder
-let SERVER = "localhost:8000"
+let SERVER = "http://127.0.0.1:8000"
 
 class HighlightLocation {
 	lineno: number;
@@ -83,18 +83,12 @@ export function activate(context: vscode.ExtensionContext) {
 		exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf,(err: any, stdout: any, stderr: any) => {
 			let stdout_lines = stdout.split("\n")
 			let opened: string[] = [];
-			console.log("stdout_lines", stdout_lines);
-			console.log("err", err);
-			console.log("stderr", stderr);
 			for (let i=0; i<stdout_lines.length; i++){
 				try {
 					if (stdout_lines[i].includes("===project_path===")) {
 						examples_folder = stdout_lines[i].substr(19);
 						continue;
 					}
-					console.log("got here 1,", i);
-					console.log(stdout_lines)
-					console.log(stdout_lines[i]);
 					let components = stdout_lines[i].split("Need2highlight ");
 					let pattern = components[0].trim();
 					let main_components = components[1].split(" ");
@@ -102,7 +96,6 @@ export function activate(context: vscode.ExtensionContext) {
 					let col_offset = Number(main_components[1]);
 					let col_offset_end = Number(main_components[2]);
 					let file_name = main_components[3];
-					console.log("got here 2");
 					if (file_name.includes("test_")) {
 						continue; // skip test files
 					}
@@ -113,7 +106,6 @@ export function activate(context: vscode.ExtensionContext) {
 						to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end, pattern)];
 					}
 					//console.log("lineno, col_offset, col_offset_end, file_name, pattern", lineno, col_offset, col_offset_end, file_name, pattern);
-					console.log("got here 3");
 					if (!opened.includes(file_name)) {
 						opened.push(file_name)
 					
