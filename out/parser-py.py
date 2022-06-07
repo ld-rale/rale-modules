@@ -6,13 +6,13 @@ import os
 from dataclasses import dataclass
 from tokenize import String
 import json
-import requests
 import csv
 
 # https://docs.python.org/3/library/ast.html
 # python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
 # needle /insight file /Users/gobidasu/Desktop/rale-modules/posthog/frontend/src/scenes/saved-insights/SavedInsights.tsx
 
+PATH_TO_CODE = "/Users/gobidasu/Desktop/rale-modules/ralemodules/"
 SERVER = "localhost:8000"
 
 print("\n") 
@@ -566,7 +566,7 @@ jDP["views"] = new_jDP_controllers
 
 # Constraining should happen to highlights too
 
-with open('out/dp.csv','w') as fd:
+with open(PATH_TO_CODE + '/out/dp.csv','w') as fd:
     writer_object = csv.writer(fd)
     writer_object.writerow(["File", "Details"])
     writer_object.writerow([folder_to_parse,json.dumps(jDP)])

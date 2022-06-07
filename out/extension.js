@@ -74,12 +74,18 @@ function activate(context) {
         exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err, stdout, stderr) => {
             let stdout_lines = stdout.split("\n");
             let opened = [];
+            console.log("stdout_lines", stdout_lines);
+            console.log("err", err);
+            console.log("stderr", stderr);
             for (let i = 0; i < stdout_lines.length; i++) {
                 try {
                     if (stdout_lines[i].includes("===project_path===")) {
                         examples_folder = stdout_lines[i].substr(19);
                         continue;
                     }
+                    console.log("got here 1,", i);
+                    console.log(stdout_lines);
+                    console.log(stdout_lines[i]);
                     let components = stdout_lines[i].split("Need2highlight ");
                     let pattern = components[0].trim();
                     let main_components = components[1].split(" ");
@@ -87,6 +93,7 @@ function activate(context) {
                     let col_offset = Number(main_components[1]);
                     let col_offset_end = Number(main_components[2]);
                     let file_name = main_components[3];
+                    console.log("got here 2");
                     if (file_name.includes("test_")) {
                         continue; // skip test files
                     }
@@ -97,6 +104,7 @@ function activate(context) {
                         to_highlight[file_name] = [new HighlightLocation(lineno, col_offset, col_offset_end, pattern)];
                     }
                     //console.log("lineno, col_offset, col_offset_end, file_name, pattern", lineno, col_offset, col_offset_end, file_name, pattern);
+                    console.log("got here 3");
                     if (!opened.includes(file_name)) {
                         opened.push(file_name);
                         vscode.workspace.openTextDocument(vscode.Uri.file(file_name)).then(document => vscode.window.showTextDocument(document).then(document => {
