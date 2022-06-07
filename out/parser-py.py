@@ -362,7 +362,8 @@ print("TEMPLATES: ", TEMPLATES)
 
 # print all the places we should highlight
 
-jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}, "classes_by_propmethods": {}, "project": project_name}
+jDP = {"mixins": {}, "models": [], "views": [], "templates": [], "classes_by_mixins": {}, "classes_by_propmethods": {}, "project": project_name, "project_path": folder_to_parse}
+print("===project_path===", folder_to_parse)
 CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]

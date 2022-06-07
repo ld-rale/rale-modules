@@ -40,9 +40,9 @@ function highlightDesignPatterns2(activeEditor, lineno, col_offset, col_offset_e
     let rangeOption = new vscode_1.Range(sp, ep);
     activeEditor.setDecorations(decorationType, [rangeOption]);
 }
-function highlightDesignPatterns(pattern, pattern_instance) {
+function highlightDesignPatterns(pattern, pattern_instance, examples_folder) {
     if (pattern == "mixin")
-        return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 1: Scan the mixin code below and summarize what you think the Mixin does: " + SERVER + "/ralemodules/exercises/?file=" + "/Users/gobidasu/Desktop/rale-modules/posthog/" + "#mixin-" + "StructuredViewSetMixin" + " \n\n Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature): [link]";
+        return "Mixins let a class adopt methods and attributes of another class. In this case, other classes may adopt properties or methods from the " + pattern_instance + " class. Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods. You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class D has parents B and C, both of whose parent is A, then does D use B or C's version of any given method). Tutorial Example: https://www.patterns.dev/posts/mixin-pattern/. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 1: Scan the mixin code below and summarize what you think the Mixin does: " + SERVER + "/ralemodules/exercises/?file=" + examples_folder + "#mixin-" + pattern_instance + " \n\n Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature): [link]";
     if (pattern == "prop_method")
         return "Some classes may use this Mixin method / property. \n\n View a diagram of the mixins in this example that we generated: [link] \n\n Activity 3A: List the files + line numbers + classes, where this Mixin's method " + pattern_instance + " is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system. [link] \n\n Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger. [link] \n\n Activity 3C: Describe how this Mixin's " + pattern_instance + " method is being used there. i.e. what does this Mixin's " + pattern_instance + " do? i.e. what does the class that adopts this Mixin's " + pattern_instance + " do? [link]";
     if (pattern == "adopters_view")
@@ -70,11 +70,16 @@ function activate(context) {
             wf = wfs[0].uri.path;
         }
         // we need to pass in the repository path
+        let examples_folder = "";
         exec('python3 ' + PATH_TO_AST_PARSERS + '/parser-py.py ' + source_code_path + " " + wf, (err, stdout, stderr) => {
             let stdout_lines = stdout.split("\n");
             let opened = [];
             for (let i = 0; i < stdout_lines.length; i++) {
                 try {
+                    if (stdout_lines[i].includes("===project_path===")) {
+                        examples_folder = stdout_lines[i].substr(19);
+                        continue;
+                    }
                     let components = stdout_lines[i].split("Need2highlight ");
                     let pattern = components[0].trim();
                     let main_components = components[1].split(" ");
@@ -143,10 +148,10 @@ function activate(context) {
                         let pattern_instance_name = highlight_able.pattern.split(" ")[0];
                         let pattern_name = highlight_able.pattern.split(" ")[1];
                         if (pattern_message == "") {
-                            pattern_message = highlightDesignPatterns(pattern_name, pattern_instance_name);
+                            pattern_message = highlightDesignPatterns(pattern_name, pattern_instance_name, examples_folder);
                         }
                         else {
-                            let to_add = highlightDesignPatterns(pattern_name, pattern_instance_name);
+                            let to_add = highlightDesignPatterns(pattern_name, pattern_instance_name, examples_folder);
                             if (!pattern_message.includes(to_add))
                                 pattern_message = pattern_message + "\n\n—————————\n\n" + to_add;
                         }
