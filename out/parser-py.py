@@ -579,15 +579,15 @@ for m in jDP["mixins"]:
     for prop_method in jDP["mixins"][m]["prop_methods"]:
         for pm in mixin.prop_methods:
             if pm.name == prop_method:
-                print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
+                print(pm.name, "prop_method", mixin.name, "Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
     for a in mixin.adopters:
         if type(a).__name__ == "View":
             for adopter in jDP["classes_by_mixins"]:
                 if a.name == adopter:  
-                    print(a.name, "adopters_view Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+                    print(a.name, "adopters_view", mixin.name, "Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
         else:
             if a.associated_class in jDP["classes_by_mixins"]:
                 if mixin.name in jDP["classes_by_mixins"][a.associated_class]:
                     for adopter in jDP["classes_by_mixins"][a.associated_class][mixin.name]:
                         if a.name == adopter: 
-                            print(a.name, "adopters_pm Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+                            print(a.name, "adopters_pm", mixin.name, "Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)

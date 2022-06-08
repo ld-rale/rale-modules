@@ -27,15 +27,17 @@ class ExercisesView(TemplateView):
         with open('../out/dp.csv', newline='\n') as csvfile:
             dpreader = csv.reader(csvfile, delimiter=',', quotechar='"', doublequote=True)
             for row in dpreader:
-                # print(', '.join(row))
-                # print("request.GET['file']", request.GET['file'])
-                # print("row[0]", row[0])
-                if len(row) > 1 and row[0] == request.GET['file']:
+                #print(', '.join(row))
+                #print("request.GET['file']", request.GET['file'])
+                #print("row[0]", row[0])
+                if len(row) > 1 \
+                    and (row[0] == request.GET['file'] or row[0] == request.GET['file'] + "/"):
                     # print("found file")
                     codebase_dp_details = row[1]
-        
+                    break
+
         # extract design patterns from csv
-        # print("codebase_dp_details", codebase_dp_details)
+        print("codebase_dp_details", codebase_dp_details)
         codebase_dp = json.loads(codebase_dp_details)
         print("codebase_dp", codebase_dp)
 
