@@ -114,7 +114,7 @@
                         </table>
                     </div>
                     <br>
-                    <div id="mv*">
+                    <div id="mvs">
                         <h2>MV* of this example</h2>
                         <div class="row">
                             <div class="col-sm-5">
@@ -186,22 +186,22 @@
                         </div>
                         {% for model in dp.models %}
                             <h4>{{model}}</h4>
-                            <p>Activity 1: Describe the {{model}} model.
+                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model.
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).
+                            <p id="{{model}}-a2">Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)
+                            <p id="{{model}}-a3">Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?
+                            <p id="{{model}}-a6">Activity 6: Why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -209,12 +209,12 @@
                         {% endfor %}
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
-                            <p>Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?
+                            <p id="{{controller.name}}-a4">Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p>Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? Consider which part, Model code vs. Controller code, is responsible for data touching logic versus template preparation logic.
+                            <p id="{{controller.name}}-a5">Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? Consider which part, Model code vs. Controller code, is responsible for data touching logic versus template preparation logic.
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -226,12 +226,12 @@
                             {% endfor %}
                             Templates
                         </h4>
-                        <p>Activity 7: This is a subjective question, but would you consider these templates part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?
+                        <p id="a7">Activity 7: This is a subjective question, but would you consider these templates part of an MVC, MVVM, MVP, MVT, or other architecture, and why do you think the code architects chose that?
                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
                         </p>
                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
-                        <table class="table">
+                        <table id="mvs-tradeoff" class="table">
                             <tr>
                                 <th>Pattern</th>
                                 <th>Definition and Reasons</th>

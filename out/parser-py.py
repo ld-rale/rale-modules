@@ -591,3 +591,21 @@ for m in jDP["mixins"]:
                     for adopter in jDP["classes_by_mixins"][a.associated_class][mixin.name]:
                         if a.name == adopter: 
                             print(a.name, "adopters_pm", mixin.name, "Need2highlight", a.lineno, a.col_offset, a.end_col_offset, a.file_path)
+
+for m in jDP["models"]:
+    model = MODELS[m]
+    print(model.name, "model Need2highlight", model.lineno, model.col_offset, model.end_col_offset, model.file_path)
+
+for v in range(len(jDP["views"])):
+    view = VIEWS[jDP["views"][v]["name"]]
+    print(view.name, "view Need2highlight", view.lineno, view.col_offset, view.end_col_offset, view.file_path)
+
+print('jDP["templates"]', jDP["templates"])
+for t in range(len(jDP["templates"])):
+    templates_l = TEMPLATES[jDP["templates"][t]["name"]]
+    try: # in the case it's a list
+        for template in templates_l:
+            print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path) 
+    except: # in the case it's just a single template
+        template = templates_l
+        print(template.name, "template Need2highlight", template.lineno, template.col_offset, template.end_col_offset, template.file_path)
