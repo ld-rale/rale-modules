@@ -48,19 +48,19 @@
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that use this mixin (hint - use VS Code's search feature):
+                            <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that use this mixin:
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                             {% for prop_method in details.prop_methods%}
                                 <h6 id="mixin-{{mixin}}-{{prop_method}}-3a">{{prop_method}}</h6>
-                                <p>Activity 3A: List the files + line numbers + classes, where this Mixin's method <b>{{prop_method}}</b> is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.
+                                <p>Activity 3A: List the classes where this Mixin's method <b>{{prop_method}}</b> is being adopted / used by a class (or class instance) that includes this Mixin. Hint: look at the other highlighted files in the file system.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-3b">Activity 3B: Trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.
+                                <p id="mixin-{{mixin}}-{{prop_method}}-3b">Activity 3B: (Optional) If you'd like, trigger the mixin code (i.e. the 'mixed in' code) below by using the software application, writing print statements, and watching them trigger.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -70,12 +70,12 @@
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-4a">Activity 4A: Trigger the highlighted code by using the software application, writing print statements, and observing what happens.
+                                <p id="mixin-{{mixin}}-{{prop_method}}-4a">Activity 4A: (Optional) If you'd like, trigger the highlighted code by using the software application, writing print statements, and observing what happens.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the domain / purpose of the application you are studying.
+                                <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4B: Why are mixins used here - briefly explain. Here are some ideas, but which ones apply in this case? Any other reasons? Why for this particular domain? Hint: Think carefully about the <b>domain / purpose</b> of the application you are studying.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -94,7 +94,7 @@
                                 <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
                                 <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
                                 <td>
-                                    Why were mixins useful for {{dp.project}}? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)
+                                    Why were mixins useful for {{dp.project}} specifically? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
@@ -105,7 +105,7 @@
                                 <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
                                 <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
                                 <td>
-                                    Why would inheritence not work in this example?
+                                    Why would inheritence not work for {{dp.project}} specifically?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
