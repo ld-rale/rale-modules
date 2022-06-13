@@ -8,7 +8,7 @@ const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const { exec } = require('child_process');
 let PATH_TO_AST_PARSERS = __dirname; // put AST parsers in out folder
-let SERVER = "http://127.0.0.1:8000";
+let SERVER = "http://127.0.0.1:7000";
 class HighlightLocation {
     constructor(lineno, col_offset, col_offset_end, pattern) {
         this.lineno = lineno;

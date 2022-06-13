@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { Range, Position } from 'vscode';
 const { exec } = require('child_process');
 let PATH_TO_AST_PARSERS = __dirname // put AST parsers in out folder
-let SERVER = "http://127.0.0.1:8000"
+let SERVER = "http://127.0.0.1:7000"
 
 class HighlightLocation {
 	lineno: number;
