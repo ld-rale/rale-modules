@@ -22,7 +22,7 @@ print("file_to_parse: ", file_to_parse)
 print("folder_to_parse: ", folder_to_parse)
 print("\n")
 
-project_name = folder_to_parse.split("/")[-2]
+project_name = folder_to_parse.split("/")[-1]
 
 class PatternArtifact:
     def __init__(self, lineno, col_offset, end_col_offset, file_path): # add the file to all these
@@ -368,7 +368,7 @@ CLASSES_BY_MIXINS = {}
 for m in MIXINS:
     mixin = MIXINS[m]
     # print(mixin.name, "mixin Need2highlight", mixin.lineno, mixin.col_offset, mixin.end_col_offset, mixin.file_path)
-    jDP["mixins"][mixin.name] = {"prop_methods": [], "adopters": []}
+    jDP["mixins"][mixin.name] = {"prop_methods": [], "adopters": [], "file_path": mixin.file_path}
     for pm in mixin.prop_methods:
         # print(pm.name, "prop_method Need2highlight", pm.lineno, pm.col_offset, pm.end_col_offset, pm.file_path)
         jDP["mixins"][mixin.name]["prop_methods"].append(pm.name)

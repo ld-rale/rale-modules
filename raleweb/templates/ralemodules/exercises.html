@@ -30,22 +30,112 @@
                         </p>
                         <pre>
                             from werkzeug import BaseRequest
-                            class Request(BaseRequest):
+                            class RegularRequest(BaseRequest):
                                 pass
                         </pre>
                         <p>If I want to add accept header support, I would make that:</p>
                         <pre>
                             from werkzeug import BaseRequest, AcceptMixin
-                                class Request(AcceptMixin, BaseRequest):
-                                pass
+                                class SpecialRequest(AcceptMixin, BaseRequest):
+                                    def sr_method:
+                                        method_from_accept_mixin(property_from_base_request)
                         </pre>
                         <p>If I wanted to make a request object that supports accept headers, etags, authentication, and user agent support, I could do this:<p>
                         <pre>
                             from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
                             
-                            class Request(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
-                                pass
+                            class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
+                                def esr_method:
+                                    method_from_accept_mixin(property_from_base_request)
+                                    method_from_e_tag_request_mixin(property_from_user_agent_mixin)
+                                    method_from_authentication_mixin()
                         </pre>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>AcceptMixin</b>
+                                        <p>method_from_accept_mixin</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>BaseRequest</b>
+                                        <p>property_from_base_request</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <b>SpecialRequest</b>
+                                <p>method_from_accept_mixin</p>
+                                <p>property_from_base_request</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>AcceptMixin</b>
+                                        <p>method_from_accept_mixin</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>BaseRequest</b>
+                                        <p>property_from_base_request</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>ETagRequestMixin</b>
+                                        <p>method_from_e_tag_request_mixin</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>UserAgentMixin</b>
+                                        <p>property_from_user_agent_mixin</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <b>AuthenticationMixin</b>
+                                        <p>method_from_authentication_mixin</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p>→</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <b>ExtraSpecialRequest</b>
+                                <p>method_from_accept_mixin</p>
+                                <p>property_from_base_request</p>
+                                <p>method_from_e_tag_request_mixin</p>
+                                <p>property_from_user_agent_mixin</p>
+                                <p>method_from_authentication_mixin</p>
+                            </div>
+                        </div>
+                        <hr>
                         <p>The difference is subtle, but in the above examples, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own. [src: https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714]</p>
                         <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behaviour.) IOW, not for re-use, but for compartmentalization.</p>
                         <p>Mixins can be used for:</p>
@@ -54,7 +144,7 @@
                             <li>Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed. Each included mixin's version of any given method (i.e. team_id) will run.</li>
                             <li>Compartmentalization: code at different levels (data touching, logic, view touching, etc.) should be separated so different developers can collaborate easily.</li>
                         </ul>
-                        <h2 id="mixin-diagram">Mixins of this example</h2>
+                        <h2 id="mixin-diagram">Mixins of {{ dp.project }}</h2>
                         {% for class, details in dp.classes_by_mixins.items %}
                             <div class="row">
                                 <div class="col-sm-6">
@@ -83,7 +173,7 @@
                         {% endfor %}
                         {% for mixin, details in dp.mixins.items %}
                             <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
-                            <p>Activity 1: Scan the mixin code below and summarize what you think the Mixin does:
+                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details}} - which has been opened for you. Summarize what you think the Mixin does:
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
