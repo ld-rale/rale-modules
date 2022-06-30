@@ -173,7 +173,7 @@
                         {% endfor %}
                         {% for mixin, details in dp.mixins.items %}
                             <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
-                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details}} - which has been opened for you. Summarize what you think the Mixin does:
+                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}}, which has been opened for you. Summarize what you think the Mixin does:
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
