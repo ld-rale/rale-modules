@@ -202,6 +202,33 @@
                                 <br><br>
                             {% endfor %}
                         {% endfor %}
+                        <h4>Inheritence Lesson</h4>
+                        <p>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation.</p>
+                        <p>Implementation inheritance is the mechanism whereby a subclass re-uses code in a base class. By default the subclass retains all of the operations of the base class, but the subclass may override some or all operations, replacing the base-class implementation with its own. [src: https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse]</p>
+                        <p>In the following Python example, subclasses SquareSumComputer and CubeSumComputer override the transform() method of the base class SumComputer. The base class comprises operations to compute the sum of the squares between two integers. The subclass re-uses all of the functionality of the base class with the exception of the operation that transforms a number into its square, replacing it with an operation that transforms a number into its square and cube respectively. The subclasses therefore compute the sum of the squares/cubes between two integers.</p>
+                        <pre>
+                            class SumComputer:
+                                def __init__(self, a, b):
+                                    self.a = a
+                                    self.b = b
+
+                                def transform(self, x):
+                                    raise NotImplementedError
+
+                                def inputs(self):
+                                    return range(self.a, self.b)
+
+                                def compute(self):
+                                    return sum(self.transform(value) for value in self.inputs())
+
+                            class SquareSumComputer(SumComputer):
+                                def transform(self, x):
+                                    return x * x
+
+                            class CubeSumComputer(SumComputer):
+                                def transform(self, x):
+                                    return x * x * x
+                        </pre>
                         <table id="mixin-tradeoff" class="table">
                             <tr>
                                 <th>Pattern</th>
@@ -212,9 +239,9 @@
                             <tr>
                                 <td>Mixin</td>
                                 <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
-                                <td><a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">Patterns.Dev Explanation</a> Reasons: <br>(A) all animals (dogs, cats, etc) can use the animalFunctionality mixin <br>(B) in <a href="https://stackoverflow.com/a/547714/1194050" target="_blank">this SO post</a>, mixins let you allow more supports as needed, but not by default, to instances of Request <br>(C) functionality for animals in general in animalFunctionality can be separated from dog-specific functionality</td>
+                                <td>Werkzeug's Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for requests in general (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</td>
                                 <td>
-                                    Why were mixins useful for {{dp.project}} specifically? (hint - think about tradeoffs over multiple inheritence and multiple inheritence issues)
+                                    Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over multiple inheritence and about multiple inheritence issues.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
@@ -222,8 +249,8 @@
                             </tr>
                             <tr>
                                 <td>Inheritence</td>
-                                <td>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), retaining similar implementation. Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
-                                <td><a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse" target="_blank">Inheritance Example</a><br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
+                                <td>Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
+                                <td>Inheritance Example of Sum / Cube Computer:<br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
                                 <td>
                                     Why would inheritence not work for {{dp.project}} specifically?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
