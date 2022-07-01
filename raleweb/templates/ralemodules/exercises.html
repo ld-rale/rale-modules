@@ -138,6 +138,7 @@
                         <hr>
                         <p>The difference is subtle, but in the above examples, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own. [src: https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714]</p>
                         <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behaviour.) IOW, not for re-use, but for compartmentalization.</p>
+                        <p><b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then classes adopting both mixins run both mixins' version of method / property X one after another.</p>
                         <p>Mixins can be used for:</p>
                         <ul>
                             <li>Mixins can be used by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration.</li>
@@ -195,7 +196,7 @@
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: Explain why mixins (i.e. {{mixin}}) are used in {{dp.project}}? Hint, see the 3 general ideas bulletted at the end of the Mixins lesson above ("Mixins can be used for ..."). Then take another look at the {{dp.project}} application as a user. Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
+                                <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: Explain why mixins (i.e. {{mixin}}) are used in {{dp.project}}? Hint, see the 3 general ideas bulletted at the end of the Mixins lesson above ("Mixins can be used for ..."). Then take another look at the {{dp.project}} application as a user. Remember the "Multiple Versions of Methods / Props Note" above. Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -241,7 +242,7 @@
                                 <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
                                 <td>Werkzeug's Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for requests in general (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</td>
                                 <td>
-                                    Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over multiple inheritence and about multiple inheritence issues.
+                                    Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over multiple inheritence and about multiple inheritence issues. Remember the "Multiple Versions of Methods / Props Note" above. 
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
