@@ -263,6 +263,79 @@
                     </div>
                     <br>
                     <div id="mvs">
+                        <h2>MV* Lesson</h2>
+                        <p>MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the "template") for visual representations, and the controller for logic for manipulating the model or view. Nuances and examples:</p>
+                        <ul>
+                            <li>The model is responsible for managing the data of the application. It receives user input from the controller.</li>
+                            <li>The view renders presentation of the model in a particular format.</li>
+                            <li>The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</li>
+                        </ul>
+                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
+                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
+                        <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a>. Here is a diagram of the MVC of the TODO app.</p>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <b>Templates / Views</b>
+                                            <p>TodoItem</p>
+                                            <p>User</p>
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Frontend Developers</p>
+                                        <p>Fullstack Developers</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p style="text-align: center;">→</p>
+                                        <br>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Controllers</b> 
+                                {% for controller in dp.views %}
+                                    <p>
+                                        {{controller.name}}<br>
+                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                    </p>
+                                {% endfor %}
+                                <br>
+                                <b>Roles</b>
+                                <p>Backend Developers</p>
+                                <p>Fullstack Developers</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <p style="text-align: center;">←</p>
+                                        <br>
+                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="5
+                                        " style="width: 100%; max-width: 100%;"></textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>Models</b>
+                                            <p>TodoItem</p>
+                                            <p>User</p>
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Backend Developers</p>
+                                        <p>Database Admin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2>MV* of this example</h2>
                         <div class="row">
                             <div class="col-sm-5">
