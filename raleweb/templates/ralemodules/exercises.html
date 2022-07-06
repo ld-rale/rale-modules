@@ -272,14 +272,15 @@
                         </ul>
                         <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
                         <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
-                        <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a>. Here is a diagram of the MVC of the TODO app.</p>
+                        <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> with the following <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>. Here is a diagram of the MVC of the TODO app.</p>
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <b>Templates / Views</b>
-                                            <p>TodoItem</p>
-                                            <p>User</p>
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></p>
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></p>
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></p>
                                         <br>
                                         <b>Roles</b>
                                         <p>Frontend Developers</p>
@@ -288,21 +289,13 @@
                                     <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
-                                        </p>
-                                        <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
+                                        <p style="font-size:12px;">The controller sends all the todo items to the template for rendering in a list.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <b>Controllers</b> 
-                                {% for controller in dp.views %}
-                                    <p>
-                                        {{controller.name}}<br>
-                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
-                                    </p>
-                                {% endfor %}
+                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br></p>
                                 <br>
                                 <b>Roles</b>
                                 <p>Backend Developers</p>
@@ -313,16 +306,9 @@
                                     <div class="col-sm-8">
                                         <p style="text-align: center;">←</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
-                                        </p>
-                                        <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
+                                        <p style="font-size:12px;">The _ controller queries the _ model of the logged in user to retrieve their todo items.</p>
                                         <br><br>
-                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
-                                        </p>
-                                        <textarea rows="5
-                                        " style="width: 100%; max-width: 100%;"></textarea>
+                                        <p style="font-size:12px;">The _ controller takes the user inputted frontend data and saves it to the todo model's table in the backend database.</p>
                                     </div>
                                     <div class="col-sm-4">
                                         <b>Models</b>
