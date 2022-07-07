@@ -56,9 +56,9 @@ function highlightDesignPatterns(pattern: String, pattern_instance: String, exam
 	if (pattern == "adopters_pm")
 		return "In this case, this class is adopting the " + pattern_instance + " method from a mixin (or from multiple mixins running each mixin's version of " + pattern_instance + " one after another).";
 	if (pattern == "model")
-		return "Below you will find the " + pattern_instance + " Model. \n\n Go to the controller and view/template to do activities 4-5. \n\n Activity 6: Specifically for {{dp.project}}, why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)? " + BASE_URL + "#" + pattern_instance + "-a6";
+		return "Below you will find the " + pattern_instance + " Model.";
 	if (pattern == "view")
-		return "Below you will find the " + pattern_instance + " MV* controller (i.e. 'View' in Django). \n\n Hint 1) look at the URL configuration files (i.e. urls.py) \n\n Hint 2) go to the Network tab in CDT on the URL corresponding to this view, as specified in urls.py.";
+		return "Below you will find the " + pattern_instance + " MV* controller (i.e. 'View' in Django).";
 	if (pattern == "template")
 		return "Below you will find a part of the " + pattern_instance + " MV* view (i.e. 'Template' in Django). There may be other parts -- look around at the other highlighted files.";
 	return "some pattern definition";
