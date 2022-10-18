@@ -13,7 +13,8 @@
                 <div class="col-xs-12">
                     <div id="uml">
                         <br>
-                        <h1>Diagrams and Activities for Design Patterns</h1>
+                        <h1>RALE Modules, a Process Management Tool for Sensemaking</h1>
+                        <h3>Diagrams and Activities for Learning Design Patterns from Professional Code</h3>
                     </div>
                     <br>
                     <div id="mixins">
@@ -149,7 +150,7 @@
                             <li>Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed. Each included mixin's version of any given method (i.e. team_id) will run.</li>
                             <li>Compartmentalization: code at different levels (data touching, logic, view touching, etc.) should be separated so different developers can collaborate easily.</li>
                         </ul>
-                        <h2 id="mixin-diagram">Mixins of {{ dp.project }}</h2>
+                        <h3 id="mixin-diagram">Mixins of {{ dp.project }}</h3>
                         {% for class, details in dp.classes_by_mixins.items %}
                             <div class="row">
                                 <div class="col-sm-6">
@@ -176,6 +177,304 @@
                             </div>
                             <hr>
                         {% endfor %}
+                        <!--Begin Hard Coding-->
+                        <h3>Data Flow and Relevant Code Snippets</h3>
+                        <br>
+                        <h6>TaggedItemViewSetMixin code:</h6>
+                        <pre><code>
+class TaggedItemViewSetMixin(viewsets.GenericViewSet):
+    def is_licensed(self):
+        return (
+            not self.request.user.is_anonymous
+            # The below triggers an extra query to resolve user's organization.
+            and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
+            # type: ignore
+        )
+
+    def get_queryset(self):
+        queryset = super(TaggedItemViewSetMixin, self).get_queryset()
+        if self.is_licensed():
+            to_return = queryset.prefetch_related(
+                Prefetch("tagged_items", queryset=TaggedItem.objects.select_related("tag"), to_attr="prefetched_tags")
+            )
+        return queryset
+                        </code></pre>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>tivsm postInsight object (21)
+tagged items: 
+tag: official
+
+tivsm postInsight object (22)
+tagged items: 
+tag: official tag
+tag: great
+tag: excellent
+tag: another one
+tag: frog
+tag: grammar
+tag: egret
+tag: hippo
+
+tivsm postInsight object (23), tagged items: 
+tag: good
+
+tivsm postInsight object (24), tagged items: 
+
+tivsm postInsight object (25), tagged items: 
+
+tivsm postInsight object (26), tagged items: </code></pre>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>tivsm postInsight object (21) 
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (22)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (23)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (24)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (25)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (26)
+tagged items: 
+# nothing was printed here
+
+and if we try to print pre_fetched tags for each of the above
+we get the following for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                            </div>
+                        </div>
+                        <br>
+                        <h6>StructuredViewSetMixin code:</h6>
+                        <pre><code>
+class StructuredViewSetMixin(_GenericViewSet):
+    legacy_team_compatibility: bool = False
+    filter_rewrite_rules: Dict[str, str] = {}
+    include_in_docs = True
+    authentication_classes = [
+        PersonalAPIKeyAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication,
+    ]
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        to_return = self.filter_queryset_by_parents_lookups(queryset)
+        return to_return
+    
+    @property
+    def team_id(self) -> int:
+        team_from_token = self._get_team_from_request()
+        if team_from_token:
+            return team_from_token.id
+        if self.legacy_team_compatibility:
+            user = cast(User, self.request.user)
+            team = user.team
+            assert team is not None
+            return team.id
+        return self.parents_query_dict["team_id"]
+    
+    @property
+    def team(self) -> Team:
+        team_from_token = self._get_team_from_request()
+        if team_from_token:
+            return team_from_token
+        user = cast(User, self.request.user)
+        if self.legacy_team_compatibility:
+            team = user.team
+            assert team is not None
+            return team
+        try:
+            return Team.objects.get(id=self.team_id)
+        except Team.DoesNotExist:
+            raise NotFound(detail="Project not found.")
+    
+    @property
+    def organization_id(self) -> str:
+        try:
+            return self.parents_query_dict["organization_id"]
+        except KeyError:
+            return str(self.team.organization_id)
+    
+    @property
+    def organization(self) -> Organization:
+        try:
+            return Organization.objects.get(id=self.organization_id)
+        except Organization.DoesNotExist:
+            raise NotFound(detail="Organization not found.")
+    
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.parents_query_dict.copy() 
+        for source, destination in self.filter_rewrite_rules.items():
+            parents_query_dict[destination] = parents_query_dict[source]
+            del parents_query_dict[source]
+        if parents_query_dict:
+            try:
+                return queryset.filter(**parents_query_dict)
+            except ValueError:
+                raise NotFound()
+        else:
+            return queryset
+    
+    @cached_property
+    def parents_query_dict(self) -> Dict[str, Any]:
+        # used to override the last visited project if there's a token in the request
+        team_from_request = self._get_team_from_request()
+        if self.legacy_team_compatibility: 
+            if not self.request.user.is_authenticated:
+                raise AuthenticationFailed()
+            project = team_from_request or self.request.user.team
+            if project is None:
+                raise ValidationError("This endpoint requires a project.")
+            return {"team_id": project.id}
+        result = {}
+
+        # process URL paremeters (here called kwargs), such as organization_id in /api/organizations/:organization_id/
+        for kwarg_name, kwarg_value in self.kwargs.items():
+            # drf-extensions nested parameters are prefixed
+            if kwarg_name.startswith(extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX):
+                query_lookup = kwarg_name.replace(
+                    extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX, "", 1
+                )
+                query_value = kwarg_value
+                if query_value == "@current":
+                    if not self.request.user.is_authenticated:
+                        raise AuthenticationFailed()
+                    if query_lookup == "team_id":
+                        project = self.request.user.team
+                        if project is None:
+                            raise NotFound("Project not found.")
+                        query_value = project.id
+                    elif query_lookup == "organization_id":
+                        organization = self.request.user.organization
+                        if organization is None:
+                            raise NotFound("Organization not found.")
+                        query_value = organization.id
+                elif query_lookup == "team_id":
+                    try:
+                        query_value = team_from_request.id if team_from_request else int(query_value)
+                    except ValueError:
+                        raise NotFound()
+                result[query_lookup] = query_value
+        return result
+    
+    def get_serializer_context(self) -> Dict[str, Any]:
+        return {**super().get_serializer_context(), **self.parents_query_dict}
+    
+    def _get_team_from_request(self) -> Optional["Team"]:
+        team_found = None
+        token = get_token(None, self.request)
+        if token:
+            team = Team.objects.get_team_from_token(token)
+            if team:
+                team_found = team
+            else:
+                raise AuthenticationFailed()
+        return team_found
+                        </code></pre>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br><br>
+                                <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                <pre><code>
+Insight object (6) Users by traffic source for team Default Project
+Insight object (8) for team Default Project
+Insight object (9) for team Default Project
+Insight object (10) for team Default Project
+Insight object (3) Repeat users over time for team Default Project
+Insight object (11) for team Default Project
+Insight object (13) Pageview count for team Default Project
+Insight object (1) Daily Active Users (DAUs) for team Default Project
+Insight object (12) for team Default Project
+Insight object (14) Page view user conversion rate for team Default Project
+Insight object (5) Users by browser (last 2 weeks) for team Default Project
+Insight object (15) Retention of users based on doing Pageview for the first time and returning with the same event for team Default Project
+Insight object (16) for team Default Project
+Insight object (17) User paths based on page views for team Default Project
+Insight object (19) for team Default Project
+Insight object (2) Cumulative DAUs for team Default Project
+Insight object (18) User stickiness based on Pageview for team Default Project
+Insight object (7) for team Default Project
+Insight object (20) Pageview count for team Default Project
+Insight object (4) Sample - Purchase conversion funnel for team Default Project
+Insight object (23) Repeat users over time for team Formative Project
+Insight object (26) Users by traffic source for team Formative Project
+Insight object (25) Users by browser (last 2 weeks) for team Formative Project
+Insight object (24) Sample - Purchase conversion funnel for team Formative Project
+Insight object (22) Cumulative DAUs for team Formative Project
+Insight object (21) Daily Active Users (DAUs) for team Formative Project										
+                                </code></pre>
+                                <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                <pre><code>
+Insight object (21) Daily Active Users (DAUs) for team Formative Project
+Insight object (22) Cumulative DAUs for team Formative Project
+Insight object (23) Repeat users over time for team Formative Project
+Insight object (24) Sample - Purchase conversion funnel for team Formative Project
+Insight object (25) Users by browser (last 2 weeks) for team Formative Project
+Insight object (26) Users by traffic source for team Formative Project
+                                </code></pre>
+                            </div>
+                        </div>
+                        <!--End Hard Coding-->
                         {% for mixin, details in dp.mixins.items %}
                             <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
                             <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}}, which has been opened for you. Summarize what you think the Mixin does:
@@ -327,7 +626,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>MV* of {{ dp.project }}</h2>
+                        <h3>MV* of {{ dp.project }}</h3>
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
@@ -404,114 +703,6 @@
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                         {% endfor %}
-                        <!--Begin Hard Coding-->
-                        <h2>Data Flow</h2>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <br>
-                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the "Formative project" on the licensed account.</p>
-                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (22) Cumulative DAUs from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (23) Repeat users over time from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (24) Sample - Purchase conversion funnel from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (25) Users by browser (last 2 weeks) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (26) Users by traffic source from TIVSM
-tagged items: posthog.TaggedItem.None
-
-# and if we try to print pre_fetched tags for each of the above, 
-we get the following, for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                                <br><br>
-                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the "Formative project" on the licensed account.</p>
-                                <pre><code>tivsm postInsight object (21)
-tagged items: 
-tag: official
-
-tivsm postInsight object (22)
-tagged items: 
-tag: official tag
-tag: great
-tag: excellent
-tag: another one
-tag: frog
-tag: grammar
-tag: egret
-tag: hippo
-
-tivsm postInsight object (23), tagged items: 
-tag: good
-
-tivsm postInsight object (24), tagged items: 
-
-tivsm postInsight object (25), tagged items: 
-
-tivsm postInsight object (26), tagged items: </code></pre>
-                            </div>
-                            <div class="col-md-6">
-                                <br>
-                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the non-licensed account.</p>
-                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (22) Cumulative DAUs from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (23) Repeat users over time from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (24) Sample - Purchase conversion funnel from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (25) Users by browser (last 2 weeks) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (26) Users by traffic source from TIVSM
-tagged items: posthog.TaggedItem.None
-
-# and if we try to print pre_fetched tags for each of the above, 
-we get the following, for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                                <br><br>
-                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the non-licensed account.</p>
-                                <pre><code>tivsm postInsight object (21) 
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (22)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (23)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (24)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (25)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (26)
-tagged items: 
-# nothing was printed here
-
-and if we try to print pre_fetched tags for each of the above
-we get the following for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                            </div>
-                        </div>
-                        <!--End Hard Coding-->
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
                             <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been highlighted for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
@@ -542,7 +733,7 @@ AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
                         </p>
                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
-                        <h2>MV* of {{ dp.project }}</h2>
+                        <h3>MV* of {{ dp.project }}</h3>
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
