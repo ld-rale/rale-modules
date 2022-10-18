@@ -2,6 +2,10 @@
     <head>
         <!-- CSS only -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <script>
+            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+            posthog.init('phc_CHNw1P7pkQP2e8QOGAMH5YGsr2K7612fkeK6VLh5KNF',{api_host:'http://127.0.0.1:8000'})
+        </script>
     </head>
     <body>
         <div class="container">
@@ -400,6 +404,114 @@
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
                         {% endfor %}
+                        <!--Begin Hard Coding-->
+                        <h2>Data Flow</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>tivsm postInsight object (21)
+tagged items: 
+tag: official
+
+tivsm postInsight object (22)
+tagged items: 
+tag: official tag
+tag: great
+tag: excellent
+tag: another one
+tag: frog
+tag: grammar
+tag: egret
+tag: hippo
+
+tivsm postInsight object (23), tagged items: 
+tag: good
+
+tivsm postInsight object (24), tagged items: 
+
+tivsm postInsight object (25), tagged items: 
+
+tivsm postInsight object (26), tagged items: </code></pre>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>tivsm postInsight object (21) 
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (22)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (23)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (24)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (25)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (26)
+tagged items: 
+# nothing was printed here
+
+and if we try to print pre_fetched tags for each of the above
+we get the following for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                            </div>
+                        </div>
+                        <!--End Hard Coding-->
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
                             <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been highlighted for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
