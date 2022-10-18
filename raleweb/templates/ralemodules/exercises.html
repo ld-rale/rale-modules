@@ -307,14 +307,7 @@ AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
                         <h6>StructuredViewSetMixin code:</h6>
                         <pre><code>
 class StructuredViewSetMixin(_GenericViewSet):
-    legacy_team_compatibility: bool = False
-    filter_rewrite_rules: Dict[str, str] = {}
-    include_in_docs = True
-    authentication_classes = [
-        PersonalAPIKeyAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication,
-    ]
+    ...
     
     def get_queryset(self):
         queryset = super().get_queryset()
