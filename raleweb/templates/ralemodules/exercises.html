@@ -2,6 +2,10 @@
     <head>
         <!-- CSS only -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <script>
+            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+            posthog.init('phc_CHNw1P7pkQP2e8QOGAMH5YGsr2K7612fkeK6VLh5KNF',{api_host:'http://127.0.0.1:8000'})
+        </script>
     </head>
     <body>
         <div class="container">
@@ -270,8 +274,8 @@
                             <li>The view renders presentation of the model in a particular format.</li>
                             <li>The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</li>
                         </ul>
-                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
-                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:7000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
+                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
+                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
                         <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> with the following <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>. Here is a diagram of the MVC of the TODO app.</p>
                         <div class="row">
                             <div class="col-sm-5">
@@ -289,13 +293,13 @@
                                     <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
-                                        <p style="font-size:12px;">The controller sends all the todo items to the template for rendering in a list.</p>
+                                        <p style="font-size:12px;">The template sends todo item updates (edits, deletions, additions) to the controller. The controller sends all the todo items to the template for rendering in a list.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <b>Controllers</b> 
-                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br></p>
+                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br> (CRUD = create, read, update, delete)</p>
                                 <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a><br></p>
                                 <br>
                                 <b>Roles</b>
@@ -307,9 +311,9 @@
                                     <div class="col-sm-8">
                                         <p style="text-align: center;">←</p>
                                         <br>
-                                        <p style="font-size:12px;">The _ controller queries the _ model of the logged in user to retrieve their todo items.</p>
+                                        <p style="font-size:12px;">The To Do CRUD controller queries the ToDoItem model of the logged in user to retrieve their todo items.</p>
                                         <br><br>
-                                        <p style="font-size:12px;">The _ controller takes the user inputted frontend data and saves it to the todo model's table in the backend database.</p>
+                                        <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
                                     </div>
                                     <div class="col-sm-4">
                                         <b>Models</b>
@@ -323,7 +327,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>MV* of this example</h2>
+                        <h2>MV* of {{ dp.project }}</h2>
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
@@ -343,7 +347,222 @@
                                     <div class="col-sm-6">
                                         <p style="text-align: center;">→</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what information)
+                                        <p style="font-size:12px;">The controller fills in / manipulates the template with data.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Controllers</b> 
+                                {% for controller in dp.views %}
+                                    <p>
+                                        {{controller.name}}<br>
+                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                    </p>
+                                {% endfor %}
+                                <br>
+                                <b>Roles</b>
+                                <p>Backend Developers</p>
+                                <p>Fullstack Developers</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <p style="text-align: center;">←</p>
+                                        <br>
+                                        <p style="font-size:12px;">The controller accesses / manipulates the model.</p>
+                                        <br><br>
+                                        <p style="font-size:12px;">The controller fills in the model with user input data.</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>Models</b>
+                                        {% for model in dp.models %}
+                                            <p>{{model}}</p>
+                                        {% endfor %}
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Backend Developers</p>
+                                        <p>Database Admin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% for model in dp.models %}
+                            <h4>{{model}}</h4>
+                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look where the model class is defined in the code - it is highlighted for you.
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p id="{{model}}-a2">Activity 2: Name the class that is the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). Hint: Look at the diagram above.
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p id="{{model}}-a3">Activity 3: Name the URI path that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view). Hint: Look at the diagram above.
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                        {% endfor %}
+                        <!--Begin Hard Coding-->
+                        <h2>Data Flow</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the "Formative project" on the licensed account.</p>
+                                <pre><code>tivsm postInsight object (21)
+tagged items: 
+tag: official
+
+tivsm postInsight object (22)
+tagged items: 
+tag: official tag
+tag: great
+tag: excellent
+tag: another one
+tag: frog
+tag: grammar
+tag: egret
+tag: hippo
+
+tivsm postInsight object (23), tagged items: 
+tag: good
+
+tivsm postInsight object (24), tagged items: 
+
+tivsm postInsight object (25), tagged items: 
+
+tivsm postInsight object (26), tagged items: </code></pre>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                                <br><br>
+                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                <p>This is data for the non-licensed account.</p>
+                                <pre><code>tivsm postInsight object (21) 
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (22)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (23)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (24)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (25)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (26)
+tagged items: 
+# nothing was printed here
+
+and if we try to print pre_fetched tags for each of the above
+we get the following for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
+                            </div>
+                        </div>
+                        <!--End Hard Coding-->
+                        {% for controller in dp.views %}
+                            <h4>{{controller.name}}</h4>
+                            <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been highlighted for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                            <p id="{{controller.name}}-a5">Activity 5: (i) How does the model data get to the view (i.e. template)? (ii) What data does the model provide and how does it fill the template? <br><br> Hint 1: Scan the {{controller.name}} code, and the code of the relevant templates you mentioned from Activity 3 above, and the code of relevant model classes. They are highlighted for you. <br> Hint 2: Consider which part, Model code vs. Controller code, is responsible for database touching logic versus template data preparation. <br> Hint 3: Look at the URL configuration files (i.e. urls.py) too. <br> Hint 4: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br>
+                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                            </p>
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><br>
+                        {% endfor %}
+                        <h4>MV* for Posthog</h4>
+                        <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>)?
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
+                        </p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <h4>
+                            {% for template in dp.templates %}
+                                {{template.name}}, 
+                            {% endfor %}
+                            Templates
+                        </h4>
+                        <p id="a7">Activity 7: (i) This is a subjective question, but would you consider these templates (highlighted in the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture? (ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
+                        </p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <h2>MV* of {{ dp.project }}</h2>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <b>Templates / Views</b>
+                                        {% for template in dp.templates %}
+                                            <p>
+                                                {{template.name}}<br>
+                                                <span style="font-size:10px;">May use {{template.model}} model but check.</span>
+                                            </p>
+                                        {% endfor %}
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Frontend Developers</p>
+                                        <p>Fullstack Developers</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p style="text-align: center;">→</p>
+                                        <br>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what data)
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
                                         </p>
                                         <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
@@ -368,12 +587,12 @@
                                     <div class="col-sm-8">
                                         <p style="text-align: center;">←</p>
                                         <br>
-                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model
+                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model.
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
                                         </p>
                                         <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what information)
+                                        <p style="font-size:12px;">Describe how the controller fills in the model (i.e. with what data).
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
                                         </p>
                                         <textarea rows="5
@@ -392,52 +611,6 @@
                                 </div>
                             </div>
                         </div>
-                        {% for model in dp.models %}
-                            <h4>{{model}}</h4>
-                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{model}}-a2">Activity 2: Name the file / class that forms the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view).
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{model}}-a3">Activity 3: Name the file that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view)
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in vanilla PHP https://en.wikipedia.org/wiki/PHP)?
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                        {% endfor %}
-                        {% for controller in dp.views %}
-                            <h4>{{controller.name}}</h4>
-                            <p id="{{controller.name}}-a4">Activity 4: How does this controller access / manipulate the data model (i.e. which line of code)? What data does the model provide the controller? Does the controller also manipulate the model (i.e. create / edit / delete model instances and if so with what information) or is it just read only?
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{controller.name}}-a5">Activity 5: How does the model data get to the view (i.e. template)? What data does the model provide and how does it fill the template? Consider which part, Model code vs. Controller code, is responsible for data touching logic versus template preparation logic.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                        {% endfor %}
-                        <h4>
-                            {% for template in dp.templates %}
-                                {{template.name}}, 
-                            {% endfor %}
-                            Templates
-                        </h4>
-                        <p id="a7">Activity 7: This is a subjective question, but would you consider these templates part of an MVC, MVVM, MVP, MVT, or other architecture, and specifically for {{dp.project}}, why do you think the code architects chose that?
-                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
-                        </p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
                         <table id="mvs-tradeoff" class="table">
                             <tr>
@@ -449,10 +622,10 @@
                             <tr>
                                 <td>MV*</td>
                                 <td>
-                                    <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="_blank">Model-view-controller architectures</a> and 
-                                    <a href="https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4" target="_blank">MVC vs MVP vs MVVM</a></td>
+                                    Model-view-controller architectures, described above, and 
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a></td>
                                 <td>
-                                    <a href="https://levelup.gitconnected.com/mvc-vs-mvp-vs-mvvm-35e0d4b933b4" target="_blank">MVC vs MVP vs MVVM</a>
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
                                     <ul>
                                         <li>(A) separation of visualization, processing, data management</li>
                                         <li>(B) modularity</li>
@@ -462,7 +635,7 @@
                                     </ul>    
                                 </td>
                                 <td>
-                                    Why was MV* useful specifically for {{dp.project}}? (hint - think about tradeoffs over not using any framework)
+                                    Why was MV* useful specifically for {{dp.project}}? Hint - think about tradeoffs over not using any framework.
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
                                     <br><br>
                                     <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
@@ -470,8 +643,8 @@
                             </tr>
                             <tr>
                                 <td>No Framework</td>
-                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a>.</td>
-                                <td><a href="https://en.wikipedia.org/wiki/PHP" target="_blank">vanilla PHP</a</td>
+                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>.</td>
+                                <td><a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a</td>
                                 <td>
                                     Why would no framework not work specifically for {{dp.project}}?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
