@@ -308,7 +308,7 @@ AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
                         <pre><code>
 class StructuredViewSetMixin(_GenericViewSet):
     ...
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         to_return = self.filter_queryset_by_parents_lookups(queryset)
@@ -470,7 +470,7 @@ Insight object (26) Users by traffic source for team Formative Project
                         <!--End Hard Coding-->
                         {% for mixin, details in dp.mixins.items %}
                             <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
-                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}}, which has been opened for you. Summarize what you think the Mixin does:
+                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}} (see the snippet above). Summarize what you think the Mixin does:
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -487,7 +487,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                 <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how this Mixin's <b>{{prop_method}}</b> method is being used. i.e. What does this Mixin's <b>{{prop_method}}</b> do (see {{mixin}} in {{details.file_path}})? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do (look at the code of the classes you mentioned in 3A)?
+                                <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how this Mixin's <b>{{prop_method}}</b> method is being used. i.e. What does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do (look at the code of the classes you mentioned in 3A)?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                 </p>
                                 <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
