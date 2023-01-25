@@ -21,8 +21,8 @@
                         <!--{{dp}}-->
                         <h2>Mixins Lesson</h2>
                         <p>Mixins are a class from which other classes can adopt methods and properties.</p>
-                        <p>Mixins are used if you don't want a class to inherit from another class (i.e. be its child class) but you want it to adopt some attributes / methods.</p> 
-                        <p>You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (i.e. if class TA has parents Student and Faculty, both of whose parent is Person, then does TA use Student or Faculty's version of any given method).</p>
+                        <p>Mixins are used if you don't want a class to "inherit" from another class (i.e. be its child class) but you want it to "include" some attributes / methods.</p> 
+                        <p>You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (e.g. if class TA has parents Student and Faculty, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's?).</p>
                         <img src="/static/ralemodules/diamondproblem.png"/>
                         <br><br>
                         <p>A mixin is an object that we can use in order to add reusable functionality to another object or class, without using inheritance. We can't use mixins on their own: their sole purpose is to add functionality to objects or classes without inheritance. [src: https://www.patterns.dev/posts/mixin-pattern/]</p>
@@ -142,7 +142,7 @@
                         </div>
                         <hr>
                         <p>The difference is subtle, but in the above examples, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own. [src: https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714]</p>
-                        <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behaviour.) IOW, not for re-use, but for compartmentalization.</p>
+                        <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). IOW, not for re-use, but for compartmentalization.</p>
                         <p><b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then classes adopting both mixins run both mixins' version of method / property X one after another.</p>
                         <p>Mixins can be used for:</p>
                         <ul>
@@ -710,7 +710,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             <br><br>
                         {% endfor %}
                         <h4>MV* for Posthog</h4>
-                        <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here over no framework (i.e. mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>)?
+                        <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here?
                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
                         </p>
                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
