@@ -9,7 +9,7 @@ import json
 import csv
 
 # https://docs.python.org/3/library/ast.html
-# python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog/
+# python3 out/parser-py.py /Users/gobidasu/Desktop/rale-modules/posthog/posthog/api/routing.py /Users/gobidasu/Desktop/rale-modules/posthog
 # needle /insight file /Users/gobidasu/Desktop/rale-modules/posthog/frontend/src/scenes/saved-insights/SavedInsights.tsx
 
 PATH_TO_CODE = "/Users/gobidasu/Desktop/rale-modules/ralemodules/"
@@ -442,18 +442,23 @@ mixins_used_alone = set()
 for adopter_class in jDP["classes_by_mixins"]:
     # print(jDP["classes_by_mixins"][adopter_class])
     if not jDP["classes_by_mixins"][adopter_class]:
+        print("removing", adopter_class, "because it is not even in jDP")
         to_remove.add(adopter_class)
     if len(jDP["classes_by_mixins"][adopter_class]) < 2: # if using one or fewer mixins
         for relevant_mixin in jDP["classes_by_mixins"][adopter_class]: # just 1 time
+            print("relevant_mixin: ", relevant_mixin)
             if relevant_mixin not in mixins_used_alone:
                 mixins_used_alone.add(relevant_mixin)
             else:
+                print("removing", adopter_class, "because it uses one or fewer mixins, and it is not the only case of that mixin used alone")
                 to_remove.add(adopter_class)
     for adopted_mixin in jDP["classes_by_mixins"][adopter_class]:
         if not jDP["classes_by_mixins"][adopter_class][adopted_mixin]: # if it's not using all the mixins
+            print('jDP["classes_by_mixins"][', adopter_class , '] [', adopted_mixin, '] =', )
+            print("removing", adopter_class, "because it not using all of its mixins")
             to_remove.add(adopter_class)
 for adopter_class in to_remove:
-    # print("removing adopter_class:", adopter_class)
+    print("removing adopter_class:", adopter_class)
     jDP["classes_by_mixins"].pop(adopter_class)
 
 # Remove mixins that have one or fewer prop methods or adopters. 
