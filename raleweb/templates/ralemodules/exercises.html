@@ -680,7 +680,7 @@ Insight object (26) Users by traffic source for team Formative Project
                         </div>
                         {% for model in dp.models %}
                             <h4>{{model}}</h4>
-                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look where the model class is defined in the code - it is highlighted for you.
+                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look where the model class is defined in the code - it is surfaced for you.
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -698,12 +698,12 @@ Insight object (26) Users by traffic source for team Formative Project
                         {% endfor %}
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
-                            <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been linked / surfaced for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
+                            <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been surfaced for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                             <br><br>
-                            <p id="{{controller.name}}-a5">Activity 5: (i) How does the model data get to the view (i.e. template)? (ii) What data does the model provide and how does it fill the template? <br><br> Hint 1: Scan the {{controller.name}} code, and the code of the relevant templates you mentioned from Activity 3 above, and the code of relevant model classes. They are highlighted for you. <br> Hint 2: Consider which part, Model code vs. Controller code, is responsible for database touching logic vs. template data preparation. <br> Hint 3: Look at the URL configuration files (i.e. urls.py) too. <br> Hint 4: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br>
+                            <p id="{{controller.name}}-a5">Activity 5: (i) How does the model data get to the view (i.e. template)? (ii) What data does the model provide and how does it fill the template? <br><br> Hint 1: Scan the {{controller.name}} code, and the code of the relevant templates you mentioned from Activity 3 above, and the code of relevant model classes. They are surfaced / linked for you. <br> Hint 2: Consider which part, Model code vs. Controller code, is responsible for database touching logic vs. template data preparation. <br> Hint 3: Look at the URL configuration files (i.e. urls.py) too. <br> Hint 4: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br>
                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
                             </p>
                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -721,7 +721,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             {% endfor %}
                             Templates
                         </h4>
-                        <p id="a7">Activity 7: (i) Would you consider these templates (highlighted in the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture? (ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
+                        <p id="a7">Activity 7: (i) Would you consider these templates (surfaced from the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture? (ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
                         </p>
                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
