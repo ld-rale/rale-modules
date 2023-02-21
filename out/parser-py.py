@@ -439,13 +439,27 @@ response = {"name": folder_to_parse, "details": jDP}
 # Remove classes that use one or fewer mixins (unless it's the only case of that mixin used alone), or that don't use all the mixins fed into them.
 to_remove = set()
 mixins_used_alone = set()
+jDP__cbym = {}
+
+for adopter_class in jDP["classes_by_mixins"]:
+    for relevant_mixin in jDP["classes_by_mixins"][adopter_class]:
+        print('jDP["classes_by_mixins"][', adopter_class , '] [', relevant_mixin, '] =', jDP['classes_by_mixins'][adopter_class][relevant_mixin])
+            len_methods_adopted = len(jDP["classes_by_mixins"][adopter_class][relevant_mixin])
+            jDP__cbym[adopter_class].append((len_methods_adopted, relevant_mixin))
 for adopter_class in jDP["classes_by_mixins"]:
     # print(jDP["classes_by_mixins"][adopter_class])
     if not jDP["classes_by_mixins"][adopter_class]:
         print("removing", adopter_class, "because it is not even in jDP")
         to_remove.add(adopter_class)
     if len(jDP["classes_by_mixins"][adopter_class]) < 2: # if using one or fewer mixins
-        for relevant_mixin in jDP["classes_by_mixins"][adopter_class]: # just 1 time
+        if adopter_class not in jDP__cbym:
+            jDP__cbym[adopter_class] = []
+        
+            
+        jDP__cbym[adopter_class] = sorted(jDP__cbym__ac, reverse=True)
+        print("jDP__cbym__ac: ", jDP__cbym__ac)
+        for jDP__cbym__ac__rm in jDP__cbym__ac: # just 1 time # but go through in order of ac's that adopt more methods of the rm, to those that adopt less
+            relevant_mixin = jDP__cbym__ac__rm[1]
             print("relevant_mixin: ", relevant_mixin)
             if relevant_mixin not in mixins_used_alone:
                 mixins_used_alone.add(relevant_mixin)
@@ -454,7 +468,6 @@ for adopter_class in jDP["classes_by_mixins"]:
                 to_remove.add(adopter_class)
     for adopted_mixin in jDP["classes_by_mixins"][adopter_class]:
         if not jDP["classes_by_mixins"][adopter_class][adopted_mixin]: # if it's not using all the mixins
-            print('jDP["classes_by_mixins"][', adopter_class , '] [', adopted_mixin, '] =', )
             print("removing", adopter_class, "because it not using all of its mixins")
             to_remove.add(adopter_class)
 for adopter_class in to_remove:
