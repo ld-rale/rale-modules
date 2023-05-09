@@ -14,47 +14,84 @@
                     <div id="uml">
                         <br>
                         <h1>RALE Modules, a Process Management Tool for Sensemaking</h1>
-                        <h3>Diagrams and Activities for Learning Design Patterns from Professional Code</h3>
+                        <h3>Diagrams and Activities for Learning Design Patterns and Architectures from Professional Code</h3>
                     </div>
                     <br>
                     <div id="mixins">
                         <!--{{dp}}-->
-                        <h2>Mixins Lesson</h2>
-                        <p>Mixins are a class from which other classes can adopt methods and properties.</p>
-                        <p>Mixins are used if you don't want a class to "inherit" from another class (i.e. be its child class) but you want it to "include" some attributes / methods.</p> 
-                        <p>You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance (e.g. if class TA has parents Student and Faculty, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's?).</p>
-                        <img src="/static/ralemodules/diamondproblem.png"/>
-                        <br><br>
-                        <p>A mixin is an object that we can use in order to add reusable functionality to another object or class, without using inheritance. We can't use mixins on their own: their sole purpose is to add functionality to objects or classes without inheritance. [src: https://www.patterns.dev/posts/mixin-pattern/] [img src: https://www.geeksforgeeks.org/multiple-inheritance-in-c/]</p>
-                        <p>A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
-                            <ul>
-                                <li>You want to provide a lot of optional features for a class.</li>
-                                <li>You want to use one particular feature in a lot of different classes.</li>
-                            </ul>
-                            For an example of number one, consider werkzeug, which is an HTTP request and response system. I can make a plain request object by saying:
-                        </p>
-                        <pre>
-                            from werkzeug import BaseRequest
-                            class RegularRequest(BaseRequest):
-                                pass
-                        </pre>
-                        <p>If I want to add accept header support, which enables getting all HTTP ccept headers (which determines the type of content the client can support) into a single object, I would instead write:</p>
-                        <pre>
-                            from werkzeug import BaseRequest, AcceptMixin
-                                class SpecialRequest(AcceptMixin, BaseRequest):
-                                    def sr_method:
-                                        method_from_accept_mixin(property_from_base_request)
-                        </pre>
-                        <p>If I wanted to make a request object that supports accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.), I could do this:<p>
-                        <pre>
-                            from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
+                        <h2>Mixins</h2>
+                        <p>Check the boxes after reading the statements. Fill in the text boxes.</p>
+                        <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Theory</th>
+                                <th>Canonical / Tutorial Example</th>
+                                <th>Professional Example</th>
+                            </tr>
+                            <tr>
+                                <td>Definition</td>
+                                <td>
+                                    <p><input type="checkbox"/> A mixin is a class from which other classes can adopt methods and properties.</p>
+                                    <p><input type="checkbox"/> Mixins are used if you don't want a class to "inherit" from another class (i.e. be its child class) but you want it to "include" some attributes / methods.</p>
+                                    <p><input type="checkbox"/> You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance. e.g. If <a target="_blank" href="/static/ralemodules/diamondproblem.png">class TA has parents Student and Faculty</a>, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's?</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> For an example, consider werkzeug, which is an HTTP request and response system. I can make a plain request object by saying:</p>
+                                    <pre>
+from werkzeug import BaseRequest
+class RegularRequest(BaseRequest):
+    pass
+                                    </pre>
+                                    <p>If I want to add accept header support, which enables getting all HTTP ccept headers (which determines the type of content the client can support) into a single object, I would instead write:</p>
+                                    <pre>
+from werkzeug import BaseRequest, AcceptMixin
+    class SpecialRequest(AcceptMixin, BaseRequest):
+        def sr_method:
+            method_from_accept_mixin(property_from_base_request)
+                                    </pre>
+                                    <p>If I wanted to make a request object that supports accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.), I could do this:<p>
+                                    <pre>
+from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
+
+class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
+    def esr_method:
+        method_from_accept_mixin(property_from_base_request)
+        method_from_e_tag_request_mixin(property_from_user_agent_mixin)
+        method_from_authentication_mixin()
+                                    </pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Diagrams</td>
+                            </tr>
+                            <tr>
+                                <td>Goals</td>
+                            </tr>
+                            <tr>
+                                <td>Rationales</td>
+                                <td>
+                                    <p><input type="checkbox"/> A mixin is an object that we can use in order to add reusable functionality to another object or class, without using inheritance. We can't use mixins on their own: their sole purpose is to add functionality to objects or classes without inheritance (src: <a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">1</a>, <a href="https://www.geeksforgeeks.org/multiple-inheritance-in-c/" target="_blank">2</a>)</p>
+                                    <p><input type="checkbox"/> A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
+                                        <ul>
+                                            <li>You want to provide a lot of optional features for a class.</li>
+                                            <li>You want to use one particular feature in a lot of different classes.</li>
+                                        </ul>
+                                        
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tradeoffs / Alternatives</td>
+                            </tr>
+                        </table>
+                        
+                        
+
+
+                        
                             
-                            class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
-                                def esr_method:
-                                    method_from_accept_mixin(property_from_base_request)
-                                    method_from_e_tag_request_mixin(property_from_user_agent_mixin)
-                                    method_from_authentication_mixin()
-                        </pre>
+                        
+                        
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="row">
