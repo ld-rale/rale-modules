@@ -37,20 +37,20 @@
                                 </td>
                                 <td>
                                     <p><input type="checkbox"/> For an example, consider werkzeug, which is an HTTP request and response system. I can make a plain request object by saying:</p>
-                                    <pre>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
 from werkzeug import BaseRequest
 class RegularRequest(BaseRequest):
     pass
                                     </pre>
-                                    <p>If I want to add accept header support, which enables getting all HTTP ccept headers (which determines the type of content the client can support) into a single object, I would instead write:</p>
-                                    <pre>
+                                    <p><input type="checkbox"/> If I want to add accept header support, which enables getting all HTTP ccept headers (which determines the type of content the client can support) into a single object, I would instead write:</p>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
 from werkzeug import BaseRequest, AcceptMixin
     class SpecialRequest(AcceptMixin, BaseRequest):
         def sr_method:
             method_from_accept_mixin(property_from_base_request)
                                     </pre>
-                                    <p>If I wanted to make a request object that supports accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.), I could do this:<p>
-                                    <pre>
+                                    <p><input type="checkbox"/> If I wanted to make a request object that supports accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.), I could do this:<p>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
 from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
 
 class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
@@ -63,6 +63,95 @@ class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, Authent
                             </tr>
                             <tr>
                                 <td>Diagrams</td>
+                                <td>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>AcceptMixin</b>
+                                                    <p>method_from_accept_mixin</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>BaseRequest</b>
+                                                    <p>property_from_base_request</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <b>SpecialRequest</b>
+                                            <p>method_from_accept_mixin</p>
+                                            <p>property_from_base_request</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>AcceptMixin</b>
+                                                    <p>method_from_accept_mixin</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>BaseRequest</b>
+                                                    <p>property_from_base_request</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>ETagRequestMixin</b>
+                                                    <p>method_from_e_tag_request_mixin</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>UserAgentMixin</b>
+                                                    <p>property_from_user_agent_mixin</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <b>AuthenticationMixin</b>
+                                                    <p>method_from_authentication_mixin</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p>→</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <b>ExtraSpecialRequest</b>
+                                            <p>method_from_accept_mixin</p>
+                                            <p>property_from_base_request</p>
+                                            <p>method_from_e_tag_request_mixin</p>
+                                            <p>property_from_user_agent_mixin</p>
+                                            <p>method_from_authentication_mixin</p>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Goals</td>
@@ -76,9 +165,14 @@ class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, Authent
                                             <li>You want to provide a lot of optional features for a class.</li>
                                             <li>You want to use one particular feature in a lot of different classes.</li>
                                         </ul>
-                                        
                                     </p>
+                                    <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization.</p>
+                                    <p><b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then classes adopting both mixins run both mixins' version of method / property X one after another. This is true for Python Mixins with super calls (src: <a target="_blank" href="https://www.pythontutorial.net/python-oop/python-mixin/">1</a>, ).</p>
                                 </td>
+                                <td>
+                                    <p><input type="checkbox"/> The difference is subtle, but in the above examples, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                                </td>
+
                             </tr>
                             <tr>
                                 <td>Tradeoffs / Alternatives</td>
@@ -92,95 +186,11 @@ class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, Authent
                             
                         
                         
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>AcceptMixin</b>
-                                        <p>method_from_accept_mixin</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>BaseRequest</b>
-                                        <p>property_from_base_request</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <b>SpecialRequest</b>
-                                <p>method_from_accept_mixin</p>
-                                <p>property_from_base_request</p>
-                            </div>
-                        </div>
+                        
                         <hr>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>AcceptMixin</b>
-                                        <p>method_from_accept_mixin</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>BaseRequest</b>
-                                        <p>property_from_base_request</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>ETagRequestMixin</b>
-                                        <p>method_from_e_tag_request_mixin</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>UserAgentMixin</b>
-                                        <p>property_from_user_agent_mixin</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <b>AuthenticationMixin</b>
-                                        <p>method_from_authentication_mixin</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p>→</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <b>ExtraSpecialRequest</b>
-                                <p>method_from_accept_mixin</p>
-                                <p>property_from_base_request</p>
-                                <p>method_from_e_tag_request_mixin</p>
-                                <p>property_from_user_agent_mixin</p>
-                                <p>method_from_authentication_mixin</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <p>The difference is subtle, but in the above examples, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own. [src: https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714] [src: https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes]</p>
-                        <p>Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). IOW, not for re-use, but for compartmentalization.</p>
-                        <p><b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then classes adopting both mixins run both mixins' version of method / property X one after another.</p>
+                        
+                        
+                        
                         <p>Mixins can be used for:</p>
                         <ul>
                             <li>Mixins can be used by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration.</li>
