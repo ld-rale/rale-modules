@@ -59,6 +59,29 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    <u>Goals</u><br><br>
+                                    <ul>
+                                        <li><input type="checkbox"/> inherit functionality</li>
+                                        <li><input type="checkbox"/> mix/match functionality</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li><input type="checkbox"/> wants to let some requests support header functionality</li>
+                                        <li><input type="checkbox"/> but others to support headers, auth, tags, etc.</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    Actions, Insights, Dashboards need to:
+                                    <ol>
+                                        <li><input type="checkbox"/> check the logged in user's access to data</li>
+                                        <li><input type="checkbox"/> add tags to data of pro account users</li>
+                                    </ol>
+                                    but ClickHouseGroupTypes only need to do #1.
+                                </td>
+                            <tr>                        
+                            <tr>
                                 <td class="diagram-text">
                                     <u style="font-size:medium;">Diagrams</u><br><br>
                                     <div class="row">
@@ -190,34 +213,25 @@
                                         </div>
                                         <hr>
                                     {% endfor %}
+                                    <!--End Hard Coding-->
+                                    {% for mixin, details in dp.mixins.items %}
+                                        <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
+                                        <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}} (see the snippet below). Summarize what you think the Mixin does:
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that use the {{mixin}} mixin. Hint, look at the "Mixins of {{ dp.project }}" diagram above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                    {% endfor %}
                                     <!--Begin Hard Coding-->
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <u>Goals</u><br><br>
-                                    <ul>
-                                        <li><input type="checkbox"/> inherit functionality</li>
-                                        <li><input type="checkbox"/> mix/match functionality</li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li><input type="checkbox"/> wants to let some requests support header functionality</li>
-                                        <li><input type="checkbox"/> but others to support headers, auth, tags, etc.</li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    Actions, Insights, Dashboards need to:
-                                    <ol>
-                                        <li><input type="checkbox"/> check the logged in user's access to data</li>
-                                        <li><input type="checkbox"/> add tags to data of pro account users</li>
-                                    </ol>
-                                    but ClickHouseGroupTypes only need to do #1.
-                                </td>
-                            <tr>                                                                                                                                                            <tr>
-                                <td>
-                                    <u>Data flow and relevant code snippets</u> can often be important to consider.
+                                    <u>Relevant code snippets and data flow</u> can often be important to consider.
                                 </td>
                                 <td>
                                     <p>In Werkzeug, I can make a plain request object by saying:</p>
@@ -245,51 +259,14 @@ class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, Authent
                                     </pre>
                                 </td>
                                 <td>
-
-                                </td>
-                            </tr>                               
-                            <tr>
-                                <td>
-                                    <u>Rationales</u><br><br>
-                                    <p><input type="checkbox"/> A mixin is an object that we can use in order to add reusable functionality to another object or class, without using inheritance. We can't use mixins on their own: their sole purpose is to add functionality to objects or classes without inheritance (src: <a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">1</a>, <a href="https://www.geeksforgeeks.org/multiple-inheritance-in-c/" target="_blank">2</a>).</p> 
-                                    <p><input type="checkbox"/> Mixins can be used in this way by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration.</p>
-                                    <p><input type="checkbox"/> A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
-                                        <ul>
-                                            <li>You want to provide a lot of optional features for a class.</li>
-                                            <li>You want to use one particular feature in a lot of different classes.</li>
-                                        </ul>
-                                    </p>
-                                    <p><input type="checkbox"/> Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization. In this way, code at different levels (data touching, logic, view touching, etc.) is separated so different developers can collaborate easily.</p>
-                                    <p><input type="checkbox"/> Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods.</p>
-                                    <p><input type="checkbox"/> <b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then an instance of class C, which adopts both mixins A and B, follows a method resolution order (MRO) to determine which version of X (A's or B's) to run. By using the super() syntax in A and B's version of the method / property X, one can even get both versions of X to run in sequence, one after another. This is a benefit of using super() with multiple inheritance, i.e. Python mixins<!--, depending on the MRO of the class of the object involved.--> (src: <a target="_blank" href="https://www.pythontutorial.net/python-oop/python-mixin/">1</a>, <a href="https://www.thedigitalcatonline.com/blog/2020/03/27/mixin-classes-in-python/">2</a>, <a target="_blank" href="https://stackoverflow.com/questions/3277367/how-does-pythons-super-work-with-multiple-inheritance">3</a>, <a target="_blank" href="https://stackoverflow.com/questions/576169/understanding-python-super-with-init-methods/576183#576183">4</a>, <a href="https://www.artima.com/weblogs/viewpost.jsp?thread=236275">5</a>, <a target="_blank" href="https://stackoverflow.com/questions/55994700/why-doesnt-super-class-name-return-the-name-of-my-base-class">6</a>, <a target="_bl
-                                        " href="https://stackoverflow.com/questions/47117327/is-mro-order-depth-first-or-breadth-first">7</a>).</p>
-                                </td>
-                                <td>
-                                    <p><input type="checkbox"/> The difference is subtle, but in the werkzeug example, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
-                                    <p><input type="checkbox"/> Here werkzeug's SpecialRequest and ExtraSpecialRequest both use AcceptMixin.</p>
-                                    <p><input type="checkbox"/> Here werkzeug is adding optional features for SpecialRequest and even more optional features for ExtraSpecialRequest.</p>
-                                    <p><input type="checkbox"/> Here AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin each represent compartmentalized implementations of particular functionalities.</p>
-                                    <p><input type="checkbox"/> For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed.</p>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Tradeoffs / Alternatives</td>
-                            </tr>
-                        </table>
-                        
-
-                        
-                        <br>
-                        <h6>TaggedItemViewSetMixin code:</h6>
-                        <pre><code>
+                                    <h6>TaggedItemViewSetMixin code:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
 class TaggedItemViewSetMixin(viewsets.GenericViewSet):
     def is_licensed(self):
         return (
-            not self.request.user.is_anonymous
-            # The below triggers an extra query to resolve user's organization.
-            and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
-            # type: ignore
+            not self.request.user.is_anonymous and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
+            # The second one triggers an extra query to resolve user's organization.
         )
 
     def get_queryset(self):
@@ -299,114 +276,11 @@ class TaggedItemViewSetMixin(viewsets.GenericViewSet):
                 Prefetch("tagged_items", queryset=TaggedItem.objects.select_related("tag"), to_attr="prefetched_tags")
             )
         return queryset
-                        </code></pre>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the "Formative project" on the licensed account.</p>
-                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (22) Cumulative DAUs from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (23) Repeat users over time from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (24) Sample - Purchase conversion funnel from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (25) Users by browser (last 2 weeks) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (26) Users by traffic source from TIVSM
-tagged items: posthog.TaggedItem.None
-
-# and if we try to print pre_fetched tags for each of the above, 
-we get the following, for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                                <br><br>
-                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the "Formative project" on the licensed account.</p>
-                                <pre><code>tivsm postInsight object (21)
-tagged items: 
-tag: official
-
-tivsm postInsight object (22)
-tagged items: 
-tag: official tag
-tag: great
-tag: excellent
-tag: another one
-tag: frog
-tag: grammar
-tag: egret
-tag: hippo
-
-tivsm postInsight object (23), tagged items: 
-tag: good
-
-tivsm postInsight object (24), tagged items: 
-
-tivsm postInsight object (25), tagged items: 
-
-tivsm postInsight object (26), tagged items: </code></pre>
-                            </div>
-                            <div class="col-md-6">
-                                <br>
-                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the non-licensed account.</p>
-                                <pre><code>Insight object (21) Daily Active Users (DAUs) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (22) Cumulative DAUs from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (23) Repeat users over time from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (24) Sample - Purchase conversion funnel from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (25) Users by browser (last 2 weeks) from TIVSM
-tagged items: posthog.TaggedItem.None
-
-Insight object (26) Users by traffic source from TIVSM
-tagged items: posthog.TaggedItem.None
-
-# and if we try to print pre_fetched tags for each of the above, 
-we get the following, for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                                <br><br>
-                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
-                                <p>This is data for the non-licensed account.</p>
-                                <pre><code>tivsm postInsight object (21) 
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (22)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (23)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (24)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (25)
-tagged items: 
-# nothing was printed here
-tivsm postInsight object (26)
-tagged items: 
-# nothing was printed here
-
-and if we try to print pre_fetched tags for each of the above
-we get the following for each of the above insight objects:
-AttributeError: 'Insight' object has no attribute 'prefetched_tags'</code></pre>
-                            </div>
-                        </div>
-                        <br>
-                        <h6>StructuredViewSetMixin code:</h6>
-                        <pre><code>
+                                        </code>
+                                    </pre>
+                                    <h6>StructuredViewSetMixin code:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
 class StructuredViewSetMixin(_GenericViewSet):
     ...
 
@@ -524,12 +398,133 @@ class StructuredViewSetMixin(_GenericViewSet):
             else:
                 raise AuthenticationFailed()
         return team_found
-                        </code></pre>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <br><br>
-                                <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
-                                <pre><code>
+                                        </code>
+                                    </pre>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                            <p>This is data for the "Formative project" on the licensed account.</p>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
+Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                                </code>
+                                            </pre>
+                                            <br><br>
+                                            <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                            <p>This is data for the "Formative project" on the licensed account.</p>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
+tivsm postInsight object (21)
+tagged items: 
+tag: official
+
+tivsm postInsight object (22)
+tagged items: 
+tag: official tag
+tag: great
+tag: excellent
+tag: another one
+tag: frog
+tag: grammar
+tag: egret
+tag: hippo
+
+tivsm postInsight object (23), tagged items: 
+tag: good
+
+tivsm postInsight object (24), tagged items: 
+
+tivsm postInsight object (25), tagged items: 
+
+tivsm postInsight object (26), tagged items: 
+                                                </code>
+                                            </pre>
+                                        </div>
+                                            <div class="col-md-6">
+                                                <br>
+                                                <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                                <p>This is data for the non-licensed account.</p>
+                                                <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                    <code>
+Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                                    </code>
+                                                </pre>
+                                                <br><br>
+                                                <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                                <p>This is data for the non-licensed account.</p>
+                                                <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                    <code>
+tivsm postInsight object (21) 
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (22)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (23)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (24)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (25)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (26)
+tagged items: 
+# nothing was printed here
+
+and if we try to print pre_fetched tags for each of the above
+we get the following for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br><br>
+                                            <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
 Insight object (6) Users by traffic source for team Default Project
 Insight object (8) for team Default Project
 Insight object (9) for team Default Project
@@ -556,51 +551,73 @@ Insight object (25) Users by browser (last 2 weeks) for team Formative Project
 Insight object (24) Sample - Purchase conversion funnel for team Formative Project
 Insight object (22) Cumulative DAUs for team Formative Project
 Insight object (21) Daily Active Users (DAUs) for team Formative Project										
-                                </code></pre>
-                                <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
-                                <pre><code>
+                                                </code>
+                                            </pre>
+                                            <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
 Insight object (21) Daily Active Users (DAUs) for team Formative Project
 Insight object (22) Cumulative DAUs for team Formative Project
 Insight object (23) Repeat users over time for team Formative Project
 Insight object (24) Sample - Purchase conversion funnel for team Formative Project
 Insight object (25) Users by browser (last 2 weeks) for team Formative Project
 Insight object (26) Users by traffic source for team Formative Project
-                                </code></pre>
-                            </div>
-                        </div>
-                        <!--End Hard Coding-->
-                        {% for mixin, details in dp.mixins.items %}
-                            <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
-                            <p>Activity 1: Scan the mixin code of {{mixin}}, found in {{details.file_path}} (see the snippet above). Summarize what you think the Mixin does:
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that use the {{mixin}} mixin. Hint, look at the "Mixins of {{ dp.project }}" diagram above.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            {% for prop_method in details.prop_methods%}
-                                <h6 id="mixin-{{mixin}}-{{prop_method}}-3a">{{prop_method}}</h6>
-                                <p>Activity 3A: List the classes / class instances that adopt / use the {{mixin}}'s method <b>{{prop_method}}</b>. Hint, look at the "Mixins of {{ dp.project }}" diagram above.
-                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
-                                </p>
-                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                                <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how this Mixin's <b>{{prop_method}}</b> method is being used. i.e. What does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do (look at the code of the classes you mentioned in 3A)?
-                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
-                                </p>
-                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                                <br><br>
-                                <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: Explain why mixins (i.e. {{mixin}}) are used in {{dp.project}}? Hint, see the 3 general ideas bulletted <a href="#">at the end of the Mixins lesson above</a> ("Mixins can be used for ..."). Then take another look at the {{dp.project}} application as a user. Remember the "Multiple Versions of Methods / Props Note" above. Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
-                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
-                                </p>
-                                <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                                <br><br>
-                            {% endfor %}
-                        {% endfor %}
-                        <h4>Inheritence Lesson</h4>
+                                                </code>
+                                            </pre>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>                               
+                            <tr>
+                                <td>
+                                    <u>Rationales</u><br><br>
+                                    <p><input type="checkbox"/> A mixin is an object that we can use in order to add reusable functionality to another object or class, without using inheritance. We can't use mixins on their own: their sole purpose is to add functionality to objects or classes without inheritance (src: <a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">1</a>, <a href="https://www.geeksforgeeks.org/multiple-inheritance-in-c/" target="_blank">2</a>).</p> 
+                                    <p><input type="checkbox"/> Mixins can be used in this way by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration.</p>
+                                    <p><input type="checkbox"/> A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
+                                        <ul>
+                                            <li>You want to provide a lot of optional features for a class.</li>
+                                            <li>You want to use one particular feature in a lot of different classes.</li>
+                                        </ul>
+                                    </p>
+                                    <p><input type="checkbox"/> Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization. In this way, code at different levels (data touching, logic, view touching, etc.) is separated so different developers can collaborate easily.</p>
+                                    <p><input type="checkbox"/> Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods.</p>
+                                    <p><input type="checkbox"/> <b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then an instance of class C, which adopts both mixins A and B, follows a method resolution order (MRO) to determine which version of X (A's or B's) to run. By using the super() syntax in A and B's version of the method / property X, one can even get both versions of X to run in sequence, one after another. This is a benefit of using super() with multiple inheritance, i.e. Python mixins<!--, depending on the MRO of the class of the object involved.--> (src: <a target="_blank" href="https://www.pythontutorial.net/python-oop/python-mixin/">1</a>, <a href="https://www.thedigitalcatonline.com/blog/2020/03/27/mixin-classes-in-python/">2</a>, <a target="_blank" href="https://stackoverflow.com/questions/3277367/how-does-pythons-super-work-with-multiple-inheritance">3</a>, <a target="_blank" href="https://stackoverflow.com/questions/576169/understanding-python-super-with-init-methods/576183#576183">4</a>, <a href="https://www.artima.com/weblogs/viewpost.jsp?thread=236275">5</a>, <a target="_blank" href="https://stackoverflow.com/questions/55994700/why-doesnt-super-class-name-return-the-name-of-my-base-class">6</a>, <a target="_bl
+                                        " href="https://stackoverflow.com/questions/47117327/is-mro-order-depth-first-or-breadth-first">7</a>).</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> The difference is subtle, but in the werkzeug example, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                                    <p><input type="checkbox"/> Here werkzeug's SpecialRequest and ExtraSpecialRequest both use AcceptMixin.</p>
+                                    <p><input type="checkbox"/> Here werkzeug is adding optional features for SpecialRequest and even more optional features for ExtraSpecialRequest.</p>
+                                    <p><input type="checkbox"/> Here AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin each represent compartmentalized implementations of particular functionalities.</p>
+                                    <p><input type="checkbox"/> For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed.</p>
+                                </td>
+                                <td>
+                                    <!--End Hard Coding-->
+                                    {% for mixin, details in dp.mixins.items %}
+                                        <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
+                                        {% for prop_method in details.prop_methods%}
+                                            <h6 id="mixin-{{mixin}}-{{prop_method}}-3a">{{prop_method}}</h6>
+                                            <p>Activity 3A: List the classes / class instances that adopt / use the {{mixin}}'s method <b>{{prop_method}}</b>. Hint, look at the "Mixins of {{ dp.project }}" diagram above.
+                                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                                            </p>
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><br>
+                                            <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how this Mixin's <b>{{prop_method}}</b> method is being used. i.e. What does this Mixin's <b>{{prop_method}}</b> do? i.e. what does the class that adopts this Mixin's <b>{{prop_method}}</b> do (look at the code of the classes you mentioned in 3A)?
+                                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                            </p>
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><br>
+                                            <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: Explain why mixins (i.e. {{mixin}}) are used in {{dp.project}}? Hint, see the general ideas bulletted to the left. Then take another look at the {{dp.project}} application as a user. Remember the "Multiple Versions of Methods / Props Note" above. Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
+                                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                            </p>
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><br>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>                        
+                        <h4>Tradeoffs / Alternatives - Inheritence Lesson</h4>
                         <p>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), with the child class retaining a similar implementation from the parent class.</p>
                         <p>Implementation inheritance is the mechanism whereby a subclass re-uses code in a base class. By default the subclass retains all of the operations of the base class, but the subclass may override some or all operations, replacing the base-class implementation with its own. [src: https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse]</p>
                         <p>In the following Python example, subclasses SquareSumComputer and CubeSumComputer override the transform() method of the base class SumComputer. The base class comprises operations to compute the sum of the transformations of two integers. The subclass re-uses all of the functionality of the base class with the exception of the operation that transforms a number into its square, replacing it with an operation that transforms a number into its square and cube respectively. The subclasses therefore compute the sum of the squares/cubes between two integers.</p>
@@ -630,9 +647,9 @@ Insight object (26) Users by traffic source for team Formative Project
                         <table id="mixin-tradeoff" class="table">
                             <tr>
                                 <th>Pattern</th>
-                                <th>Definition and Reasons</th>
-                                <th>Example</th>
-                                <th>Tradeoff</th>
+                                <th>Theory</th>
+                                <th>Canonical / Tutorial Example</th>
+                                <th>Tradeoffs</th>
                             </tr>
                             <tr>
                                 <td>Mixin</td>
