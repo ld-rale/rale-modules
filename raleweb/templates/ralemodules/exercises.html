@@ -55,7 +55,8 @@
                                         <li><input type="checkbox"/> <a href="#">Regular Posthog Version</a></li>
                                         <li><input type="checkbox"/> <a href="#">Enterprise Posthog Version</a></p></li>
                                     </ul>
-                                    
+                                    <p>Note that a logged in user is generally part of a team. Depending on which team they are part of, they have access to different data.</p>
+                                    <p>The application has complex functionality involving insights, dashboards, actions which involve both data and frontend views.</p>
                                 </td>
                             </tr>
                             <tr>
@@ -618,9 +619,9 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                         </table>                        
                         <h4>Tradeoffs / Alternatives - Inheritence Lesson</h4>
-                        <p>Inheritance is the mechanism of basing a class upon another class (class-based inheritance), with the child class retaining a similar implementation from the parent class.</p>
-                        <p>Implementation inheritance is the mechanism whereby a subclass re-uses code in a base class. By default the subclass retains all of the operations of the base class, but the subclass may override some or all operations, replacing the base-class implementation with its own. [src: https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse]</p>
-                        <p>In the following Python example, subclasses SquareSumComputer and CubeSumComputer override the transform() method of the base class SumComputer. The base class comprises operations to compute the sum of the transformations of two integers. The subclass re-uses all of the functionality of the base class with the exception of the operation that transforms a number into its square, replacing it with an operation that transforms a number into its square and cube respectively. The subclasses therefore compute the sum of the squares/cubes between two integers.</p>
+                        <p><input type="checkbox"/> Inheritance is the mechanism of basing a class upon another class (class-based inheritance), with the child class retaining a similar implementation from the parent class.</p>
+                        <p><input type="checkbox"/> Implementation inheritance is the mechanism whereby a subclass re-uses code in a base class. By default the subclass retains all of the operations of the base class, but the subclass may override some or all operations, replacing the base-class implementation with its own. [src: https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Code_reuse]</p>
+                        <p><input type="checkbox"/> In the following Python example, subclasses SquareSumComputer and CubeSumComputer override the transform() method of the base class SumComputer. The base class comprises operations to compute the sum of the transformations of two integers. The subclass re-uses all of the functionality of the base class with the exception of the operation that transforms a number into its square, replacing it with an operation that transforms a number into its square and cube respectively. The subclasses therefore compute the sum of the squares/cubes between two integers.</p>
                         <pre>
                             class SumComputer:
                                 def __init__(self, a, b):
@@ -653,8 +654,8 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                             <tr>
                                 <td>Mixin</td>
-                                <td>Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
-                                <td>Werkzeug's Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for requests in general (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</td>
+                                <td><input type="checkbox"/> Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</td>
+                                <td><input type="checkbox"/> Werkzeug's Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for requests in general (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</td>
                                 <td>
                                     Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over multiple inheritence and about multiple inheritence issues. Remember the "Multiple Versions of Methods / Props Note" above. 
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
@@ -664,8 +665,8 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                             <tr>
                                 <td>Inheritence</td>
-                                <td>Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
-                                <td>Inheritance Example of Sum / Cube Computer:<br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
+                                <td><input type="checkbox"/> Reasons:<br>(A) code reuse<br>(B) allows for extending classes</td>
+                                <td><input type="checkbox"/> Inheritance Example of Sum / Cube Computer:<br>(A) code is reused between sum and cube computer<br>(B) a more specific class SquareSumComputer, CubeSumComputer can extend a more generic class SumComputer.</td>
                                 <td>
                                     Why would inheritence not work for {{dp.project}} specifically?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
@@ -678,142 +679,242 @@ Insight object (26) Users by traffic source for team Formative Project
                     <br>
                     <div id="mvs">
                         <h2>MV* Lesson</h2>
-                        <p>MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the "template") for visual representations, and the controller for logic for manipulating the model or view. Nuances and examples:</p>
-                        <ul>
-                            <li>The model is responsible for managing the data of the application. It receives user input from the controller.</li>
-                            <li>The view renders presentation of the model in a particular format.</li>
-                            <li>The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</li>
-                        </ul>
-                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
-                        <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
-                        <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> with the following <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>. Here is a diagram of the MVC of the TODO app.</p>
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <b>Templates / Views</b>
-                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></p>
-                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></p>
-                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></p>
-                                        <br>
-                                        <b>Roles</b>
-                                        <p>Frontend Developers</p>
-                                        <p>Fullstack Developers</p>
+                        <p>Check the boxes after reading the statements. Fill in the text boxes.</p>
+                        <table class="table">
+                            <tr>
+                                <th style="width: 30%">Theory</th>
+                                <th style="width: 35%">Canonical / Tutorial Example</th>
+                                <th style="width: 35%">Professional Example ({{ dp.project }})</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p><input type="checkbox"/> MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the "template") for visual representations, and the controller for logic for manipulating the model or view (src: <a target="_blank" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">1</a>). Nuances:</p>
+                                    <p></p><input type="checkbox"/> The model is responsible for managing the data of the application. It receives user input from the controller.</p>
+                                    <p><input type="checkbox"/> The view renders presentation of the model in a particular format.</p>
+                                    <p><input type="checkbox"/> The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</p>
+                                    <p><input type="checkbox"/> Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
+                                    <p><input type="checkbox"/> Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
+                                </td>
+                                <td>
+                                    <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> (reference <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>). You can add, filter, edit, update, and delete todo items.</p>
+                                    <img alt="todo example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/todo.png"/>
+                                </td>
+                                <td>
+                                    <img alt="posthog example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/posthog.png"/>
+                                    <br><br>
+                                    <p><input type="checkbox"/> Watch this video on how Posthog's features work: <a href="#">Posthog Features Video</a></p>
+                                    <br>
+                                    <p>Play around with these Posthog demos: 
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="#">Regular Posthog Version</a></li>
+                                        <li><input type="checkbox"/> <a href="#">Enterprise Posthog Version</a></p></li>
+                                    </ul>
+                                    <p>Note that a logged in user is generally part of a team. Depending on which team they are part of, they have access to different data.</p>
+                                    <p>The application has complex functionality involving insights, dashboards, actions which involve both data and frontend views.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Goals</u>
+                                    <br><br>
+                                    <p><input type="checkbox"/> Support complex interactive functionality involving data, logic, and frontend views.</p>
+                                    <p><input type="checkbox"/> Make the codebase easy to maintain by a group of multiple developers.</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> Allow users to add, filter, edit, update, delete todo items on the frontend.</p>
+                                    <p><input type="checkbox"/> Persist the data updates.</p>
+                                    <p><input type="checkbox"/> Make it easy for multiple developers to work on different parts of the application, like the todo view or the data storage.</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> Allow users to view insights, dashboards, and actions filled with only the data they have access to.</p>
+                                    <p><input type="checkbox"/> Allow enterprise users only to view tags on the insights.</p>
+                                    <p><input type="checkbox"/> Persist and update data.</p>
+                                    <p><input type="checkbox"/> Make it easy for multiple developers to work on different parts of the application, like the Insights view or the data storage.</p>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td class="diagram-text">
+                                    <p>Here is a diagram of the MVC in general.</p>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Template / View &nbsp;→</b><sup>1</sup>
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>UI Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <b>Controllers</b> 
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <sup>1</sup><b>←&nbsp; Models</b>
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <p style="text-align: center;">→</p>
-                                        <br>
-                                        <p style="font-size:12px;">The template sends todo item updates (edits, deletions, additions) to the controller. The controller sends all the todo items to the template for rendering in a list.</p>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in / manipulates the template with data.</p>
+                                    <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
+                                    <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
+                                </td>
+                                <td class="diagram-text">
+                                    <p>Here is a diagram of the MVC of the TODO app.</p>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Templates / Views &nbsp;→</b><sup>3</sup>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></p>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></p>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>UI Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <b>Controllers</b> 
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br> (CRUD = create, read, update, delete)</p>
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a><br></p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <sup>4</sup><b>←&nbsp; Models</b>
+                                                <p>TodoItem</p>
+                                                <p>User</p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <b>Controllers</b> 
-                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br> (CRUD = create, read, update, delete)</p>
-                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a><br></p>
-                                <br>
-                                <b>Roles</b>
-                                <p>Backend Developers</p>
-                                <p>Fullstack Developers</p>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <p style="text-align: center;">←</p>
-                                        <br>
-                                        <p style="font-size:12px;">The To Do CRUD controller queries the ToDoItem model of the logged in user to retrieve their todo items.</p>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>3</sup>The template sends todo item updates (edits, deletions, additions) to the controller. The controller sends all the todo items to the template for rendering in a list.</p>
+                                    <p style="font-size:12px;"><sup>4</sup>The To Do CRUD controller queries the ToDoItem model of the logged in user to retrieve their todo items.</p>
+                                    <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
+                                </td>
+                                <td class="diagram-text">
+                                    <h3>MV* of {{ dp.project }}</h3>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Templates / Views &nbsp;→</b><sup>1</sup>
+                                            {% for template in dp.templates %}
+                                                <p>
+                                                    {{template.name}}<br>
+                                                    <span style="font-size:10px;">May use {{template.model}} model but check.</span>
+                                                </p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <b>Controllers</b> 
+                                            {% for controller in dp.views %}
+                                                <p>
+                                                    {{controller.name}}<br>
+                                                    <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                                </p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <sup>2</sup><b>← &nbsp;Models</b>
+                                            {% for model in dp.models %}
+                                                <p>{{model}}</p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in / manipulates the template with data.</p>
+                                    <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
+                                    <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Relevant code snippets and data flow</u> can often be important to consider.
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></li>
+                                        <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></li>
+                                        <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a></li>
+                                        <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>shared_dashboard.html</li>
+                                        <li>/shared_dashboard</li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/saved-insights/savedInsightsLogic.ts#L75-L77" target="_blank">/insight</a> (some CRUD might be found in 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/saved-insights/SavedInsights.tsx#L287-L468" target="_blank">1</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/insightsModel.tsx#L34" target="_blank">2</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightSceneLogic.tsx#L87-L146" target="_blank">3</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightLogic.ts#L148-L270" target="_blank">4</a>, 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightLogic.ts#L618-L680" target="_blank">5</a> too)</li>
+                                        <li>/action</li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/dashboardsModel.tsx#L304" target="_blank">/dashboards</a> (some CRUD might be found in 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/dashboardsModel.tsx#L71" target="_blank">1</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/dashboard/dashboardsLogic.ts#L80" target="_blank">2</a> too)</li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/action.py#L156-L266" target="_blank">actionviewset</a></li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/insight.py#L200-L428" target="_blank">insightviewset</a></li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/dashboard.py#LL203C15-L245C15" target="_blank">dashboardsviewset</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/insight.py" target="_blank">Insight Model</a></li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/action.py" target="_blank">Action Model</a></li>
+                                        <li><a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/dashboard.py" target="_blank">Dashboard Model</a></li>
+                                    </ul>
+                                    {% for model in dp.models %}
+                                        <h4>{{model}}</h4>
+                                        <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look where the model class is defined in the code - it is surfaced for you.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <b>Models</b>
-                                            <p>TodoItem</p>
-                                            <p>User</p>
-                                        <br>
-                                        <b>Roles</b>
-                                        <p>Backend Developers</p>
-                                        <p>Database Admin</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h3>MV* of {{ dp.project }}</h3>
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <b>Templates / Views</b>
-                                        {% for template in dp.templates %}
-                                            <p>
-                                                {{template.name}}<br>
-                                                <span style="font-size:10px;">May use {{template.model}} model but check.</span>
-                                            </p>
-                                        {% endfor %}
-                                        <br>
-                                        <b>Roles</b>
-                                        <p>Frontend Developers</p>
-                                        <p>Fullstack Developers</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p style="text-align: center;">→</p>
-                                        <br>
-                                        <p style="font-size:12px;">The controller fills in / manipulates the template with data.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <b>Controllers</b> 
-                                {% for controller in dp.views %}
-                                    <p>
-                                        {{controller.name}}<br>
-                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
-                                    </p>
-                                {% endfor %}
-                                <br>
-                                <b>Roles</b>
-                                <p>Backend Developers</p>
-                                <p>Fullstack Developers</p>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <p style="text-align: center;">←</p>
-                                        <br>
-                                        <p style="font-size:12px;">The controller accesses / manipulates the model.</p>
+                                        <p id="{{model}}-a2">Activity 2: Name the class that is the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). Hint: Look at the diagram above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <b>Models</b>
-                                        {% for model in dp.models %}
-                                            <p>{{model}}</p>
-                                        {% endfor %}
-                                        <br>
-                                        <b>Roles</b>
-                                        <p>Backend Developers</p>
-                                        <p>Database Admin</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% for model in dp.models %}
-                            <h4>{{model}}</h4>
-                            <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look where the model class is defined in the code - it is surfaced for you.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{model}}-a2">Activity 2: Name the class that is the {{model}} model's controller (in Django, confusingly, they say 'View' for the MV* controller, and 'Template' for view). Hint: Look at the diagram above.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                            <p id="{{model}}-a3">Activity 3: Name the URI path that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view). Hint: Look at the diagram above.
-                                <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
-                            </p>
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><br>
-                        {% endfor %}
+                                        <p id="{{model}}-a3">Activity 3: Name the URI path that corresponds to the {{model}} model's view (in Django, confusingly, they say 'Template' for the MV* view). Hint: Look at the diagram above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        
+                        
+                        
+                        
+                        
+                    
                         {% for controller in dp.views %}
                             <h4>{{controller.name}}</h4>
                             <p id="{{controller.name}}-a4">Activity 4: (i) How does this controller access / manipulate the data model? Hint: Scan the {{controller.name}} code that has been surfaced for you. (ii) What data does the model provide the controller? (iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
@@ -913,13 +1014,14 @@ Insight object (26) Users by traffic source for team Formative Project
                                 </div>
                             </div>
                         </div>
-                        <br><br>
+                        <br>
+                        <h3>Tradeoffs / Alternatives to MV*</h3>
                         <table id="mvs-tradeoff" class="table">
                             <tr>
                                 <th>Pattern</th>
-                                <th>Definition and Reasons</th>
-                                <th>Example</th>
-                                <th>Tradeoff</th>
+                                <th>Theory</th>
+                                <th>Canonical / Tutorial Example</th>
+                                <th>Tradeoffs</th>
                             </tr>
                             <tr>
                                 <td>MV*</td>
