@@ -37,7 +37,7 @@
                                     <u>Definitions</u><br><br>
                                     <p><input type="checkbox"/> A mixin is a class from which other classes can adopt methods and properties.</p>
                                     <p><input type="checkbox"/> Mixins are used if you don't want a class to "inherit" from another class (i.e. be its child class) but you want it to "include" some attributes / methods.</p>
-                                    <p><input type="checkbox"/> You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance. e.g. If <a target="_blank" href="/static/ralemodules/diamondproblem.png">class TA has parents Student and Faculty</a>, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's?</p>
+                                    <p><input type="checkbox"/> You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance. e.g. If <a target="_blank" href="/static/ralemodules/diamondproblem.png">class TA has parents Student and Faculty</a>, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's? (src: <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>)</p>
                                 </td>
                                 <td>
                                     <p><input type="checkbox"/> For an example, consider <a href="https://pypi.org/project/Werkzeug/#a-simple-example" target="_blank">werkzeug</a>, which is an HTTP request and response system. Werkzeug needs to support regular HTTP requests, but also:</p>
@@ -267,14 +267,14 @@ class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, Authent
                                     <h6>TaggedItemViewSetMixin code:</h6>
                                     <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
                                         <code>
-class TaggedItemViewSetMixin(viewsets.GenericViewSet):
+class <mark>TaggedItemViewSetMixin</mark>(viewsets.GenericViewSet):
     def is_licensed(self):
         return (
             not self.request.user.is_anonymous and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
             # The second one triggers an extra query to resolve user's organization.
         )
 
-    def get_queryset(self):
+    def <mark>get_queryset</mark>(self):
         queryset = super(TaggedItemViewSetMixin, self).get_queryset()
         if self.is_licensed():
             to_return = queryset.prefetch_related(
@@ -288,16 +288,16 @@ class TaggedItemViewSetMixin(viewsets.GenericViewSet):
                                     <h6>StructuredViewSetMixin code:</h6>
                                     <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
                                         <code>
-class StructuredViewSetMixin(_GenericViewSet):
+class <mark>StructuredViewSetMixin</mark>(_GenericViewSet):
     ...
 
-    def get_queryset(self):
+    def <mark>get_queryset</mark>(self):
         queryset = super().get_queryset()
         to_return = self.filter_queryset_by_parents_lookups(queryset)
         return to_return
     
     @property
-    def team_id(self) -> int:
+    def <mark>team_id</mark>(self) -> int:
         team_from_token = self._get_team_from_request()
         if team_from_token:
             return team_from_token.id
@@ -309,7 +309,7 @@ class StructuredViewSetMixin(_GenericViewSet):
         return self.parents_query_dict["team_id"]
     
     @property
-    def team(self) -> Team:
+    def <mark>team</mark>(self) -> Team:
         team_from_token = self._get_team_from_request()
         if team_from_token:
             return team_from_token
@@ -325,17 +325,11 @@ class StructuredViewSetMixin(_GenericViewSet):
     
     @property
     def organization_id(self) -> str:
-        try:
-            return self.parents_query_dict["organization_id"]
-        except KeyError:
-            return str(self.team.organization_id)
+        ...
     
     @property
     def organization(self) -> Organization:
-        try:
-            return Organization.objects.get(id=self.organization_id)
-        except Organization.DoesNotExist:
-            raise NotFound(detail="Organization not found.")
+        ...
     
     def filter_queryset_by_parents_lookups(self, queryset):
         parents_query_dict = self.parents_query_dict.copy() 
@@ -392,19 +386,127 @@ class StructuredViewSetMixin(_GenericViewSet):
                 result[query_lookup] = query_value
         return result
     
-    def get_serializer_context(self) -> Dict[str, Any]:
-        return {**super().get_serializer_context(), **self.parents_query_dict}
+    ...
     
     def _get_team_from_request(self) -> Optional["Team"]:
-        team_found = None
-        token = get_token(None, self.request)
-        if token:
-            team = Team.objects.get_team_from_token(token)
-            if team:
-                team_found = team
-            else:
-                raise AuthenticationFailed()
+        ...
         return team_found
+
+
+class InsightViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
+    queryset = Insight.objects.all().prefetch_related(
+        "dashboard", "dashboard__team", "dashboard__team__organization", "created_by"
+    )
+    ...
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["short_id", "created_by"]
+    ...
+
+    def get_queryset(self) -> QuerySet:
+        print("in InsightViewSet, before super().get_queryset() call, super:", super().get_queryset)
+        queryset = super().<mark>get_queryset()</mark>
+        print("in InsightViewSet, after super().get_queryset() call")
+        if self.action == "list":
+            queryset = queryset.filter(deleted=False)
+            queryset = self._filter_request(self.request, queryset)
+
+        order = self.request.GET.get("order", None)
+        if order:
+            queryset = queryset.order_by(order)
+        else:
+            queryset = queryset.order_by("order")
+
+        return queryset
+
+    def _filter_request(self, request: request.Request, queryset: QuerySet) -> QuerySet:
+        filters = request.GET.dict()
+
+        for key in filters:
+            ...
+        return queryset
+    ...
+
+    @action(methods=["GET", "POST"], detail=False)
+    def trend(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        ...
+
+        result = self.calculate_trends(request)
+        filter = Filter(request=request, team=<mark>self.team</mark>)
+        next = (
+            format_paginated_url(request, filter.offset, BREAKDOWN_VALUES_LIMIT)
+            if len(result["result"]) >= BREAKDOWN_VALUES_LIMIT
+            else None
+        )
+        return Response({**result, "next": next})
+    ...
+
+
+class DashboardsViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
+    queryset = Dashboard.objects.order_by("name")
+    ...
+    permission_classes = [
+        IsAuthenticated,
+        ProjectMembershipNecessaryPermissions,
+        TeamMemberAccessPermission,
+        CanEditDashboard,
+    ]
+
+    def get_queryset(self) -> QuerySet:
+        queryset = super().<mark>get_queryset()</mark>
+        ...
+
+        deferred_fields = set.union(
+            get_deferred_field_set_for_model(
+                Organization, fields_not_deferred={"available_features"}, field_prefix="team__organization__"
+            ),
+            get_deferred_field_set_for_model(Team, fields_not_deferred={"organization", "name"}, field_prefix="team__"),
+        )
+
+        queryset = (
+            queryset.select_related("team__organization", "created_by")
+            .defer(*deferred_fields)
+            .prefetch_related(Prefetch("items", queryset=Insight.objects.filter(deleted=False).order_by("order")))
+        )
+        return queryset
+
+
+class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.ModelViewSet):
+    ...
+    queryset = Action.objects.all()
+    ...
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+    ...
+
+    def get_queryset(self):
+        queryset = super().<mark>get_queryset</mark>()
+        if self.action == "list":
+            queryset = queryset.filter(deleted=False)
+
+        queryset = queryset.annotate(count=Count(TREND_FILTER_TYPE_EVENTS))
+        queryset = queryset.prefetch_related(Prefetch("steps", queryset=ActionStep.objects.order_by("id")))
+        return queryset.filter(team_id=self.team_id).order_by(*self.ordering)
+
+    def list(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        actions = self.get_queryset()
+        actions_list: List[Dict[Any, Any]] = self.serializer_class(actions, many=True, context={"request": request}).data  # type: ignore
+        return Response({"results": actions_list})
+
+    @action(methods=["GET"], detail=False)
+    def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        team = <mark>self.team</mark>
+        filter = Filter(request=request, team=<mark>self.team</mark>)
+        entity = get_target_entity(filter)
+
+        actors, serialized_actors = ClickhouseTrendsActors(team, entity, filter).get_actors()
+        ...
+        return Response(
+            {
+                "results": [{"people": serialized_actors[0:100], "count": len(serialized_actors[0:100])}],
+                "next": next_url,
+                "previous": current_url[1:],
+            }
+        )
                                         </code>
                                     </pre>
                                     <div class="row">
@@ -583,11 +685,11 @@ Insight object (26) Users by traffic source for team Formative Project
                                     <p><input type="checkbox"/> R3) A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
                                         <ul>
                                             <li>You want to provide a lot of optional features for a class.</li>
-                                            <li>You want to use one particular feature in a lot of different classes.</li>
+                                            <li>You want to use one particular feature in a lot of different classes. (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</li>
                                         </ul>
                                     </p>
-                                    <p><input type="checkbox"/> R4) Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization. In this way, code at different levels (data touching, logic, view touching, etc.) is separated so different developers can collaborate easily.</p>
-                                    <p><input type="checkbox"/> R5) Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods.</p>
+                                    <p><input type="checkbox"/> R4) Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization. In this way, code at different levels (data touching, logic, view touching, etc.) is separated so different developers can collaborate easily.  (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                                    <p><input type="checkbox"/> R5) Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
                                     <p><input type="checkbox"/> R6) Mixins can be viewed as an interface with implemented methods. An interface is a protocol or a set of method signatures that is implemented in detail by some classes. <br><br><span class="diagram-text">In this way, mixins can enforce the "dependency inversion principle", which states that high level interfaces and low level implementations should be decoupled, and each built based upon abstractions (i.e. the interface). High level objects should not depend on low level implementations (and vice versa). Either could be switched out, and as long as they respect the interface, the system should work. <!--This is just like how the CEO of a company or individual engineers / workers at the company can be switched out and as long as each member follows the company's protocols, the company should still be able to run. The CEO does not need to micromanage the details of individual workers day-to-day tasks, and also their role still functions similarly despite a change in leadership-->(src: 
                                         <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>
                                         <a href="https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)" target="_blank">2</a>
@@ -617,12 +719,16 @@ Insight object (26) Users by traffic source for team Formative Project
                                             </p>
                                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                             <br><br>
-                                            <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how {{mixin}}'s <b>{{prop_method}}</b> method is being used. <br>i.e. What does {{mixin}}'s <b>{{prop_method}}</b> do? <br>i.e. what does the class that adopts {{mixin}}'s <b>{{prop_method}}</b> do? <br>Hint: look at the code of the classes you mentioned in 3A.
+                                            <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how {{mixin}}'s <b>{{prop_method}}</b> method is being used. 
                                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                             </p>
                                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><br>i.e. What does {{mixin}}'s <b>{{prop_method}}</b> do? 
+                                            <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>i.e. what does the class that adopts {{mixin}}'s <b>{{prop_method}}</b> do? <br>Hint: look at the code of the classes you mentioned in 3A.
+                                            <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
                                             <br><br>
-                                            <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: Explain why mixins, and in particular {{mixin}}, is used in {{dp.project}}? <br>Hint 1: see the general ideas bulletted to the left. <br>Hint 2: remember the "Multiple Versions of Methods / Props Note" to the left. <br>Hint 3: then take another look at the {{dp.project}} application as a user. <br>Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
+                                            <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: <b>With respect to {{prop_method}}</b>, explain why mixins, and in particular {{mixin}}, is used in {{dp.project}}? <br>Hint 1: see the general ideas bulletted to the left. <br>Hint 2: remember the "Multiple Versions of Methods / Props Note" to the left. <br>Hint 3: then take another look at the {{dp.project}} application as a user. <br>Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
                                                 <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                             </p>
                                             <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -673,14 +779,14 @@ Insight object (26) Users by traffic source for team Formative Project
                                     <p><input type="checkbox"/> A mixin class acts as the parent class, containing the desired functionality. A subclass can then inherit or simply reuse this functionality, but not as a means of specialization. Typically, the mixin will export the desired functionality to a child class, without creating a rigid, single "is a" relationship. Here lies the important difference between the concepts of mixins and inheritance, in that the child class can still inherit all the features of the parent class, but, the semantics about the child "being a kind of" the parent need not be necessarily applied. <br><br> <span class="diagram-text">In this way also, mixins allow inheritance and use of only the desired features from the parent class, not necessarily all of the features from the parent class.  Most languages don't give a mixin any special status; it's just a class that was designed to be "mixed in", rather than used standalone. It's a matter of the role of the class in the overall domain as to whether a mixin is a "primary" class or simply a mixin. You don't create objects / instances of the mixin classes but rather just mix the mixin classes' functionality into other classes.</span> <br><br>(taken from src: <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>, <a href="https://www.patterns.dev/posts/mixin-pattern" target="_blank">3</a>)</p>
                                 </td>
                                 <td>
-                                    <p><input type="checkbox"/> Werkzeug's Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for generally reusable request-related features (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</p>
+                                    <p><input type="checkbox"/> <a target="_blank" href="https://pypi.org/project/Werkzeug/#a-simple-example">Werkzeug's</a> Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for generally reusable request-related features (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</p>
                                     <p><input type="checkbox"/> SpecialRequest, ExtraSpecialRequest, etc. are not types of AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, etc. The request classes ("children" / adopters) use methods of the mixin classes ("parents" / adoptees). The role of these mixins is to provide additional functionality and features to their adopter classes, and we do not create objects / instances of the Mixin classes.</p>
                                 </td>
                                 <td>
                                     Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over inheritence and about traditional multiple inheritence issues that mixins solve. Remember the "Multiple Versions of Methods / Props Note" above. 
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
-                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                    <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -697,7 +803,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                     Why would inheritence not work for {{dp.project}} specifically?
                                     <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                     <br><br>
-                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                    <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -714,6 +820,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                             <tr>
                                 <td>
+                                    <u>Definitions</u><br><br>
                                     <p><input type="checkbox"/> MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the "template") for visual representations, and the controller for logic for manipulating the model or view (src: <a target="_blank" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">1</a>). Nuances:</p>
                                     <p></p><input type="checkbox"/> The model is responsible for managing the data of the application. It receives user input from the controller.</p>
                                     <p><input type="checkbox"/> The view renders presentation of the model in a particular format.</p>
@@ -761,10 +868,11 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                             <tr>
                                 <td class="diagram-text">
+                                    <u style="font-size:medium;">Diagrams</u><br><br>
                                     <p>Here is a diagram of the MVC in general.</p>
                                     <div class="row">
                                         <div class="col-sm-5">
-                                            <b>Template / View &nbsp;→</b><sup>1</sup>
+                                            <b>Template / View &nbsp;↔</b><sup>1</sup>
                                             <br><br><br>
                                             <b>Roles</b>
                                             <p>Frontend Developers</p>
@@ -777,7 +885,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                             <p>Fullstack Developers</p>
                                         </div>
                                         <div class="col-sm-4">
-                                            <sup>1</sup><b>←&nbsp; Models</b>
+                                            <sup>1</sup><b>↔&nbsp; Models</b>
                                             <br><br><br>
                                             <b>Roles</b>
                                             <p>Backend Developers</p>
@@ -786,7 +894,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                         </div>
                                     </div>
                                     <br>
-                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data, and manipulates the data based on user input into the template.</p>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data from the model for the end user. It also manipulates the data based on user input into the template.</p>
                                     <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
                                     <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
                                 </td>
@@ -794,7 +902,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                     <p>Here is a diagram of the MVC of the TODO app.</p>
                                     <div class="row">
                                         <div class="col-sm-5">
-                                            <b>Templates / Views &nbsp;→</b><sup>3</sup>
+                                            <b>Templates / Views &nbsp;↔</b><sup>3</sup>
                                                 <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></p>
                                                 <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></p>
                                                 <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></p>
@@ -812,8 +920,8 @@ Insight object (26) Users by traffic source for team Formative Project
                                             <p>Fullstack Developers</p>
                                         </div>
                                         <div class="col-sm-4">
-                                            <sup>4</sup><b>←&nbsp; Models</b>
-                                                <p>TodoItem</p>
+                                            <sup>4</sup><b>↔&nbsp; Models</b>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoModel.js" target="_blank">TodoItem</a></p>
                                                 <p>User</p>
                                             <br>
                                             <b>Roles</b>
@@ -823,7 +931,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                         </div>
                                     </div>
                                     <br>
-                                    <p style="font-size:12px;"><sup>3</sup>The template sends todo item updates (edits, deletions, additions) to the controller. The controller sends all the todo items to the template for rendering in a list.</p>
+                                    <p style="font-size:12px;"><sup>3</sup>The controller sends all the todo items to the template for rendering in a list. The template also sends todo item updates (edits, deletions, additions) to the controller.</p>
                                     <p style="font-size:12px;"><sup>4</sup>The To Do CRUD controller queries the ToDoItem model for the logged in user's todo items.</p>
                                     <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
                                 </td>
@@ -831,7 +939,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                     <h3>MV* of {{ dp.project }}</h3>
                                     <div class="row">
                                         <div class="col-sm-5">
-                                            <b>Templates / Views &nbsp;→</b><sup>1</sup>
+                                            <b>Templates / Views &nbsp;↔</b><sup>1</sup>
                                             {% for template in dp.templates reversed %}
                                                 <p>
                                                     {{template.name}}<br>
@@ -857,7 +965,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                             <p>Fullstack Developers</p>
                                         </div>
                                         <div class="col-sm-3">
-                                            <sup>2</sup><b>← &nbsp;Models</b>
+                                            <sup>2</sup><b>↔ &nbsp;Models</b>
                                             {% for model in dp.models reversed %}
                                                 <p>{{model}}</p>
                                             {% endfor %}
@@ -868,7 +976,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                         </div>
                                     </div>
                                     <br>
-                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data, and manipulates the data based on user input into the template.</p>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data from the model for the end user. It also manipulates the data based on user input into the template.</p>
                                     <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
                                     <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
                                     <p style="font-size:12px;"><sup>3</sup>Note, Django's official documentation itself says this is debatable. Some consider Django's 'Views' or 'Viewsets' to be kind of controllers (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>). We take that interpretation. Django instead interprets the word "view" itself according to the MVT style. Django states that the controller in Django is the framework itself, the view is deciding what data should be surfaced, and the template decides how the data is surfaced. However for the sake of our exercise, we will treat Django 'Views' or 'Viewsets' as the MV* controller and Django 'Templates' as the MV* view.</p>
@@ -937,7 +1045,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                     {% for model in dp.models %}
                                         <h4>{{model}}</h4>
                                         <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look at the code of the model class linked above.
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
                                         </p>
                                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
@@ -947,7 +1055,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
                                         <p id="{{model}}-a3">Activity 3: Name the URI path that corresponds to the {{model}} model's MV* view. <br>Hint 1: a URI path is what appears in a URL after the domain (i.e. /users, /contact, /about, /api).<br>Hint 2: In Django REST Framework, confusingly, they say 'Template' for the MV* view. <br>Hint 3: Look at the diagram above.
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
                                         </p>
                                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
@@ -973,15 +1081,27 @@ Insight object (26) Users by traffic source for team Formative Project
                                 <td>
                                     {% for controller in dp.views %}
                                         <h4>{{controller.name}}</h4>
-                                        <p id="{{controller.name}}-a4">Activity 4: <br>(i) How does this controller access / manipulate the data model? <br>Hint: Scan the {{controller.name}} code linked above. <br>(ii) What data does the model provide the controller? <br>(iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                        <p id="{{controller.name}}-a4">Activity 4: 
+                                            <br>(i) How does this controller access / manipulate the data model? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>Hint: Scan the {{controller.name}} code linked above. 
+                                            <br>(ii) What data does the model provide the controller?
+                                            <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>(iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                                         </p>
-                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p id="{{controller.name}}-a5">Activity 5: <br>(i) How does the model data get to the view (i.e. template)? <br>(ii) What data does the model provide and how does it fill the template? <br><br> Hint 1: Scan (a) the {{controller.name}} code, (b) the code of the relevant templates you mentioned from Activity 3 above, and (c) the code of relevant model classes. As you may recall, the code snippets have been linked for you above. <br> Hint 2: Remember that Model code is responsible for database touching logic and Controller code is responsible for data preparation for feeding the template (src: <a target="_blank" href="https://www.google.com/search?q=controller+in+mvc&oq=controller+in+mv&aqs=chrome.0.0i512j69i57j0i512l6j0i22i30l2.2514j1j7&sourceid=chrome&ie=UTF-8">1</a>). <!--<br>Hint 3: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br> (cutting this since we surface the CDT data for them) -->
-                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                        <p id="{{controller.name}}-a5">Activity 5: 
+                                            <br>(i) How does the model data get to the view (i.e. template)? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>(ii) What data does the model provide and how does it fill the template? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                                            <br><br> Hint 1: Scan (a) the {{controller.name}} code, (b) the code of the relevant templates you mentioned from Activity 3 above, and (c) the code of relevant model classes. As you may recall, the code snippets have been linked for you above. 
+                                            <br><br> Hint 2: Remember that Model code is responsible for database touching logic and Controller code is responsible for data preparation for feeding the template (src: <a target="_blank" href="https://www.google.com/search?q=controller+in+mvc&oq=controller+in+mv&aqs=chrome.0.0i512j69i57j0i512l6j0i22i30l2.2514j1j7&sourceid=chrome&ie=UTF-8">1</a>). <!--<br>Hint 3: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br> (cutting this since we surface the CDT data for them) -->
+                                            
                                         </p>
-                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
                                     {% endfor %}
                                 </td>
@@ -1005,7 +1125,7 @@ Insight object (26) Users by traffic source for team Formative Project
                                         <p>Fullstack Developers</p>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p style="text-align: center;">→</p>
+                                        <p style="text-align: center;">↔</p>
                                         <br>
                                         <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what data).
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
@@ -1030,7 +1150,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             <div class="col-sm-4">
                                 <div class="row">
                                     <div class="col-sm-8">
-                                        <p style="text-align: center;">←</p>
+                                        <p style="text-align: center;">↔</p>
                                         <br>
                                         <p style="font-size:12px;">Describe how the controller accesses / manipulates the model.
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
@@ -1057,7 +1177,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             </div>
                         </div>
                         <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here?
-                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
                         </p>
                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
@@ -1066,33 +1186,38 @@ Insight object (26) Users by traffic source for team Formative Project
                                 {{template.name}}, 
                             {% endfor %}
                         </h4>
-                        <p id="a7">Activity 7: (i) Would you consider these templates (surfaced from the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture? (ii) And specifically for {{dp.project}}, why do you think the code architects chose that? <br>Hint: Take a look at the application again and think carefully about the <b>domain / purpose</b> of the application you are studying.
-                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3.5 min for this question.</span>
+                        <p id="a7">Activity 7: 
+                            <br>(i) Would you consider these templates (surfaced from the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture?
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea> 
+                            <br>(ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                            <br>Hint: Take a look at the application again and think carefully about the <b>domain / purpose</b> of the application you are studying.
                         </p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
                         <h3>Tradeoffs / Alternatives to MV*</h3>
                         <table id="mvs-tradeoff" class="table">
                             <tr>
-                                <th>Pattern</th>
-                                <th>Theory</th>
-                                <th>Canonical / Tutorial Example</th>
+                                <th style="width: 5%">Pattern</th>
+                                <th style="width: 40%">Theory</th>
+                                <th style="width: 10%">Canonical / Tutorial Example</th>
                                 <th>Tradeoffs</th>
                             </tr>
                             <tr>
                                 <td>MV*</td>
                                 <td>
-                                    Model-view-controller architectures, described above, and 
-                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a></td>
-                                <td>
-                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
+                                    Model-view-controller architectures, described above and in 
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>, have many benefits:
                                     <ul>
                                         <li>(A) separation of visualization, processing, data management</li>
                                         <li>(B) modularity</li>
                                         <li>(C) flexibility</li>
                                         <li>(D) testability</li>
                                         <li>(E) maintainability</li>
-                                    </ul>    
+                                    </ul>  
+                                </td>
+                                <td>
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
                                 </td>
                                 <td>
                                     Why was MV* useful specifically for {{dp.project}}? Hint: think about tradeoffs over not using any framework.
@@ -1103,7 +1228,7 @@ Insight object (26) Users by traffic source for team Formative Project
                             </tr>
                             <tr>
                                 <td>No Framework</td>
-                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>.</td>
+                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>.<br><br>While there are many benefits of MV* over vanilla PHP, vanilla PHP is potentially easier for developers to learn, doesn't expose you to functionalities you don't need (as opposed to huge frameworks like CakePHP, Laravel, etc.), and is highly customizable. This is good for one-off scripts, demos, small API's, and highly specific use-cases (src: <a target="_blank" href="https://www.quora.com/What-is-vanilla-PHP-How-different-is-it-from-plain-PHP-PHP-Laravel-and-CakePHP/answer/Derak-Kilgo">1</a>, <a target="_blank" href="https://www.quora.com/How-is-MVC-different-from-normal-PHP-Why-should-I-learn-it/answer/Pooja-1071">2</a>). Code also reads linearly from top to bottom, which might make it easier for a developer to predict what will render on the page.</td>
                                 <td><a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP example</a</td>
                                 <td>
                                     Why would no framework not work specifically for {{dp.project}}?
