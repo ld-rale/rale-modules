@@ -1,0 +1,1251 @@
+<html>
+    <head>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <script>
+            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+            posthog.init('phc_CHNw1P7pkQP2e8QOGAMH5YGsr2K7612fkeK6VLh5KNF',{api_host:'http://127.0.0.1:8000'})
+        </script>
+        <style>
+            .diagram-text {
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="uml">
+                        <br>
+                        <h1>RALE Modules, a Process Management Tool for Sensemaking</h1>
+                        <h3>Diagrams and Activities for Learning Design Patterns and Architectures from Professional Code</h3>
+                    </div>
+                    <br>
+                    <div id="mixins">
+                        <!--{{dp}}-->
+                        <h2>Mixins</h2>
+                        <p>Read the statements. Fill in the text boxes.</p>
+                        
+                        <div id="theory">
+                            <h3>Theory</h3>
+                            
+                            <u>Definitions</u><br><br>
+                            <p><input type="checkbox"/> A mixin is a class from which other classes can adopt methods and properties.</p>
+                            <p><input type="checkbox"/> Mixins are used if you don't want a class to "inherit" from another class (i.e. be its child class) but you want it to "include" some attributes / methods.</p>
+                            <p><input type="checkbox"/> You can think of mixins as uncles and aunts but not necessarily parents. They help avoid issues and complexities of multiple inheritance. e.g. If <a target="_blank" href="/static/ralemodules/diamondproblem.png">class TA has parents Student and Faculty</a>, both of whose parent is Person, then does TA use Student or Faculty's version of any given method, or both's? (src: <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>)</p>
+
+                            <u>Goals</u><br><br>
+                            <ul>
+                                <li><input type="checkbox"/> inherit functionality</li>
+                                <li><input type="checkbox"/> mix/match functionality</li>
+                            </ul>
+
+                            <div class="diagram-text">
+                                <u style="font-size:medium;">Diagrams</u><br><br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>Mixin →</b>
+                                                <p>method1</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>Mixin 2</b>
+                                                <p>method2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <b>Adopter Class</b>
+                                        <p>method1</p>
+                                        <p>method2</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <u>Rationales</u><br><br>
+                            <p><input type="checkbox"/> R1) A mixin is an object that we can use in order to add reusable functionality to another object or class, without using traditional inheritance. We can't use mixins on their own: their sole purpose is to add functionality to other objects or classes (src: <a href="https://www.patterns.dev/posts/mixin-pattern/" target="_blank">1</a>, <a href="https://www.geeksforgeeks.org/multiple-inheritance-in-c/" target="_blank">2</a>).</p> 
+                            <p><input type="checkbox"/> R2) Mixins can be used in this way by multiple classes, for code reusability. They are used to avoid code repetition and promote code reuse, so there is less complexity and room for error. This helps with collaboration.</p>
+                            <p><input type="checkbox"/> R3) A mixin is a special kind of multiple inheritance. There are two main situations where mixins are used: 
+                                <ul>
+                                    <li>You want to provide a lot of optional features for a class.</li>
+                                    <li>You want to use one particular feature in a lot of different classes. (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</li>
+                                </ul>
+                            </p>
+                            <p><input type="checkbox"/> R4) Another situation is: you want to provide a lot of (not-optional) features for a class, but you want the features in separate classes (and in separate modules) so each module is about one feature (behavior). In other words, not for re-use, but for compartmentalization. In this way, code at different levels (data touching, logic, view touching, etc.) is separated so different developers can collaborate easily.  (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                            <p><input type="checkbox"/> R5) Mixins can be used for adding lots of optional attributes/methods. You may want a class to avail of several optional properties or methods. (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                            <p><input type="checkbox"/> R6) Mixins can be viewed as an interface with implemented methods. An interface is a protocol or a set of method signatures that is implemented in detail by some classes. <br><br><span class="diagram-text">In this way, mixins can enforce the "dependency inversion principle", which states that high level interfaces and low level implementations should be decoupled, and each built based upon abstractions (i.e. the interface). High level objects should not depend on low level implementations (and vice versa). Either could be switched out, and as long as they respect the interface, the system should work. <!--This is just like how the CEO of a company or individual engineers / workers at the company can be switched out and as long as each member follows the company's protocols, the company should still be able to run. The CEO does not need to micromanage the details of individual workers day-to-day tasks, and also their role still functions similarly despite a change in leadership-->(src: 
+                                <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>
+                                <a href="https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)" target="_blank">2</a>
+                                <a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle" target="_blank">3</a>
+                                <a href="https://www.youtube.com/watch?v=9oHY5TllWaU" target="_blank">4</a>
+                                <a href="https://www.youtube.com/watch?v=5WHKNOTqwsA" target="_blank">5</a>
+                                <a href="https://www.youtube.com/watch?v=qL2-5g_lJTs" target="_blank">6</a>)</span></p>
+                            <p><input type="checkbox"/> R7) <b>Multiple Versions of Methods / Props Note</b>: When mixin A and mixin B each define the same method / property X, then an instance of class C, which adopts both mixins A and B, follows a method resolution order (MRO) to determine which version of X (A's or B's) to run. By using the super() syntax in A and B's version of the method / property X, one can even get both versions of X to run in sequence, one after another. This is a benefit of using super() with multiple inheritance, i.e. Python mixins<!--, depending on the MRO of the class of the object involved.--> (src: <a target="_blank" href="https://www.pythontutorial.net/python-oop/python-mixin/">1</a>, <a href="https://www.thedigitalcatonline.com/blog/2020/03/27/mixin-classes-in-python/">2</a>, <a target="_blank" href="https://stackoverflow.com/questions/3277367/how-does-pythons-super-work-with-multiple-inheritance">3</a>, <a target="_blank" href="https://stackoverflow.com/questions/576169/understanding-python-super-with-init-methods/576183#576183">4</a>, <a href="https://www.artima.com/weblogs/viewpost.jsp?thread=236275">5</a>, <a target="_blank" href="https://stackoverflow.com/questions/55994700/why-doesnt-super-class-name-return-the-name-of-my-base-class">6</a>, <a target="_bl
+                                " href="https://stackoverflow.com/questions/47117327/is-mro-order-depth-first-or-breadth-first">7</a>).</p>
+
+                            <p><input type="checkbox"/> Mixins let a class adopt methods and attributes of another class. Reasons: <br>(A) code reuse <br>(B) optional methods / attributes <br>(C) compartmentalization</p>
+                            <p><input type="checkbox"/> A mixin class acts as the parent class, containing the desired functionality. A subclass can then inherit or simply reuse this functionality, but not as a means of specialization. Typically, the mixin will export the desired functionality to a child class, without creating a rigid, single "is a" relationship. Here lies the important difference between the concepts of mixins and inheritance, in that the child class can still inherit all the features of the parent class, but, the semantics about the child "being a kind of" the parent need not be necessarily applied. <br><br> <span class="diagram-text">In this way also, mixins allow inheritance and use of only the desired features from the parent class, not necessarily all of the features from the parent class.  Most languages don't give a mixin any special status; it's just a class that was designed to be "mixed in", rather than used standalone. It's a matter of the role of the class in the overall domain as to whether a mixin is a "primary" class or simply a mixin. You don't create objects / instances of the mixin classes but rather just mix the mixin classes' functionality into other classes.</span> <br><br>(taken from src: <a href="https://en.wikipedia.org/wiki/Mixin" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>, <a href="https://www.patterns.dev/posts/mixin-pattern" target="_blank">3</a>)</p>
+                        </div>
+
+                        <div id="canonical">
+                            <h3>Canonical / Tutorial Example</h3>
+                                    
+                            <p><input type="checkbox"/> For an example, consider <a href="https://pypi.org/project/Werkzeug/#a-simple-example" target="_blank">werkzeug</a>, which is an HTTP request and response system. Werkzeug needs to support regular HTTP requests, but also:</p>
+                            <ul>
+                                <li>requests that accept <i>header support</i>, which enables the system to retrieve all the relevant HTTP accept headers, that in turn determine the type of content the client can support</li>
+                                <li>requests that support accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.)</li>
+                            </ul>
+
+                            <u>Goals</u><br><br>
+                            <ul>
+                                <li><input type="checkbox"/> wants to let some requests support header functionality</li>
+                                <li><input type="checkbox"/> but others to support headers, auth, tags, etc.</li>
+                            </ul>
+
+                            <div class="diagram-text">
+                                <u style="font-size:medium;">Mixins of werkzeug:</u>
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>AcceptMixin</b>
+                                                <p>method_from_accept_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>BaseRequest</b>
+                                                <p>prop_of_basereq_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <b>SpecialRequest</b>
+                                        <p>method_from_accept_mxn</p>
+                                        <p>prop_of_basereq_mxn</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>AcceptMixin</b>
+                                                <p>method_from_accept_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>BaseRequest</b>
+                                                <p>prop_of_basereq_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>ETagRequestMixin</b>
+                                                <p>method_from_etag_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <b>UserAgentMixin</b>
+                                                <p>prop_from_useragent_mxn</p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-9">
+                                                <b>AuthenticationMixin</b>
+                                                <p>method_from_auth_mixin</p>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <p>→</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <b>ExtraSpecialRequest</b>
+                                        <p>method_from_accept_mxn</p>
+                                        <p>prop_of_basereq_mxn</p>
+                                        <p>method_from_etag_mxn</p>
+                                        <p>prop_from_useragent_mxn</p>
+                                        <p>method_from_auth_mixin</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <u>Relevant Code</u><br><br>
+                            <p>In Werkzeug, I can make a plain request object by saying:</p>
+                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+    from werkzeug import BaseRequest
+        class RegularRequest(BaseRequest):
+            pass
+                            </pre>
+                            <p><input type="checkbox"/> If I want to add accept header support, which enables getting all HTTP accept headers (which determines the type of content the client can support) into a single object, I would instead write:</p>
+                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word; width:110%">
+    from werkzeug import BaseRequest, AcceptMixin
+    class SpecialRequest(AcceptMixin, BaseRequest):
+        def sr_method:
+            method_from_accept_mxn(prop_of_basereq_mxn)
+                            </pre>
+                            <p><input type="checkbox"/> If I wanted to make a request object that supports accept headers, etags (entity tags which help the web cache only request for information it needs), authentication, and user agent support (which lets servers access frontend client data such as the OS, browser, etc.), I could do this:<p>
+                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word; width:110%">
+    from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
+
+    class ExtraSpecialRequest(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, BaseRequest):
+        def esr_method:
+            method_from_accept_mxn(prop_of_basereq_mxn)
+            method_from_etag_mxn(prop_from_useragent_mxn)
+            method_from_auth_mixin()
+                            </pre>
+
+                            <u>Rationales</u><br><br>
+                            <p><input type="checkbox"/> R1 Ex) The difference is subtle, but in the werkzeug example, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
+                            <p><input type="checkbox"/> R2 Ex) Here werkzeug's SpecialRequest and ExtraSpecialRequest both use AcceptMixin.</p>
+                            <p><input type="checkbox"/> R3 Ex) Here werkzeug is adding optional features for SpecialRequest and even more optional features for ExtraSpecialRequest.</p>
+                            <p><input type="checkbox"/> R4 Ex) Here AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin each represent compartmentalized implementations of particular functionalities.</p>
+                            <p><input type="checkbox"/> R5 Ex) For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed.</p>
+                            <p><input type="checkbox"/> R6 Ex) Here, the werkzeug example's mixins (AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, etc.) respect DI (the dependency inversion principle) because each of their implementations could be changed as long as they implement the methods they promise to implement, which get used by the adopter classes (SpecialRequest, ExtraSpecialRequest, etc.). Similarly the adopter classes can change how they use the mixins and mixin methods they adopt depending only on the interface (i.e. the method signatures) of the individual mixins.</p> 
+                        </div>
+
+                        <div id="professional">
+                            <h3>Professional Example ({{ dp.project }})</h3>
+                            <img alt="posthog example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/posthog.png"/>
+                            <br><br>
+                            <p><input type="checkbox"/> Watch this video on how Posthog's features work: <a href="#">Posthog Features Video</a></p>
+                            <p>Play around with these Posthog demos: 
+                            <ul>
+                                <li><input type="checkbox"/> <a href="#">Regular Posthog Version</a></li>
+                                <li><input type="checkbox"/> <a href="#">Enterprise Posthog Version</a></p></li>
+                            </ul>
+                            <p>Note that a logged in user is generally part of a team. Depending on which team they are part of, they have access to different data.</p>
+                            <p>The application has complex functionality involving insights, dashboards, actions which involve both data and frontend views.</p>
+
+                            <u>Goals</u><br><br>
+                            <p>Actions, Insights, Dashboards need to:
+                            <ol>
+                                <li><input type="checkbox"/> check the logged in user's access to data</li>
+                                <li><input type="checkbox"/> add tags to data of pro account users</li>
+                            </ol>
+                            but ClickHouseGroupTypes only need to do #1.</p>
+                                
+                            <div class="diagram-text">
+                                <u style="font-size:medium;">Mixins of {{ dp.project }}:</u>
+                                <br><br>
+                                {% for class, details in dp.classes_by_mixins.items %}
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            {% for mixin_adopted, mixin_details in details.items %}
+                                                <b>{{ mixin_adopted }} &nbsp;→</b>
+                                                {% for pm_adopted in mixin_details %}
+                                                    <p>{{pm_adopted}}</p>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-sm-6">
+                                        <b>{{class}}</b>
+                                        {% for pm_adopted in dp.classes_by_propmethods|get_value:class %}
+                                            <p>{{pm_adopted}}</p>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+
+                            <u>Relevant code snippets and data flow</u> can often be important to consider.
+
+                            <h6>TaggedItemViewSetMixin code:</h6>
+                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                <code>
+class <mark>TaggedItemViewSetMixin</mark>(viewsets.GenericViewSet):
+def is_licensed(self):
+return (
+    not self.request.user.is_anonymous and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
+    # The second one triggers an extra query to resolve user's organization.
+)
+
+def <mark>get_queryset</mark>(self):
+queryset = super(TaggedItemViewSetMixin, self).get_queryset()
+if self.is_licensed():
+    to_return = queryset.prefetch_related(
+        Prefetch("tagged_items", 
+            queryset=TaggedItem.objects.select_related("tag"), 
+            to_attr="prefetched_tags")
+    )
+return queryset
+                                </code>
+                            </pre>
+                            <h6>StructuredViewSetMixin code:</h6>
+                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                <code>
+class <mark>StructuredViewSetMixin</mark>(_GenericViewSet):
+...
+
+def <mark>get_queryset</mark>(self):
+queryset = super().get_queryset()
+to_return = self.filter_queryset_by_parents_lookups(queryset)
+return to_return
+
+@property
+def <mark>team_id</mark>(self) -> int:
+team_from_token = self._get_team_from_request()
+if team_from_token:
+    return team_from_token.id
+if self.legacy_team_compatibility:
+    user = cast(User, self.request.user)
+    team = user.team
+    assert team is not None
+    return team.id
+return self.parents_query_dict["team_id"]
+
+@property
+def <mark>team</mark>(self) -> Team:
+team_from_token = self._get_team_from_request()
+if team_from_token:
+    return team_from_token
+user = cast(User, self.request.user)
+if self.legacy_team_compatibility:
+    team = user.team
+    assert team is not None
+    return team
+try:
+    return Team.objects.get(id=self.team_id)
+except Team.DoesNotExist:
+    raise NotFound(detail="Project not found.")
+
+@property
+def organization_id(self) -> str:
+...
+
+@property
+def organization(self) -> Organization:
+...
+
+def filter_queryset_by_parents_lookups(self, queryset):
+parents_query_dict = self.parents_query_dict.copy() 
+for source, destination in self.filter_rewrite_rules.items():
+    parents_query_dict[destination] = parents_query_dict[source]
+    del parents_query_dict[source]
+if parents_query_dict:
+    try:
+        return queryset.filter(**parents_query_dict)
+    except ValueError:
+        raise NotFound()
+else:
+    return queryset
+
+@cached_property
+def parents_query_dict(self) -> Dict[str, Any]:
+# used to override the last visited project if there's a token in the request
+team_from_request = self._get_team_from_request()
+if self.legacy_team_compatibility: 
+    if not self.request.user.is_authenticated:
+        raise AuthenticationFailed()
+    project = team_from_request or self.request.user.team
+    if project is None:
+        raise ValidationError("This endpoint requires a project.")
+    return {"team_id": project.id}
+result = {}
+
+# process URL parameters (here called kwargs), such as organization_id in /api/organizations/:organization_id/
+for kwarg_name, kwarg_value in self.kwargs.items():
+    # drf-extensions nested parameters are prefixed
+    if kwarg_name.startswith(extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX):
+        query_lookup = kwarg_name.replace(
+            extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX, "", 1
+        )
+        query_value = kwarg_value
+        if query_value == "@current":
+            if not self.request.user.is_authenticated:
+                raise AuthenticationFailed()
+            if query_lookup == "team_id":
+                project = self.request.user.team
+                if project is None:
+                    raise NotFound("Project not found.")
+                query_value = project.id
+            elif query_lookup == "organization_id":
+                organization = self.request.user.organization
+                if organization is None:
+                    raise NotFound("Organization not found.")
+                query_value = organization.id
+        elif query_lookup == "team_id":
+            try:
+                query_value = team_from_request.id if team_from_request else int(query_value)
+            except ValueError:
+                raise NotFound()
+        result[query_lookup] = query_value
+return result
+
+...
+
+def _get_team_from_request(self) -> Optional["Team"]:
+...
+return team_found
+
+
+class InsightViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
+queryset = Insight.objects.all().prefetch_related(
+"dashboard", "dashboard__team", "dashboard__team__organization", "created_by"
+)
+...
+permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+filter_backends = [DjangoFilterBackend]
+filterset_fields = ["short_id", "created_by"]
+...
+
+def get_queryset(self) -> QuerySet:
+print("in InsightViewSet, before super().get_queryset() call, super:", super().get_queryset)
+queryset = super().<mark>get_queryset()</mark>
+print("in InsightViewSet, after super().get_queryset() call")
+if self.action == "list":
+    queryset = queryset.filter(deleted=False)
+    queryset = self._filter_request(self.request, queryset)
+
+order = self.request.GET.get("order", None)
+if order:
+    queryset = queryset.order_by(order)
+else:
+    queryset = queryset.order_by("order")
+
+return queryset
+
+def _filter_request(self, request: request.Request, queryset: QuerySet) -> QuerySet:
+filters = request.GET.dict()
+
+for key in filters:
+    ...
+return queryset
+...
+
+@action(methods=["GET", "POST"], detail=False)
+def trend(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+...
+
+result = self.calculate_trends(request)
+filter = Filter(request=request, team=<mark>self.team</mark>)
+next = (
+    format_paginated_url(request, filter.offset, BREAKDOWN_VALUES_LIMIT)
+    if len(result["result"]) >= BREAKDOWN_VALUES_LIMIT
+    else None
+)
+return Response({**result, "next": next})
+...
+
+
+class DashboardsViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
+queryset = Dashboard.objects.order_by("name")
+...
+permission_classes = [
+IsAuthenticated,
+ProjectMembershipNecessaryPermissions,
+TeamMemberAccessPermission,
+CanEditDashboard,
+]
+
+def get_queryset(self) -> QuerySet:
+queryset = super().<mark>get_queryset()</mark>
+...
+
+deferred_fields = set.union(
+    get_deferred_field_set_for_model(
+        Organization, fields_not_deferred={"available_features"}, field_prefix="team__organization__"
+    ),
+    get_deferred_field_set_for_model(Team, fields_not_deferred={"organization", "name"}, field_prefix="team__"),
+)
+
+queryset = (
+    queryset.select_related("team__organization", "created_by")
+    .defer(*deferred_fields)
+    .prefetch_related(Prefetch("items", queryset=Insight.objects.filter(deleted=False).order_by("order")))
+)
+return queryset
+
+
+class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.ModelViewSet):
+...
+queryset = Action.objects.all()
+...
+permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+...
+
+def get_queryset(self):
+queryset = super().<mark>get_queryset</mark>()
+if self.action == "list":
+    queryset = queryset.filter(deleted=False)
+
+queryset = queryset.annotate(count=Count(TREND_FILTER_TYPE_EVENTS))
+queryset = queryset.prefetch_related(Prefetch("steps", queryset=ActionStep.objects.order_by("id")))
+return queryset.filter(team_id=self.team_id).order_by(*self.ordering)
+
+def list(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+actions = self.get_queryset()
+actions_list: List[Dict[Any, Any]] = self.serializer_class(actions, many=True, context={"request": request}).data  # type: ignore
+return Response({"results": actions_list})
+
+@action(methods=["GET"], detail=False)
+def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+team = <mark>self.team</mark>
+filter = Filter(request=request, team=<mark>self.team</mark>)
+entity = get_target_entity(filter)
+
+actors, serialized_actors = ClickhouseTrendsActors(team, entity, filter).get_actors()
+...
+return Response(
+    {
+        "results": [{"people": serialized_actors[0:100], "count": len(serialized_actors[0:100])}],
+        "next": next_url,
+        "previous": current_url[1:],
+    }
+)
+
+class ClickhouseGroupsView(StructuredViewSetMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+...
+queryset = Group.objects.all()
+pagination_class = GroupCursorPagination
+permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+
+def get_queryset(self):
+return super().<mark>get_queryset</mark>().filter(group_type_index=self.request.GET["group_type_index"])
+
+@action(methods=["GET"], detail=False)
+def find(self, request: request.Request, **kw) -> response.Response:
+print("In ClickhouseGroupsView, find")
+try:
+    group = self.<mark>get_queryset</mark>().get(group_key=request.GET["group_key"])
+    data = self.get_serializer(group).data
+    return response.Response(data)
+except Group.DoesNotExist:
+    raise NotFound()
+
+@action(methods=["GET"], detail=False)
+def related(self, request: request.Request, pk=None, **kw) -> response.Response:
+print("In ClickhouseGroupsView, related")
+group_type_index = request.GET.get("group_type_index")
+id = request.GET["id"]
+
+results = RelatedActorsQuery(self.team.pk, group_type_index, id).run()
+return response.Response(results)
+
+@action(methods=["GET"], detail=False)
+def property_definitions(self, request: request.Request, **kw):
+print("In ClickhouseGroupsView, property_definitions")
+...
+group_type_index_to_properties = defaultdict(list)
+for group_type_index, key, count in rows:
+    group_type_index_to_properties[group_type_index].append({"name": key, "count": count})
+
+return response.Response(group_type_index_to_properties)
+
+@action(methods=["GET"], detail=False)
+def property_values(self, request: request.Request, **kw):
+print("In ClickhouseGroupsView, property_values")
+rows = sync_execute(...,
+    {"team_id": <mark>self.team</mark>.pk, "group_type_index": request.GET["group_type_index"], "key": request.GET["key"]},
+)
+
+return response.Response([{"name": name[0]} for name in rows])
+                                </code>
+                            </pre>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                    <p>This is data for the "Formative project" on the licensed account.</p>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                        </code>
+                                    </pre>
+                                    <br><br>
+                                    <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                    <p>This is data for the "Formative project" on the licensed account.</p>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+tivsm postInsight object (21)
+tagged items: 
+tag: official
+
+tivsm postInsight object (22)
+tagged items: 
+tag: official tag
+tag: great
+tag: excellent
+tag: another one
+tag: frog
+tag: grammar
+tag: egret
+tag: hippo
+
+tivsm postInsight object (23), tagged items: 
+tag: good
+
+tivsm postInsight object (24), tagged items: 
+
+tivsm postInsight object (25), tagged items: 
+
+tivsm postInsight object (26), tagged items: 
+                                        </code>
+                                    </pre>
+                                </div>
+                                <div class="col-md-6">
+                                        <br>
+                                        <h6>Insight data before the TaggedItemViewSetMixin is applied:</h6>
+                                        <p>This is data for the non-licensed account.</p>
+                                        <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                            <code>
+Insight object (21) Daily Active Users (DAUs) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (22) Cumulative DAUs from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (23) Repeat users over time from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (24) Sample - Purchase conversion funnel from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (25) Users by browser (last 2 weeks) from TIVSM
+tagged items: posthog.TaggedItem.None
+
+Insight object (26) Users by traffic source from TIVSM
+tagged items: posthog.TaggedItem.None
+
+# and if we try to print pre_fetched tags for each of the above, 
+we get the following, for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                            </code>
+                                        </pre>
+                                        <br><br>
+                                        <h6>Insight data after the TaggedItemViewSetMixin is applied:</h6>
+                                        <p>This is data for the non-licensed account.</p>
+                                        <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                            <code>
+tivsm postInsight object (21) 
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (22)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (23)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (24)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (25)
+tagged items: 
+# nothing was printed here
+tivsm postInsight object (26)
+tagged items: 
+# nothing was printed here
+
+and if we try to print pre_fetched tags for each of the above
+we get the following for each of the above insight objects:
+AttributeError: 'Insight' object has no attribute 'prefetched_tags'
+                                            </code>
+                                        </pre>
+                                </div>
+                                <div class="col-md-12">
+                                    <br><br>
+                                    <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+Insight object (6) Users by traffic source for team Default Project
+Insight object (8) for team Default Project
+Insight object (9) for team Default Project
+Insight object (10) for team Default Project
+Insight object (3) Repeat users over time for team Default Project
+Insight object (11) for team Default Project
+Insight object (13) Pageview count for team Default Project
+Insight object (1) Daily Active Users (DAUs) for team Default Project
+Insight object (12) for team Default Project
+Insight object (14) Page view user conversion rate for team Default Project
+Insight object (5) Users by browser (last 2 weeks) for team Default Project
+Insight object (15) Retention of users based on doing Pageview for the first time and returning with the same event for team Default Project
+Insight object (16) for team Default Project
+Insight object (17) User paths based on page views for team Default Project
+Insight object (19) for team Default Project
+Insight object (2) Cumulative DAUs for team Default Project
+Insight object (18) User stickiness based on Pageview for team Default Project
+Insight object (7) for team Default Project
+Insight object (20) Pageview count for team Default Project
+Insight object (4) Sample - Purchase conversion funnel for team Default Project
+Insight object (23) Repeat users over time for team Formative Project
+Insight object (26) Users by traffic source for team Formative Project
+Insight object (25) Users by browser (last 2 weeks) for team Formative Project
+Insight object (24) Sample - Purchase conversion funnel for team Formative Project
+Insight object (22) Cumulative DAUs for team Formative Project
+Insight object (21) Daily Active Users (DAUs) for team Formative Project										
+                                        </code>
+                                    </pre>
+                                    <h6>Insight data before the StructuredViewSetMixin is applied:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+Insight object (21) Daily Active Users (DAUs) for team Formative Project
+Insight object (22) Cumulative DAUs for team Formative Project
+Insight object (23) Repeat users over time for team Formative Project
+Insight object (24) Sample - Purchase conversion funnel for team Formative Project
+Insight object (25) Users by browser (last 2 weeks) for team Formative Project
+Insight object (26) Users by traffic source for team Formative Project
+                                        </code>
+                                    </pre>
+                                </div>
+                                <div class="col-md-12">
+                                    <br><br>
+                                    <h6>ClickhouseGroupsView data before the StructuredViewSetMixin is applied:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+group:  Group object (2) group_key: 017f7f2a-7209-0000-10fb-5d43f27650a5 group_type_index: 0 group_team: Default Project
+group_properties: {'id': 1, 'name': 'Default Project', 'uuid': '017f7f2a-7209-0000-10fb-5d43f27650a5', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
+
+group:  Group object (3) group_key: http://localhost:8000 group_type_index: 2 group_team: Default Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (5) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Formative Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}
+
+group:  Group object (4) group_key: 01835cfd-c74d-0000-8dce-b86655e46e84 group_type_index: 0 group_team: Formative Project
+group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-0000-8dce-b86655e46e84', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
+
+group:  Group object (6) group_key: http://localhost:8000 group_type_index: 2 group_team: Formative Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (1) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Default Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}									
+                                        </code>
+                                    </pre>
+                                    <h6>ClickhouseGroupsViewdata before the StructuredViewSetMixin is applied:</h6>
+                                    <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                        <code>
+group:  Group object (5) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Formative Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}
+
+group:  Group object (6) group_key: http://localhost:8000 group_type_index: 2 group_team: Formative Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (4) group_key: 01835cfd-c74d-0000-8dce-b86655e46e84 group_type_index: 0 group_team: Formative Project
+group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-0000-8dce-b86655e46e84', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
+                                        </code>
+                                    </pre>
+                                </div>
+                            </div>
+                            
+                            <!--End Hard Coding-->
+                            {% for mixin, details in dp.mixins.items %}
+                                <h4 id="mixin-{{mixin}}">{{mixin}}</h4>
+                                {% for prop_method in details.prop_methods%}
+                                    <h6 id="mixin-{{mixin}}-{{prop_method}}-3a">{{prop_method}}</h6>
+                                    <p>Activity 3A: List the classes or class instances that adopt the method <b>{{prop_method}}</b> from {{mixin}}. Hint, look at the "Mixins of {{ dp.project }}" diagram above.
+                                        <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
+                                    </p>
+                                    <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                    <br><br>
+                                    <p id="mixin-{{mixin}}-{{prop_method}}-3c">Activity 3B: Describe how {{mixin}}'s <b>{{prop_method}}</b> method is being used. 
+                                        <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                    </p>
+                                    <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                    <br><br>i.e. What does {{mixin}}'s <b>{{prop_method}}</b> do? 
+                                    <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
+                                    <br>i.e. what does the class that adopts {{mixin}}'s <b>{{prop_method}}</b> do? <br>Hint: look at the code of the classes you mentioned in 3A.
+                                    <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
+                                    <br><br>
+                                    <p id="mixin-{{mixin}}-{{prop_method}}-4b">Activity 4: <b>With respect to {{prop_method}}</b>, explain why mixins, and in particular {{mixin}}, is used in {{dp.project}}? <br>Hint 1: see the general ideas bulletted to the left. <br>Hint 2: remember the "Multiple Versions of Methods / Props Note" to the left. <br>Hint 3: then take another look at the {{dp.project}} application as a user. <br>Think carefully about the <b>domain / purpose</b> of the application you are studying. Why specifically are mixins used for this particular domain? 
+                                        <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                    </p>
+                                    <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                    <br><br>
+                                {% endfor %}
+                            {% endfor %}               
+                        </div>
+
+                        <u>Summary</u>
+
+                        <p><input type="checkbox"/> <a target="_blank" href="https://pypi.org/project/Werkzeug/#a-simple-example">Werkzeug's</a> Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for generally reusable request-related features (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</p>
+                        <p><input type="checkbox"/> SpecialRequest, ExtraSpecialRequest, etc. are not types of AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, etc. The request classes ("children" / adopters) use methods of the mixin classes ("parents" / adoptees). The role of these mixins is to provide additional functionality and features to their adopter classes, and we do not create objects / instances of the Mixin classes.</p>
+
+                        Why were mixins useful for {{dp.project}} specifically? Hint, think about tradeoffs over inheritence and about traditional multiple inheritence issues that mixins solve. Remember the "Multiple Versions of Methods / Props Note" above. 
+                        <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                        <br><br>
+                        <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
+                    </div>
+
+                    <br>
+                    <div id="mvs">
+                        <h2>MV* Lesson</h2>
+                        <p>Check the boxes after reading the statements. Fill in the text boxes.</p>
+                        <table class="table">
+                            <tr>
+                                <th style="width: 30%">Theory</th>
+                                <th style="width: 35%">Canonical / Tutorial Example</th>
+                                <th style="width: 35%">Professional Example ({{ dp.project }})</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Definitions</u><br><br>
+                                    <p><input type="checkbox"/> MV* (MVC, MVVM, MVP, MVT) divide user interface implementations into 3 interconnected elements - the model for data related management, the view (or in the case of django the "template") for visual representations, and the controller for logic for manipulating the model or view (src: <a target="_blank" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">1</a>). Nuances:</p>
+                                    <p></p><input type="checkbox"/> The model is responsible for managing the data of the application. It receives user input from the controller.</p>
+                                    <p><input type="checkbox"/> The view renders presentation of the model in a particular format.</p>
+                                    <p><input type="checkbox"/> The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</p>
+                                    <p><input type="checkbox"/> Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
+                                    <p><input type="checkbox"/> Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
+                                </td>
+                                <td>
+                                    <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> (reference <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>). You can add, filter, edit, update, and delete todo items.</p>
+                                    <img alt="todo example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/todo.png"/>
+                                </td>
+                                <td>
+                                    <img alt="posthog example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/posthog.png"/>
+                                    <br><br>
+                                    <p><input type="checkbox"/> Watch this video on how Posthog's features work: <a href="#">Posthog Features Video</a></p>
+                                    <br>
+                                    <p>Play around with these Posthog demos: 
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="#">Regular Posthog Version</a></li>
+                                        <li><input type="checkbox"/> <a href="#">Enterprise Posthog Version</a></p></li>
+                                    </ul>
+                                    <p>Note that a logged in user is generally part of a team. Depending on which team they are part of, they have access to different data.</p>
+                                    <p>The application has complex functionality involving insights, dashboards, actions which involve both data and frontend views.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Goals</u>
+                                    <br><br>
+                                    <p><input type="checkbox"/> Support complex interactive functionality involving data, logic, and frontend views.</p>
+                                    <p><input type="checkbox"/> Make the codebase easy to maintain by a group of multiple developers.</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> Allow users to add, filter, edit, update, delete todo items on the frontend.</p>
+                                    <p><input type="checkbox"/> Persist the data updates.</p>
+                                    <p><input type="checkbox"/> Make it easy for multiple developers to work on different parts of the application, like the todo view or the data storage.</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> Allow users to view insights, dashboards, and actions filled with only the data they have access to.</p>
+                                    <p><input type="checkbox"/> Allow enterprise users only to view tags on the insights.</p>
+                                    <p><input type="checkbox"/> Persist and update data.</p>
+                                    <p><input type="checkbox"/> Make it easy for multiple developers to work on different parts of the application, like the Insights view or the data storage.</p>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td class="diagram-text">
+                                    <u style="font-size:medium;">Diagrams</u><br><br>
+                                    <p>Here is a diagram of the MVC in general.</p>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Template / View &nbsp;↔</b><sup>1</sup>
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>UI Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <b>Controllers</b> 
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <sup>1</sup><b>↔&nbsp; Models</b>
+                                            <br><br><br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data from the model for the end user. It also manipulates the data based on user input into the template.</p>
+                                    <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
+                                    <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
+                                </td>
+                                <td class="diagram-text">
+                                    <p>Here is a diagram of the MVC of the TODO app.</p>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Templates / Views &nbsp;↔</b><sup>3</sup>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></p>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></p>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>UI Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <b>Controllers</b> 
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a><br> (CRUD = create, read, update, delete)</p>
+                                            <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a><br></p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <sup>4</sup><b>↔&nbsp; Models</b>
+                                                <p><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoModel.js" target="_blank">TodoItem</a></p>
+                                                <p>User</p>
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>3</sup>The controller sends all the todo items to the template for rendering in a list. The template also sends todo item updates (edits, deletions, additions) to the controller.</p>
+                                    <p style="font-size:12px;"><sup>4</sup>The To Do CRUD controller queries the ToDoItem model for the logged in user's todo items.</p>
+                                    <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
+                                </td>
+                                <td class="diagram-text">
+                                    <h3>MV* of {{ dp.project }}</h3>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <b>Templates / Views &nbsp;↔</b><sup>1</sup>
+                                            {% for template in dp.templates reversed %}
+                                                <p>
+                                                    {{template.name}}<br>
+                                                    <span style="font-size:10px;">May use {{template.model}} model but check.</span>
+                                                </p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Frontend Developers</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <b>Controllers</b><sup>3</sup>
+                                            {% for controller in dp.views reversed %}
+                                                <p>
+                                                    {{controller.name}}<br>
+                                                    <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                                </p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Fullstack Developers</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <sup>2</sup><b>↔ &nbsp;Models</b>
+                                            {% for model in dp.models reversed %}
+                                                <p>{{model}}</p>
+                                            {% endfor %}
+                                            <br>
+                                            <b>Roles</b>
+                                            <p>Backend Developers</p>
+                                            <p>Database Admin</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data from the model for the end user. It also manipulates the data based on user input into the template.</p>
+                                    <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
+                                    <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
+                                    <p style="font-size:12px;"><sup>3</sup>Note, Django's official documentation itself says this is debatable. Some consider Django's 'Views' or 'Viewsets' to be kind of controllers (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>). We take that interpretation. Django instead interprets the word "view" itself according to the MVT style. Django states that the controller in Django is the framework itself, the view is deciding what data should be surfaced, and the template decides how the data is surfaced. However for the sake of our exercise, we will treat Django 'Views' or 'Viewsets' as the MV* controller and Django 'Templates' as the MV* view.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Relevant code snippets and data flow</u> can often be important to consider.
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx#L136" target="_blank">Creating / Toggling Todo's</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/footer.jsx" target="_blank">Footer</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/saved-insights/savedInsightsLogic.ts#L75-L77" target="_blank">/insight</a> (some CRUD may be in 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/saved-insights/SavedInsights.tsx#L287-L468" target="_blank">1</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/insightsModel.tsx#L34" target="_blank">2</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightSceneLogic.tsx#L87-L146" target="_blank">3</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightLogic.ts#L148-L270" target="_blank">4</a>, 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/insights/insightLogic.ts#L618-L680" target="_blank">5</a> too)</li>    
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/models/actionsModel.ts#L21" target="_blank">/action</a> (some CRUD may be in 
+                                            <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/lib/api.ts#L404" target="_blank">1</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/lib/api.ts#L114-L225" target="_blank">2</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/toolbar/actions/actionsTabLogic.tsx#L166-L193" target="_blank">3</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/toolbar/actions/actionsLogic.ts#L27" target="_blank">4</a>,
+                                             too)</li>                                             
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/dashboardsModel.tsx#L71" target="_blank">/dashboards</a> (some CRUD may be in 
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/lib/api.ts#L404" target="_blank">1</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/models/dashboardsModel.tsx#L304" target="_blank">2</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/dashboard/dashboardsLogic.ts#L80" target="_blank">3</a>,
+                                            <a href="https://github.com/ld-rale/posthog/blob/a7b39645e0826955c1a2e5081825dabf1e5fd791/frontend/src/scenes/dashboard/dashboardLogic.ts#LL122C33-L122C70" target="_blank">4</a> too)</li>
+                                    </ul>
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/action.py#L156-L184" target="_blank">actionviewset</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/insight.py#L200-L428" target="_blank">insightviewset</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/api/dashboard.py#LL203C15-L245C15" target="_blank">dashboardsviewset</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/insight.py" target="_blank">Insight Model</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/action.py" target="_blank">Action Model</a></li>
+                                        <li><input type="checkbox"/> <a href="https://github.com/ld-rale/posthog/blob/master/posthog/models/dashboard.py" target="_blank">Dashboard Model</a></li>
+                                    </ul>
+                                    <u>Insights data:</u>
+                                    <br>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/insights1.png" alt="insights1" width="100%"/>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/insights2.png" alt="insights2" width="100%"/>
+                                    <br><br>
+                                    <u>Actions data:</u>
+                                    <br>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/actions1.png" alt="actions1" width="100%"/>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/actions2.png" alt="actions1" width="100%"/>
+                                    <br><br>
+                                    <u>Dashboards data:</u>
+                                    <br>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/dashboards1.png" alt="dashboards1" width="100%"/>
+                                    <img src="http://127.0.0.1:9000/static/ralemodules/dashboards2.png" alt="dashboards2" width="100%"/>
+                                    <br><br>
+                                    {% for model in dp.models %}
+                                        <h4>{{model}}</h4>
+                                        <p id="{{model}}-a1">Activity 1: Describe the {{model}} model. Hint: Look at the code of the model class linked above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p id="{{model}}-a2">Activity 2: Name the class that is the {{model}} model's MV* controller. <br>Hint 1: In Django REST Framework, confusingly, they say 'View' or 'Viewset' for the MV* controller, and 'Template' for MV* view. (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>) <br>Hint 2: Look at the diagram above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~0.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p id="{{model}}-a3">Activity 3: Name the URI path that corresponds to the {{model}} model's MV* view. <br>Hint 1: a URI path is what appears in a URL after the domain (i.e. /users, /contact, /about, /api).<br>Hint 2: In Django REST Framework, confusingly, they say 'Template' for the MV* view. <br>Hint 3: Look at the diagram above.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <u>Rationales</u><br><br>
+                                    <p><input type="checkbox"/> R1) MV* affords separation of visualization, processing, and data management code.</p>
+                                    <p><input type="checkbox"/> R2) MV* affords modularity in code.</p>
+                                    <p><input type="checkbox"/> R3) MV* affords flexibility in code. For instance, one can change or add new tempalates (views) without changing or touching the underlying models.</p>
+                                    <p><input type="checkbox"/> R4) MV* affords testability in code. For instance, one can easily test the models and controllers with unit tests, and the templates (views) with e2e tests.</p>
+                                    <p><input type="checkbox"/> R5) MV* affords maintainability in code. One can more easily maintain smaller, separate chunks of code responsible for specific purposes (M, V, and C).</p>
+                                </td>
+                                <td>
+                                    <p><input type="checkbox"/> R1 Ex) The ToDoItem and User models, the CRUD operations on them, and the actual template (MV* view) for seeing the items on the page are in separate parts of the codebase, which makes it easier to separate visuals from processing from data.</p>
+                                    <p><input type="checkbox"/> R2 Ex) The ToDo list code is modular in that the ToDoItem objects can be reused by different controllers and templates.</p>
+                                    <p><input type="checkbox"/> R3 Ex) The ToDo list codebase is flexible. For example, one could add more models to store data like groups of lists and categories of items without affecting the existing functionality.</p>
+                                    <p><input type="checkbox"/> R4 Ex) The ToDo list codebase is testable. For example, e2e tests can evaluate <a href="https://github.com/tastejs/todomvc/tree/master/tests#example-output" target="_blank">template / view level ToDo list functionality</a> and unit tests can evaluate the the controllers and models.</p>
+                                    <p><input type="checkbox"/> R5 Ex) The Todo list code is comprised of <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">small chunked files</a> and hence is easy to maintain. 
+                                </td>
+                                <td>
+                                    {% for controller in dp.views %}
+                                        <h4>{{controller.name}}</h4>
+                                        <p id="{{controller.name}}-a4">Activity 4: 
+                                            <br>(i) How does this controller access / manipulate the data model? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>Hint: Scan the {{controller.name}} code linked above. 
+                                            <br>(ii) What data does the model provide the controller?
+                                            <textarea rows="1" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>(iii) Does the controller also manipulate the model, i.e. create / edit / delete model instances and if so with what information, or is it just read only?
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                                        </p>
+                                        <br><br>
+                                        <p id="{{controller.name}}-a5">Activity 5: 
+                                            <br>(i) How does the model data get to the view (i.e. template)? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br>(ii) What data does the model provide and how does it fill the template? 
+                                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                                            <br><br> Hint 1: Scan (a) the {{controller.name}} code, (b) the code of the relevant templates you mentioned from Activity 3 above, and (c) the code of relevant model classes. As you may recall, the code snippets have been linked for you above. 
+                                            <br><br> Hint 2: Remember that Model code is responsible for database touching logic and Controller code is responsible for data preparation for feeding the template (src: <a target="_blank" href="https://www.google.com/search?q=controller+in+mvc&oq=controller+in+mv&aqs=chrome.0.0i512j69i57j0i512l6j0i22i30l2.2514j1j7&sourceid=chrome&ie=UTF-8">1</a>). <!--<br>Hint 3: If you have time, go to the Network tab in CDT and inspect the URLs corresponding to this view, as specified in urls.py.<br> (cutting this since we surface the CDT data for them) -->
+                                            
+                                        </p>
+                                        <br><br>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+                        <h3>MV* of {{ dp.project }}</h3>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <b>Templates / Views</b>
+                                        {% for template in dp.templates reversed %}
+                                            <p>
+                                                {{template.name}}<br>
+                                                <span style="font-size:10px;">May use {{template.model}} model but check.</span>
+                                            </p>
+                                        {% endfor %}
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Frontend Developers</p>
+                                        <p>Fullstack Developers</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p style="text-align: center;">↔</p>
+                                        <br>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the template (i.e. with what data).
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="8" style="width: 100%; max-width: 100%;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Controllers</b> 
+                                {% for controller in dp.views reversed %}
+                                    <p>
+                                        {{controller.name}}<br>
+                                        <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
+                                    </p>
+                                {% endfor %}
+                                <br>
+                                <b>Roles</b>
+                                <p>Backend Developers</p>
+                                <p>Fullstack Developers</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <p style="text-align: center;">↔</p>
+                                        <br>
+                                        <p style="font-size:12px;">Describe how the controller accesses / manipulates the model.
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="5" style="width: 100%; max-width: 100%;"></textarea>
+                                        <br><br>
+                                        <p style="font-size:12px;">Describe how the controller fills in / manipulates the model (i.e. with what data).
+                                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                        </p>
+                                        <textarea rows="5
+                                        " style="width: 100%; max-width: 100%;"></textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>Models</b>
+                                        {% for model in dp.models reversed %}
+                                            <p>{{model}}</p>
+                                        {% endfor %}
+                                        <br>
+                                        <b>Roles</b>
+                                        <p>Backend Developers</p>
+                                        <p>Database Admin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here?
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                        </p>
+                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                        <br><br>
+                        <p>Now, consider templates and pages like: 
+                            {% for template in dp.templates reversed %}
+                                {{template.name}}, 
+                            {% endfor %}
+                        </h4>
+                        <p id="a7">Activity 7: 
+                            <br>(i) Would you consider these templates (surfaced from the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture?
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea> 
+                            <br>(ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
+                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
+                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
+                            <br>Hint: Take a look at the application again and think carefully about the <b>domain / purpose</b> of the application you are studying.
+                        </p>
+                        <br><br>
+                        <h3>Tradeoffs / Alternatives to MV*</h3>
+                        <table id="mvs-tradeoff" class="table">
+                            <tr>
+                                <th style="width: 5%">Pattern</th>
+                                <th style="width: 40%">Theory</th>
+                                <th style="width: 10%">Canonical / Tutorial Example</th>
+                                <th>Tradeoffs</th>
+                            </tr>
+                            <tr>
+                                <td>MV*</td>
+                                <td>
+                                    Model-view-controller architectures, described above and in 
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>, have many benefits:
+                                    <ul>
+                                        <li>(A) separation of visualization, processing, data management</li>
+                                        <li>(B) modularity</li>
+                                        <li>(C) flexibility</li>
+                                        <li>(D) testability</li>
+                                        <li>(E) maintainability</li>
+                                    </ul>  
+                                </td>
+                                <td>
+                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
+                                </td>
+                                <td>
+                                    Why was MV* useful specifically for {{dp.project}}? Hint: think about tradeoffs over not using any framework.
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                    <br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>No Framework</td>
+                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>.<br><br>While there are many benefits of MV* over vanilla PHP, vanilla PHP is potentially easier for developers to learn, doesn't expose you to functionalities you don't need (as opposed to huge frameworks like CakePHP, Laravel, etc.), and is highly customizable. This is good for one-off scripts, demos, small API's, and highly specific use-cases (src: <a target="_blank" href="https://www.quora.com/What-is-vanilla-PHP-How-different-is-it-from-plain-PHP-PHP-Laravel-and-CakePHP/answer/Derak-Kilgo">1</a>, <a target="_blank" href="https://www.quora.com/How-is-MVC-different-from-normal-PHP-Why-should-I-learn-it/answer/Pooja-1071">2</a>). Code also reads linearly from top to bottom, which might make it easier for a developer to predict what will render on the page.</td>
+                                <td><a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP example</a</td>
+                                <td>
+                                    Why would no framework not work specifically for {{dp.project}}?
+                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
+                                    <br><br>
+                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </body>
+</html>

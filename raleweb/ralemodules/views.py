@@ -16,32 +16,37 @@ def get_value(dictionary, key):
 def index(request):
     return HttpResponse("Hello, world. You're at the ralemodules index.")
 
+def get_cb_details(request):
+    # get codebase folder
+    codebase_dp_details = None
+    with open('../out/dp.csv', newline='\n') as csvfile:
+        dpreader = csv.reader(csvfile, delimiter=',', quotechar='"', doublequote=True)
+        for row in dpreader:
+            #print(', '.join(row))
+            #print("request.GET['file']", request.GET['file'])
+            #print("row[0]", row[0])
+            if len(row) > 1 \
+                and (row[0] == request.GET['file'] or row[0] == request.GET['file'] + "/"):
+                # print("found file")
+                codebase_dp_details = row[1]
+                break
+    # extract design patterns from csv
+    print("codebase_dp_details", codebase_dp_details)
+    codebase_dp = json.loads(codebase_dp_details)
+    print("codebase_dp", codebase_dp)
+    return codebase_dp
+
 class ExercisesView(TemplateView):
     template_name = 'ralemodules/exercises.html'
 
     def get(self, request, *args, **kwargs):
         # print('in ExercisesView')
+        codebase_dp = get_cb_details(request)
+        return render(request, self.template_name, { 'dp': codebase_dp })
 
-        # get codebase folder
-        codebase_dp_details = None
-        with open('../out/dp.csv', newline='\n') as csvfile:
-            dpreader = csv.reader(csvfile, delimiter=',', quotechar='"', doublequote=True)
-            for row in dpreader:
-                #print(', '.join(row))
-                #print("request.GET['file']", request.GET['file'])
-                #print("row[0]", row[0])
-                if len(row) > 1 \
-                    and (row[0] == request.GET['file'] or row[0] == request.GET['file'] + "/"):
-                    # print("found file")
-                    codebase_dp_details = row[1]
-                    break
+class ExercisesCView(TemplateView):
+    template_name = 'ralemodules/exercises-c.html'
 
-        # extract design patterns from csv
-        print("codebase_dp_details", codebase_dp_details)
-        codebase_dp = json.loads(codebase_dp_details)
-        print("codebase_dp", codebase_dp)
-
-        context = {
-            'dp': codebase_dp,
-        }
-        return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        codebase_dp = get_cb_details(request)
+        return render(request, self.template_name, { 'dp': codebase_dp })
