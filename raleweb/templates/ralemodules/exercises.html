@@ -507,6 +507,53 @@ class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.Mod
                 "previous": current_url[1:],
             }
         )
+
+class ClickhouseGroupsView(StructuredViewSetMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    ...
+    queryset = Group.objects.all()
+    pagination_class = GroupCursorPagination
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+
+    def get_queryset(self):
+        return super().<mark>get_queryset</mark>().filter(group_type_index=self.request.GET["group_type_index"])
+
+    @action(methods=["GET"], detail=False)
+    def find(self, request: request.Request, **kw) -> response.Response:
+        print("In ClickhouseGroupsView, find")
+        try:
+            group = self.<mark>get_queryset</mark>().get(group_key=request.GET["group_key"])
+            data = self.get_serializer(group).data
+            return response.Response(data)
+        except Group.DoesNotExist:
+            raise NotFound()
+
+    @action(methods=["GET"], detail=False)
+    def related(self, request: request.Request, pk=None, **kw) -> response.Response:
+        print("In ClickhouseGroupsView, related")
+        group_type_index = request.GET.get("group_type_index")
+        id = request.GET["id"]
+
+        results = RelatedActorsQuery(self.team.pk, group_type_index, id).run()
+        return response.Response(results)
+
+    @action(methods=["GET"], detail=False)
+    def property_definitions(self, request: request.Request, **kw):
+        print("In ClickhouseGroupsView, property_definitions")
+        ...
+        group_type_index_to_properties = defaultdict(list)
+        for group_type_index, key, count in rows:
+            group_type_index_to_properties[group_type_index].append({"name": key, "count": count})
+
+        return response.Response(group_type_index_to_properties)
+
+    @action(methods=["GET"], detail=False)
+    def property_values(self, request: request.Request, **kw):
+        print("In ClickhouseGroupsView, property_values")
+        rows = sync_execute(...,
+            {"team_id": <mark>self.team</mark>.pk, "group_type_index": request.GET["group_type_index"], "key": request.GET["key"]},
+        )
+
+        return response.Response([{"name": name[0]} for name in rows])
                                         </code>
                                     </pre>
                                     <div class="row">
@@ -671,6 +718,44 @@ Insight object (23) Repeat users over time for team Formative Project
 Insight object (24) Sample - Purchase conversion funnel for team Formative Project
 Insight object (25) Users by browser (last 2 weeks) for team Formative Project
 Insight object (26) Users by traffic source for team Formative Project
+                                                </code>
+                                            </pre>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br><br>
+                                            <h6>ClickhouseGroupsView data before the StructuredViewSetMixin is applied:</h6>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
+group:  Group object (2) group_key: 017f7f2a-7209-0000-10fb-5d43f27650a5 group_type_index: 0 group_team: Default Project
+group_properties: {'id': 1, 'name': 'Default Project', 'uuid': '017f7f2a-7209-0000-10fb-5d43f27650a5', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
+
+group:  Group object (3) group_key: http://localhost:8000 group_type_index: 2 group_team: Default Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (5) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Formative Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}
+
+group:  Group object (4) group_key: 01835cfd-c74d-0000-8dce-b86655e46e84 group_type_index: 0 group_team: Formative Project
+group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-0000-8dce-b86655e46e84', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
+
+group:  Group object (6) group_key: http://localhost:8000 group_type_index: 2 group_team: Formative Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (1) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Default Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}									
+                                                </code>
+                                            </pre>
+                                            <h6>ClickhouseGroupsViewdata before the StructuredViewSetMixin is applied:</h6>
+                                            <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
+                                                <code>
+group:  Group object (5) group_key: 017f7f2a-6815-0000-e178-1b3b38fe53df group_type_index: 1 group_team: Formative Project
+group_properties: {'id': '017f7f2a-6815-0000-e178-1b3b38fe53df', 'name': 'LD Talent', 'slug': 'ld-talent', 'created_at': '2022-03-12T17:25:59.962598Z', 'available_features': ['zapier', 'organizations_projects', 'google_login', 'dashboard_collaboration', 'ingestion_taxonomy', 'paths_advanced', 'correlation_analysis', 'group_analytics', 'multivariate_flags', 'experimentation', 'tagging', 'dashboard_permissioning', 'project_based_permissioning', 'saml'], 'taxonomy_set_events_count': 0, 'taxonomy_set_properties_count': 0}
+
+group:  Group object (6) group_key: http://localhost:8000 group_type_index: 2 group_team: Formative Project
+group_properties: {'site_url': 'http://localhost:8000'}
+
+group:  Group object (4) group_key: 01835cfd-c74d-0000-8dce-b86655e46e84 group_type_index: 0 group_team: Formative Project
+group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-0000-8dce-b86655e46e84', 'is_demo': False, 'timezone': 'UTC', 'ingested_event': True}
                                                 </code>
                                             </pre>
                                         </div>

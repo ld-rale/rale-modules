@@ -18,6 +18,8 @@ pp = pprint.PrettyPrinter(indent=4)
 PATH_TO_CODE = "/Users/gobidasu/Desktop/rale-modules/ralemodules/"
 SERVER = "localhost:8000"
 
+EXCESSIVE_CLASSES_TO_EXCLUDE = ["ClickhouseGroupsTypesView", "ClickhouseExperimentsViewSet", "DashboardCollaboratorViewSet", "HookViewSet", "ExplicitTeamMemberViewSet", "OrganizationInviteViewSet", "EventViewSet", "PersonViewSet", "OrganizationMemberViewSet", "CohortViewSet", "ElementViewSet", "PluginViewSet", "PluginConfigViewSet", "SessionRecordingViewSet", "PluginLogEntryViewSet", "EnterpriseEventDefinitionSerializer", "EnterprisePropertyDefinitionSerializer",  "ActionSerializer", "InsightSerializer", "DashboardSerializer"]
+
 print("\n") 
 file_to_parse = sys.argv[1]
 folder_to_parse = sys.argv[2]
@@ -473,8 +475,10 @@ for adopter_class in jDP["classes_by_mixins"]:
             if relevant_mixin not in mixins_used_alone:
                 mixins_used_alone.add(relevant_mixin)
             else:
-                # print("removing", adopter_class, "because it uses one or fewer mixins, and it is not the only case of that mixin used alone")
-                to_remove.add(adopter_class)
+                print("relevant_mixin, mixins_used_alone", relevant_mixin)
+                print("removing", adopter_class, "because it uses one or fewer mixins, and it is not the only case of that mixin used alone")
+                if adopter_class in EXCESSIVE_CLASSES_TO_EXCLUDE: # could be automated better in future - for instance check which classes are associated with urls / user views - add a heuristic to remove the ones that don't - add more heuristics - for now we wizard
+                    to_remove.add(adopter_class)
     for adopted_mixin in jDP["classes_by_mixins"][adopter_class]:
         if not jDP["classes_by_mixins"][adopter_class][adopted_mixin]: # if it's not using all the mixins
             # print("removing", adopter_class, "because it not using all of its mixins")
