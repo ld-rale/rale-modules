@@ -247,30 +247,6 @@
                                 <li>add tags to data of pro account users</li>
                             </ol>
                             but ClickHouseGroupTypes only need to do #1.</p>
-                                
-                            <div class="diagram-text">
-                                <u style="font-size:medium;">Mixins of {{ dp.project }}:</u>
-                                <br><br>
-                                {% for class, details in dp.classes_by_mixins.items %}
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            {% for mixin_adopted, mixin_details in details.items %}
-                                                <b>{{ mixin_adopted }} &nbsp;→</b>
-                                                {% for pm_adopted in mixin_details %}
-                                                    <p>{{pm_adopted}}</p>
-                                                {% endfor %}
-                                            {% endfor %}
-                                        </div>
-                                        <div class="col-sm-6">
-                                        <b>{{class}}</b>
-                                        {% for pm_adopted in dp.classes_by_propmethods|get_value:class %}
-                                            <p>{{pm_adopted}}</p>
-                                        {% endfor %}
-                                        </div>
-                                    </div>
-                                    <hr>
-                                {% endfor %}
-                            </div>
 
                             <u>Relevant code snippets and data flow</u> can often be important to consider.
                             <br><br>
@@ -770,7 +746,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                                 </div>
                             </div>
                             <u>Rationales</u>
-                            <br>
+                            <br><br>
                             Recommended Activities for understanding rationales:
                             <ul>
                                 <li>Scan mixin classes and classes that use / adopt the mixins (adopter classes). Investigate what they do.
@@ -787,7 +763,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
 
                         <p><a target="_blank" href="https://pypi.org/project/Werkzeug/#a-simple-example">Werkzeug's</a> Request / Response System Reasons: <br>(A) all Requests (SpecialRequest, ExtraSpecialRequest, etc) can use the AcceptMixin mixin <br>(B) the mixins let you allow more supports as needed, but not by default, to instances of the Request classes (i.e. AcceptMixin for SpecialRequest, 4 mixins for ExtraSpecialRequest) <br>(C) functionality for generally reusable request-related features (AcceptMixin, ETagRequestMixin, etc.) can be separated from ExtraSpecialRequest-specific functionality (i.e. the logic in the esr_method)</p>
                         <p>SpecialRequest, ExtraSpecialRequest, etc. are not types of AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin, etc. The request classes ("children" / adopters) use methods of the mixin classes ("parents" / adoptees). The role of these mixins is to provide additional functionality and features to their adopter classes, and we do not create objects / instances of the Mixin classes.</p>
-                        <b>Takeaway:</b> Consider why mixins useful for {{dp.project}} specifically, considering tradeoffs over alternative patterns.
+                        <b>Takeaway:</b> Consider why mixins are useful for {{dp.project}} specifically, considering tradeoffs over alternative patterns. Feel free to search alternatives to mixins online.
                     </div>
                     <br><br><br><br><br><br>
                     <div id="mvs">
@@ -801,10 +777,12 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                         <p>The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model.</p>
                         <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf">this tutorial of MVC vs MVP vs MVVM</a>.</p>
                         <p>Please take a skim of <a target="_blank" href="http://127.0.0.1:9000/static/ralemodules/MVC-MVT.pdf">this tutorial of MVC vs MVT</a>.</p>
+                        <br>
                         <u>Goals</u>
                         <br><br>
                         <p>Support complex interactive functionality involving data, logic, and frontend views.</p>
                         <p>Make the codebase easy to maintain by a group of multiple developers.</p>
+                        <br>
                         <div class="diagram-text">
                             <u style="font-size:medium;">Diagrams</u><br><br>
                             <p>Here is a diagram of the MVC in general.</p>
@@ -836,6 +814,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                             <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
                             <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
                         </div>
+                        <br>
                         <u>Rationales</u><br><br>
                         <p>R1) MV* affords separation of visualization, processing, and data management code.</p>
                         <p>R2) MV* affords modularity in code.</p>
@@ -843,14 +822,19 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                         <p>R4) MV* affords testability in code. For instance, one can easily test the models and controllers with unit tests, and the templates (views) with e2e tests.</p>
                         <p>R5) MV* affords maintainability in code. One can more easily maintain smaller, separate chunks of code responsible for specific purposes (M, V, and C).</p>
 
+                        <br>
                         <h3>Canonical / Tutorial Example</h3>
                         <p>Consider a <a href="https://todomvc.com/examples/react/#/" target="_blank">standard TODO application</a> (reference <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">source code</a>). You can add, filter, edit, update, and delete todo items.</p>
                         <img alt="todo example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/todo.png"/>
+                        <br><br>
                         <u>Goals</u>
                         <p>Allow users to add, filter, edit, update, delete todo items on the frontend.</p>
                         <p>Persist the data updates.</p>
                         <p>Make it easy for multiple developers to work on different parts of the application, like the todo view or the data storage.</p>
+                        <br>
+                        
                         <div class="diagram-text">
+                            <u style="font-size:medium;">Diagrams</u><br><br>
                             <p>Here is a diagram of the MVC of the TODO app.</p>
                             <div class="row">
                                 <div class="col-sm-5">
@@ -887,6 +871,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                             <p style="font-size:12px;"><sup>4</sup>The To Do CRUD controller queries the ToDoItem model for the logged in user's todo items.</p>
                             <p style="font-size:12px;">The To Do Change Bindings controller takes the user inputted frontend data and saves it to the ToDoItem model's table in the backend database.</p>
                         </div>
+                        <br>
                         <u>Relevant code snippets and data flow</u> can often be important to consider.
                         <ul>
                             <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx#L78" target="_blank">TodoItem's render</a></li>
@@ -897,18 +882,19 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                             <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/app.jsx" target="_blank">To Do CRUD Controller</a></li>
                             <li><a href="https://github.com/tastejs/todomvc/blob/master/examples/react/js/todoItem.jsx" target="_blank">To Do Change Bindings</a></li>
                         </ul>
+                        <br>
                         <u>Rationales</u><br><br>
                         <p>R1 Ex) The ToDoItem and User models, the CRUD operations on them, and the actual template (MV* view) for seeing the items on the page are in separate parts of the codebase, which makes it easier to separate visuals from processing from data.</p>
                         <p>R2 Ex) The ToDo list code is modular in that the ToDoItem objects can be reused by different controllers and templates.</p>
                         <p>R3 Ex) The ToDo list codebase is flexible. For example, one could add more models to store data like groups of lists and categories of items without affecting the existing functionality.</p>
                         <p>R4 Ex) The ToDo list codebase is testable. For example, e2e tests can evaluate <a href="https://github.com/tastejs/todomvc/tree/master/tests#example-output" target="_blank">template / view level ToDo list functionality</a> and unit tests can evaluate the the controllers and models.</p>
                         <p>R5 Ex) The Todo list code is comprised of <a href="https://github.com/tastejs/todomvc/tree/master/examples/react" target="_blank">small chunked files</a> and hence is easy to maintain. 
-
+                        
+                        <br><br>
                         <h3>Professional Example ({{ dp.project }})</h3>
                         <img alt="posthog example" style="width:100%" src="http://127.0.0.1:9000/static/ralemodules/posthog.png"/>
                         <br><br>
                         <p>Watch this video on how Posthog's features work: <a href="#">Posthog Features Video</a></p>
-                        <br>
                         <p>Play around with these Posthog demos: 
                         <ul>
                             <li><a href="#">Regular Posthog Version</a></li>
@@ -921,52 +907,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                         <p>Allow enterprise users only to view tags on the insights.</p>
                         <p>Persist and update data.</p>
                         <p>Make it easy for multiple developers to work on different parts of the application, like the Insights view or the data storage.</p>
-                        <div class="diagram-text">
-                            <h3>MV* of {{ dp.project }}</h3>
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <b>Templates / Views &nbsp;↔</b><sup>1</sup>
-                                    {% for template in dp.templates reversed %}
-                                        <p>
-                                            {{template.name}}<br>
-                                            <span style="font-size:10px;">May use {{template.model}} model but check.</span>
-                                        </p>
-                                    {% endfor %}
-                                    <br>
-                                    <b>Roles</b>
-                                    <p>Frontend Developers</p>
-                                    <p>Fullstack Developers</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <b>Controllers</b><sup>3</sup>
-                                    {% for controller in dp.views reversed %}
-                                        <p>
-                                            {{controller.name}}<br>
-                                            <span style="font-size:10px;">May use {{controller.model}} model but check.</span>
-                                        </p>
-                                    {% endfor %}
-                                    <br>
-                                    <b>Roles</b>
-                                    <p>Backend Developers</p>
-                                    <p>Fullstack Developers</p>
-                                </div>
-                                <div class="col-sm-3">
-                                    <sup>2</sup><b>↔ &nbsp;Models</b>
-                                    {% for model in dp.models reversed %}
-                                        <p>{{model}}</p>
-                                    {% endfor %}
-                                    <br>
-                                    <b>Roles</b>
-                                    <p>Backend Developers</p>
-                                    <p>Database Admin</p>
-                                </div>
-                            </div>
-                            <br>
-                            <p style="font-size:12px;"><sup>1</sup>The controller fills in the template with data from the model for the end user. It also manipulates the data based on user input into the template.</p>
-                            <p style="font-size:12px;"><sup>2</sup>The controller accesses / manipulates the model.</p>
-                            <p style="font-size:12px;">The controller fills in / manipulates the model with user input data.</p>
-                            <p style="font-size:12px;"><sup>3</sup>Note, Django's official documentation itself says this is debatable. Some consider Django's 'Views' or 'Viewsets' to be kind of controllers (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>). We take that interpretation. Django instead interprets the word "view" itself according to the MVT style. Django states that the controller in Django is the framework itself, the view is deciding what data should be surfaced, and the template decides how the data is surfaced. However for the sake of our exercise, we will treat Django 'Views' or 'Viewsets' as the MV* controller and Django 'Templates' as the MV* view.</p>
-                        </div>
+                        <p>Note, Django's official documentation itself says treating django "Views" / "Viewsets" is debatable. Some consider Django's 'Views' or 'Viewsets' to be kind of controllers (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>). We take that interpretation. Django instead interprets the word "view" itself according to the MVT style. Django states that the controller in Django is the framework itself, the view is deciding what data should be surfaced, and the template decides how the data is surfaced. However for the sake of our exercise, we will treat Django 'Views' or 'Viewsets' as the MV* controller and Django 'Templates' as the MV* view.</p>
                         <u>Relevant code snippets and data flow</u> can often be important to consider.
                         <ul>
                             <li><a href="https://github.com/ld-rale/posthog/blob/master/frontend/src/scenes/saved-insights/savedInsightsLogic.ts#L75-L77" target="_blank">/insight</a> (some CRUD may be in 
@@ -999,18 +940,18 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                         </ul>
                         <u>Insights data:</u>
                         <br>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/insights1.png" alt="insights1" width="100%"/>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/insights2.png" alt="insights2" width="100%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/insights1.png" alt="insights1" width="33%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/insights2.png" alt="insights2" width="33%"/>
                         <br><br>
                         <u>Actions data:</u>
                         <br>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/actions1.png" alt="actions1" width="100%"/>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/actions2.png" alt="actions1" width="100%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/actions1.png" alt="actions1" width="33%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/actions2.png" alt="actions1" width="33%"/>
                         <br><br>
                         <u>Dashboards data:</u>
                         <br>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/dashboards1.png" alt="dashboards1" width="100%"/>
-                        <img src="http://127.0.0.1:9000/static/ralemodules/dashboards2.png" alt="dashboards2" width="100%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/dashboards1.png" alt="dashboards1" width="33%"/>
+                        <img src="http://127.0.0.1:9000/static/ralemodules/dashboards2.png" alt="dashboards2" width="33%"/>
                         <br><br>
                         <u>Rationales</u><br><br>
                         <ul>
@@ -1022,74 +963,26 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                         </ul>       
                         <br>Hint 1: In Django REST Framework, confusingly, they say 'View' or 'Viewset' for the MV* controller, and 'Template' for MV* view. (src: <a href="https://www.google.com/search?q=is+the+django+view+the+controller" target="_blank">1</a>) 
                         <br><br> Hint 2: Remember that Model code is responsible for database touching logic and Controller code is responsible for data preparation for feeding the template (src: <a target="_blank" href="https://www.google.com/search?q=controller+in+mvc&oq=controller+in+mv&aqs=chrome.0.0i512j69i57j0i512l6j0i22i30l2.2514j1j7&sourceid=chrome&ie=UTF-8">1</a>). 
-                        
-                        
-                        
-                        
-                        
-                        
-                        <p id="{{model}}-a6">Activity 6: Specifically for {{dp.project}}, why is MV* used here?
-                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
-                        </p>
-                        <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                         <br><br>
-                        <p>Now, consider templates and pages like: 
-                            {% for template in dp.templates reversed %}
-                                {{template.name}}, 
-                            {% endfor %}
-                        </h4>
-                        <p id="a7">Activity 7: 
-                            <br>(i) Would you consider these templates (surfaced from the codebase for you) part of an MVC, MVVM, MVP, MVT, or other architecture?
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea> 
-                            <br>(ii) And specifically for {{dp.project}}, why do you think the code architects chose that?
-                            <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
-                            <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~3 min for this question.</span>
-                            <br>Hint: Take a look at the application again and think carefully about the <b>domain / purpose</b> of the application you are studying.
-                        </p>
+                        <p>Considerations:</p>
+                        <ul>
+                            <li>Consider why MV* is used specifically for {{dp.project}}.</li>
+                            <li>Consider whether this example is part of an MVC, MVVM, MVP, MVT, or other architecture.</li>
+                            <li>Consider why the code architects made the decisions they made, specifically for Posthog, and specifically for this domain / use case.</li>
+                        </ul>
+                        <h3>Summary</h3>                      
+                        <p>Model-view-controller architectures, described above and in 
+                        <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>, have many benefits:
+                        <ul>
+                            <li>(A) separation of visualization, processing, data management</li>
+                            <li>(B) modularity</li>
+                            <li>(C) flexibility</li>
+                            <li>(D) testability</li>
+                            <li>(E) maintainability</li>
+                        </ul>  
+                        <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
                         <br><br>
-                        <h3>Tradeoffs / Alternatives to MV*</h3>
-                        <table id="mvs-tradeoff" class="table">
-                            <tr>
-                                <th style="width: 5%">Pattern</th>
-                                <th style="width: 40%">Theory</th>
-                                <th style="width: 10%">Canonical / Tutorial Example</th>
-                                <th>Tradeoffs</th>
-                            </tr>
-                            <tr>
-                                <td>MV*</td>
-                                <td>
-                                    Model-view-controller architectures, described above and in 
-                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>, have many benefits:
-                                    <ul>
-                                        <li>(A) separation of visualization, processing, data management</li>
-                                        <li>(B) modularity</li>
-                                        <li>(C) flexibility</li>
-                                        <li>(D) testability</li>
-                                        <li>(E) maintainability</li>
-                                    </ul>  
-                                </td>
-                                <td>
-                                    <a href="http://127.0.0.1:9000/static/ralemodules/MVC-MVP-MVVM.pdf" target="_blank">MVC vs MVP vs MVVM</a>
-                                </td>
-                                <td>
-                                    Why was MV* useful specifically for {{dp.project}}? Hint: think about tradeoffs over not using any framework.
-                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
-                                    <br><br>
-                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>No Framework</td>
-                                <td>Not using any framework. Mixing data touching, view touching logic like in <a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP</a>.<br><br>While there are many benefits of MV* over vanilla PHP, vanilla PHP is potentially easier for developers to learn, doesn't expose you to functionalities you don't need (as opposed to huge frameworks like CakePHP, Laravel, etc.), and is highly customizable. This is good for one-off scripts, demos, small API's, and highly specific use-cases (src: <a target="_blank" href="https://www.quora.com/What-is-vanilla-PHP-How-different-is-it-from-plain-PHP-PHP-Laravel-and-CakePHP/answer/Derak-Kilgo">1</a>, <a target="_blank" href="https://www.quora.com/How-is-MVC-different-from-normal-PHP-Why-should-I-learn-it/answer/Pooja-1071">2</a>). Code also reads linearly from top to bottom, which might make it easier for a developer to predict what will render on the page.</td>
-                                <td><a href="https://en.wikipedia.org/wiki/PHP#Syntax" target="_blank">vanilla PHP example</a</td>
-                                <td>
-                                    Why would no framework not work specifically for {{dp.project}}?
-                                    <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~2.5 min for this question.</span>
-                                    <br><br>
-                                    <textarea rows="4" style="width: 100%; max-width: 100%;"></textarea>
-                                </td>
-                            </tr>
-                        </table>
+                        <b>Takeaway:</b>Consider why MV* is useful specifically for {{dp.project}}, considering tradeoffs over alternative patterns. Feel free to search alternatives to MV* online, including not using a framework at all.</p><!--giving the option of using no framework at all since we do not want it to be a trick question--->                             
                     </div>
                 </div>
             </div>
