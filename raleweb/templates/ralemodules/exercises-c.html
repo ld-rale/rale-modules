@@ -249,21 +249,21 @@
                             <pre style="white-space: pre-wrap; /* Since CSS 2.1 */ white-space: -moz-pre-wrap; /* Mozilla, since 1999 */ white-space: -pre-wrap; /* Opera 4-6 */ white-space: -o-pre-wrap; /* Opera 7 */ word-wrap: break-word;">
                                 <code>
 class <mark>TaggedItemViewSetMixin</mark>(viewsets.GenericViewSet):
-def is_licensed(self):
-return (
-    not self.request.user.is_anonymous and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
-    # The second one triggers an extra query to resolve user's organization.
-)
+    def is_licensed(self):
+        return (
+            not self.request.user.is_anonymous and self.request.user.organization.is_feature_available(AvailableFeature.TAGGING)  
+            # The second one triggers an extra query to resolve user's organization.
+        )
 
-def <mark>get_queryset</mark>(self):
-queryset = super(TaggedItemViewSetMixin, self).get_queryset()
-if self.is_licensed():
-    to_return = queryset.prefetch_related(
-        Prefetch("tagged_items", 
-            queryset=TaggedItem.objects.select_related("tag"), 
-            to_attr="prefetched_tags")
-    )
-return queryset
+    def <mark>get_queryset</mark>(self):
+        queryset = super(TaggedItemViewSetMixin, self).get_queryset()
+        if self.is_licensed():
+            to_return = queryset.prefetch_related(
+                Prefetch("tagged_items", 
+                    queryset=TaggedItem.objects.select_related("tag"), 
+                    to_attr="prefetched_tags")
+            )
+        return queryset
                                 </code>
                             </pre>
                             <h6>StructuredViewSetMixin code:</h6>
@@ -272,269 +272,269 @@ return queryset
 class <mark>StructuredViewSetMixin</mark>(_GenericViewSet):
 ...
 
-def <mark>get_queryset</mark>(self):
-queryset = super().get_queryset()
-to_return = self.filter_queryset_by_parents_lookups(queryset)
-return to_return
+    def <mark>get_queryset</mark>(self):
+        queryset = super().get_queryset()
+        to_return = self.filter_queryset_by_parents_lookups(queryset)
+        return to_return
 
-@property
-def <mark>team_id</mark>(self) -> int:
-team_from_token = self._get_team_from_request()
-if team_from_token:
-    return team_from_token.id
-if self.legacy_team_compatibility:
-    user = cast(User, self.request.user)
-    team = user.team
-    assert team is not None
-    return team.id
-return self.parents_query_dict["team_id"]
+    @property
+    def <mark>team_id</mark>(self) -> int:
+        team_from_token = self._get_team_from_request()
+        if team_from_token:
+            return team_from_token.id
+        if self.legacy_team_compatibility:
+            user = cast(User, self.request.user)
+            team = user.team
+            assert team is not None
+            return team.id
+        return self.parents_query_dict["team_id"]
 
-@property
-def <mark>team</mark>(self) -> Team:
-team_from_token = self._get_team_from_request()
-if team_from_token:
-    return team_from_token
-user = cast(User, self.request.user)
-if self.legacy_team_compatibility:
-    team = user.team
-    assert team is not None
-    return team
-try:
-    return Team.objects.get(id=self.team_id)
-except Team.DoesNotExist:
-    raise NotFound(detail="Project not found.")
+    @property
+    def <mark>team</mark>(self) -> Team:
+        team_from_token = self._get_team_from_request()
+        if team_from_token:
+            return team_from_token
+        user = cast(User, self.request.user)
+        if self.legacy_team_compatibility:
+            team = user.team
+            assert team is not None
+            return team
+        try:
+            return Team.objects.get(id=self.team_id)
+        except Team.DoesNotExist:
+            raise NotFound(detail="Project not found.")
 
-@property
-def organization_id(self) -> str:
-...
+    @property
+    def organization_id(self) -> str:
+    ...
 
-@property
-def organization(self) -> Organization:
-...
+    @property
+    def organization(self) -> Organization:
+    ...
 
-def filter_queryset_by_parents_lookups(self, queryset):
-parents_query_dict = self.parents_query_dict.copy() 
-for source, destination in self.filter_rewrite_rules.items():
-    parents_query_dict[destination] = parents_query_dict[source]
-    del parents_query_dict[source]
-if parents_query_dict:
-    try:
-        return queryset.filter(**parents_query_dict)
-    except ValueError:
-        raise NotFound()
-else:
-    return queryset
-
-@cached_property
-def parents_query_dict(self) -> Dict[str, Any]:
-# used to override the last visited project if there's a token in the request
-team_from_request = self._get_team_from_request()
-if self.legacy_team_compatibility: 
-    if not self.request.user.is_authenticated:
-        raise AuthenticationFailed()
-    project = team_from_request or self.request.user.team
-    if project is None:
-        raise ValidationError("This endpoint requires a project.")
-    return {"team_id": project.id}
-result = {}
-
-# process URL parameters (here called kwargs), such as organization_id in /api/organizations/:organization_id/
-for kwarg_name, kwarg_value in self.kwargs.items():
-    # drf-extensions nested parameters are prefixed
-    if kwarg_name.startswith(extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX):
-        query_lookup = kwarg_name.replace(
-            extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX, "", 1
-        )
-        query_value = kwarg_value
-        if query_value == "@current":
-            if not self.request.user.is_authenticated:
-                raise AuthenticationFailed()
-            if query_lookup == "team_id":
-                project = self.request.user.team
-                if project is None:
-                    raise NotFound("Project not found.")
-                query_value = project.id
-            elif query_lookup == "organization_id":
-                organization = self.request.user.organization
-                if organization is None:
-                    raise NotFound("Organization not found.")
-                query_value = organization.id
-        elif query_lookup == "team_id":
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.parents_query_dict.copy() 
+        for source, destination in self.filter_rewrite_rules.items():
+            parents_query_dict[destination] = parents_query_dict[source]
+            del parents_query_dict[source]
+        if parents_query_dict:
             try:
-                query_value = team_from_request.id if team_from_request else int(query_value)
+                return queryset.filter(**parents_query_dict)
             except ValueError:
                 raise NotFound()
-        result[query_lookup] = query_value
-return result
+        else:
+            return queryset
 
-...
+    @cached_property
+    def parents_query_dict(self) -> Dict[str, Any]:
+        # used to override the last visited project if there's a token in the request
+        team_from_request = self._get_team_from_request()
+        if self.legacy_team_compatibility: 
+            if not self.request.user.is_authenticated:
+                raise AuthenticationFailed()
+            project = team_from_request or self.request.user.team
+            if project is None:
+                raise ValidationError("This endpoint requires a project.")
+            return {"team_id": project.id}
+        result = {}
 
-def _get_team_from_request(self) -> Optional["Team"]:
-...
-return team_found
+        # process URL parameters (here called kwargs), such as organization_id in /api/organizations/:organization_id/
+        for kwarg_name, kwarg_value in self.kwargs.items():
+            # drf-extensions nested parameters are prefixed
+            if kwarg_name.startswith(extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX):
+                query_lookup = kwarg_name.replace(
+                    extensions_api_settings.DEFAULT_PARENT_LOOKUP_KWARG_NAME_PREFIX, "", 1
+                )
+                query_value = kwarg_value
+                if query_value == "@current":
+                    if not self.request.user.is_authenticated:
+                        raise AuthenticationFailed()
+                    if query_lookup == "team_id":
+                        project = self.request.user.team
+                        if project is None:
+                            raise NotFound("Project not found.")
+                        query_value = project.id
+                    elif query_lookup == "organization_id":
+                        organization = self.request.user.organization
+                        if organization is None:
+                            raise NotFound("Organization not found.")
+                        query_value = organization.id
+                elif query_lookup == "team_id":
+                    try:
+                        query_value = team_from_request.id if team_from_request else int(query_value)
+                    except ValueError:
+                        raise NotFound()
+                result[query_lookup] = query_value
+        return result
+
+    ...
+
+    def _get_team_from_request(self) -> Optional["Team"]:
+        ...
+        return team_found
 
 
 class InsightViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
-queryset = Insight.objects.all().prefetch_related(
-"dashboard", "dashboard__team", "dashboard__team__organization", "created_by"
-)
-...
-permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
-filter_backends = [DjangoFilterBackend]
-filterset_fields = ["short_id", "created_by"]
-...
-
-def get_queryset(self) -> QuerySet:
-print("in InsightViewSet, before super().get_queryset() call, super:", super().get_queryset)
-queryset = super().<mark>get_queryset()</mark>
-print("in InsightViewSet, after super().get_queryset() call")
-if self.action == "list":
-    queryset = queryset.filter(deleted=False)
-    queryset = self._filter_request(self.request, queryset)
-
-order = self.request.GET.get("order", None)
-if order:
-    queryset = queryset.order_by(order)
-else:
-    queryset = queryset.order_by("order")
-
-return queryset
-
-def _filter_request(self, request: request.Request, queryset: QuerySet) -> QuerySet:
-filters = request.GET.dict()
-
-for key in filters:
+    queryset = Insight.objects.all().prefetch_related(
+    "dashboard", "dashboard__team", "dashboard__team__organization", "created_by"
+    )
     ...
-return queryset
-...
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["short_id", "created_by"]
+    ...
 
-@action(methods=["GET", "POST"], detail=False)
-def trend(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-...
+    def get_queryset(self) -> QuerySet:
+        print("in InsightViewSet, before super().get_queryset() call, super:", super().get_queryset)
+        queryset = super().<mark>get_queryset()</mark>
+        print("in InsightViewSet, after super().get_queryset() call")
+        if self.action == "list":
+            queryset = queryset.filter(deleted=False)
+            queryset = self._filter_request(self.request, queryset)
 
-result = self.calculate_trends(request)
-filter = Filter(request=request, team=<mark>self.team</mark>)
-next = (
-    format_paginated_url(request, filter.offset, BREAKDOWN_VALUES_LIMIT)
-    if len(result["result"]) >= BREAKDOWN_VALUES_LIMIT
-    else None
-)
-return Response({**result, "next": next})
-...
+        order = self.request.GET.get("order", None)
+        if order:
+            queryset = queryset.order_by(order)
+        else:
+            queryset = queryset.order_by("order")
+
+        return queryset
+
+    def _filter_request(self, request: request.Request, queryset: QuerySet) -> QuerySet:
+        filters = request.GET.dict()
+
+        for key in filters:
+            ...
+        return queryset
+        ...
+
+    @action(methods=["GET", "POST"], detail=False)
+    def trend(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+    ...
+
+        result = self.calculate_trends(request)
+        filter = Filter(request=request, team=<mark>self.team</mark>)
+        next = (
+            format_paginated_url(request, filter.offset, BREAKDOWN_VALUES_LIMIT)
+            if len(result["result"]) >= BREAKDOWN_VALUES_LIMIT
+            else None
+        )
+        return Response({**result, "next": next})
+        ...
 
 
 class DashboardsViewSet(<mark>TaggedItemViewSetMixin</mark>, <mark>StructuredViewSetMixin</mark>, viewsets.ModelViewSet):
-queryset = Dashboard.objects.order_by("name")
-...
-permission_classes = [
-IsAuthenticated,
-ProjectMembershipNecessaryPermissions,
-TeamMemberAccessPermission,
-CanEditDashboard,
-]
+    queryset = Dashboard.objects.order_by("name")
+    ...
+    permission_classes = [
+    IsAuthenticated,
+    ProjectMembershipNecessaryPermissions,
+    TeamMemberAccessPermission,
+    CanEditDashboard,
+    ]
 
-def get_queryset(self) -> QuerySet:
-queryset = super().<mark>get_queryset()</mark>
-...
+    def get_queryset(self) -> QuerySet:
+        queryset = super().<mark>get_queryset()</mark>
+        ...
 
-deferred_fields = set.union(
-    get_deferred_field_set_for_model(
-        Organization, fields_not_deferred={"available_features"}, field_prefix="team__organization__"
-    ),
-    get_deferred_field_set_for_model(Team, fields_not_deferred={"organization", "name"}, field_prefix="team__"),
-)
+        deferred_fields = set.union(
+            get_deferred_field_set_for_model(
+                Organization, fields_not_deferred={"available_features"}, field_prefix="team__organization__"
+            ),
+            get_deferred_field_set_for_model(Team, fields_not_deferred={"organization", "name"}, field_prefix="team__"),
+        )
 
-queryset = (
-    queryset.select_related("team__organization", "created_by")
-    .defer(*deferred_fields)
-    .prefetch_related(Prefetch("items", queryset=Insight.objects.filter(deleted=False).order_by("order")))
-)
-return queryset
+        queryset = (
+            queryset.select_related("team__organization", "created_by")
+            .defer(*deferred_fields)
+            .prefetch_related(Prefetch("items", queryset=Insight.objects.filter(deleted=False).order_by("order")))
+        )
+        return queryset
 
 
 class ActionViewSet(TaggedItemViewSetMixin, StructuredViewSetMixin, viewsets.ModelViewSet):
-...
-queryset = Action.objects.all()
-...
-permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
-...
+    ...
+    queryset = Action.objects.all()
+    ...
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+    ...
 
-def get_queryset(self):
-queryset = super().<mark>get_queryset</mark>()
-if self.action == "list":
-    queryset = queryset.filter(deleted=False)
+    def get_queryset(self):
+        queryset = super().<mark>get_queryset</mark>()
+        if self.action == "list":
+            queryset = queryset.filter(deleted=False)
 
-queryset = queryset.annotate(count=Count(TREND_FILTER_TYPE_EVENTS))
-queryset = queryset.prefetch_related(Prefetch("steps", queryset=ActionStep.objects.order_by("id")))
-return queryset.filter(team_id=self.team_id).order_by(*self.ordering)
+        queryset = queryset.annotate(count=Count(TREND_FILTER_TYPE_EVENTS))
+        queryset = queryset.prefetch_related(Prefetch("steps", queryset=ActionStep.objects.order_by("id")))
+        return queryset.filter(team_id=self.team_id).order_by(*self.ordering)
 
-def list(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-actions = self.get_queryset()
-actions_list: List[Dict[Any, Any]] = self.serializer_class(actions, many=True, context={"request": request}).data  # type: ignore
-return Response({"results": actions_list})
+    def list(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        actions = self.get_queryset()
+        actions_list: List[Dict[Any, Any]] = self.serializer_class(actions, many=True, context={"request": request}).data  # type: ignore
+        return Response({"results": actions_list})
 
-@action(methods=["GET"], detail=False)
-def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
-team = <mark>self.team</mark>
-filter = Filter(request=request, team=<mark>self.team</mark>)
-entity = get_target_entity(filter)
+    @action(methods=["GET"], detail=False)
+    def people(self, request: request.Request, *args: Any, **kwargs: Any) -> Response:
+        team = <mark>self.team</mark>
+        filter = Filter(request=request, team=<mark>self.team</mark>)
+        entity = get_target_entity(filter)
 
-actors, serialized_actors = ClickhouseTrendsActors(team, entity, filter).get_actors()
-...
-return Response(
-    {
-        "results": [{"people": serialized_actors[0:100], "count": len(serialized_actors[0:100])}],
-        "next": next_url,
-        "previous": current_url[1:],
-    }
-)
+        actors, serialized_actors = ClickhouseTrendsActors(team, entity, filter).get_actors()
+        ...
+        return Response(
+            {
+                "results": [{"people": serialized_actors[0:100], "count": len(serialized_actors[0:100])}],
+                "next": next_url,
+                "previous": current_url[1:],
+            }
+        )
 
 class ClickhouseGroupsView(StructuredViewSetMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-...
-queryset = Group.objects.all()
-pagination_class = GroupCursorPagination
-permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
+    ...
+    queryset = Group.objects.all()
+    pagination_class = GroupCursorPagination
+    permission_classes = [IsAuthenticated, ProjectMembershipNecessaryPermissions, TeamMemberAccessPermission]
 
-def get_queryset(self):
-return super().<mark>get_queryset</mark>().filter(group_type_index=self.request.GET["group_type_index"])
+    def get_queryset(self):
+    return super().<mark>get_queryset</mark>().filter(group_type_index=self.request.GET["group_type_index"])
 
-@action(methods=["GET"], detail=False)
-def find(self, request: request.Request, **kw) -> response.Response:
-print("In ClickhouseGroupsView, find")
-try:
-    group = self.<mark>get_queryset</mark>().get(group_key=request.GET["group_key"])
-    data = self.get_serializer(group).data
-    return response.Response(data)
-except Group.DoesNotExist:
-    raise NotFound()
+    @action(methods=["GET"], detail=False)
+    def find(self, request: request.Request, **kw) -> response.Response:
+        print("In ClickhouseGroupsView, find")
+        try:
+            group = self.<mark>get_queryset</mark>().get(group_key=request.GET["group_key"])
+            data = self.get_serializer(group).data
+            return response.Response(data)
+        except Group.DoesNotExist:
+            raise NotFound()
 
-@action(methods=["GET"], detail=False)
-def related(self, request: request.Request, pk=None, **kw) -> response.Response:
-print("In ClickhouseGroupsView, related")
-group_type_index = request.GET.get("group_type_index")
-id = request.GET["id"]
+    @action(methods=["GET"], detail=False)
+    def related(self, request: request.Request, pk=None, **kw) -> response.Response:
+        print("In ClickhouseGroupsView, related")
+        group_type_index = request.GET.get("group_type_index")
+        id = request.GET["id"]
 
-results = RelatedActorsQuery(self.team.pk, group_type_index, id).run()
-return response.Response(results)
+        results = RelatedActorsQuery(self.team.pk, group_type_index, id).run()
+        return response.Response(results)
 
-@action(methods=["GET"], detail=False)
-def property_definitions(self, request: request.Request, **kw):
-print("In ClickhouseGroupsView, property_definitions")
-...
-group_type_index_to_properties = defaultdict(list)
-for group_type_index, key, count in rows:
-    group_type_index_to_properties[group_type_index].append({"name": key, "count": count})
+    @action(methods=["GET"], detail=False)
+    def property_definitions(self, request: request.Request, **kw):
+        print("In ClickhouseGroupsView, property_definitions")
+        ...
+        group_type_index_to_properties = defaultdict(list)
+        for group_type_index, key, count in rows:
+            group_type_index_to_properties[group_type_index].append({"name": key, "count": count})
 
-return response.Response(group_type_index_to_properties)
+        return response.Response(group_type_index_to_properties)
 
-@action(methods=["GET"], detail=False)
-def property_values(self, request: request.Request, **kw):
-print("In ClickhouseGroupsView, property_values")
-rows = sync_execute(...,
-    {"team_id": <mark>self.team</mark>.pk, "group_type_index": request.GET["group_type_index"], "key": request.GET["key"]},
-)
+    @action(methods=["GET"], detail=False)
+    def property_values(self, request: request.Request, **kw):
+        print("In ClickhouseGroupsView, property_values")
+        rows = sync_execute(...,
+            {"team_id": <mark>self.team</mark>.pk, "group_type_index": request.GET["group_type_index"], "key": request.GET["key"]},
+        )
 
-return response.Response([{"name": name[0]} for name in rows])
+        return response.Response([{"name": name[0]} for name in rows])
                                 </code>
                             </pre>
                             <div class="row">
