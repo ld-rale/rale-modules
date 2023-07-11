@@ -2,6 +2,6 @@
 
 A tool to help intermediate level developers learn about Python design patterns from professional examples.
 
-We have started with Mixins and MVC.
+We have started with Mixins and MVC. And Posthog as our professional example.
 
 **Enjoy!**
