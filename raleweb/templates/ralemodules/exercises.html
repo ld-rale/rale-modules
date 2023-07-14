@@ -220,7 +220,7 @@
                                         </p>
                                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
                                         <br><br>
-                                        <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that use the {{mixin}} mixin. Hint, look at the <!--"Mixins of {{ dp.project }}" -->diagram above.
+                                        <p id="mixin-{{mixin}}-a2">Activity 2: List some classes in this codebase that adopt the {{mixin}} mixin. Hint, look at the <!--"Mixins of {{ dp.project }}" -->diagram above.
                                             <br><span style="font-size: 10px;">Pacing: Perhaps reserve ~1 min for this question.</span>
                                         </p>
                                         <textarea rows="2" style="width: 100%; max-width: 100%;"></textarea>
@@ -781,7 +781,7 @@ group_properties: {'id': 2, 'name': 'Formative Project', 'uuid': '01835cfd-c74d-
                                 </td>
                                 <td>
                                     <p><input type="checkbox"/> R1 Ex) The difference is subtle, but in the werkzeug example, the mixin classes weren't made to stand on their own. In more traditional multiple inheritance, the AuthenticationMixin (for example) would probably be something more like Authenticator. That is, the class would probably be designed to stand on its own (src: <a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-is-it-useful/547714#547714" target="_blank">1</a>, <a href="https://stackoverflow.com/questions/860245/mixin-vs-inheritance#:~:text=Frequently%20the%20mix%2Din%20is,functionality%20in%20multiple%20different%20classes" target="_blank">2</a>)</p>
-                                    <p><input type="checkbox"/> R2 Ex) Here werkzeug's SpecialRequest and ExtraSpecialRequest both use AcceptMixin.</p>
+                                    <p><input type="checkbox"/> R2 Ex) Here werkzeug's SpecialRequest and ExtraSpecialRequest both adopt AcceptMixin.</p>
                                     <p><input type="checkbox"/> R3 Ex) Here werkzeug is adding optional features for SpecialRequest and even more optional features for ExtraSpecialRequest.</p>
                                     <p><input type="checkbox"/> R4 Ex) Here AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin each represent compartmentalized implementations of particular functionalities.</p>
                                     <p><input type="checkbox"/> R5 Ex) For instance in the werkzeug's request and response example, mixins let you allow more supports as needed, but not by default, to instances of Request. Adding mixins to classes let you layer on additional functionality as needed.</p>
